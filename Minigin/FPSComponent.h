@@ -16,6 +16,6 @@ namespace dae
 		TextComponent* m_pTextComponent{ nullptr };
 
 		float m_ElapsedTime{};
-		int m_FrameCount{};
+		float m_FrameCount{};
 	};
 }

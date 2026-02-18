@@ -106,39 +106,30 @@ void dae::Minigin::RunOneFrame()
 	using clock = std::chrono::high_resolution_clock;
 
 	const auto CURRENT_FRAME = clock::now();
-	const float DELTA_TIME =
-		std::chrono::duration<float>(CURRENT_FRAME - m_LastTime).count();
+	const float DELTA_TIME = std::chrono::duration<float>(CURRENT_FRAME - m_LastTime).count();
 	m_LastTime = CURRENT_FRAME;
 
 	m_Lag += DELTA_TIME;
 
-	// Input
 	m_Quit = !InputManager::GetInstance().ProcessInput();
 
-	// Fixed update (physics / deterministic logic)
 	while (m_Lag >= m_FixedTimeStep)
 	{
 		SceneManager::GetInstance().FixedUpdate(m_FixedTimeStep);
 		m_Lag -= m_FixedTimeStep;
 	}
 
-	// Variable update
 	SceneManager::GetInstance().Update(DELTA_TIME);
 
-	// Render
 	Renderer::GetInstance().Render();
 
-	// Optional sleep to avoid turbo mode
 	constexpr float TARGET_FRAME_TIME = 1.0f / 60.0f;
 	const auto FRAME_END = clock::now();
-	const float FRAME_TIME =
-		std::chrono::duration<float>(FRAME_END - CURRENT_FRAME).count();
+	const float FRAME_TIME = std::chrono::duration<float>(FRAME_END - CURRENT_FRAME).count();
 
 	if (FRAME_TIME < TARGET_FRAME_TIME)
 	{
-		std::this_thread::sleep_for(
-			std::chrono::duration<float>(TARGET_FRAME_TIME - FRAME_TIME)
-		);
+		std::this_thread::sleep_for(std::chrono::duration<float>(TARGET_FRAME_TIME - FRAME_TIME));
 	}
 }
 
