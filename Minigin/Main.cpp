@@ -12,6 +12,7 @@
 
 #include "TextureComponent.h"
 #include "TextComponent.h"
+#include "FPSComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -30,6 +31,15 @@ static void load()
 	scene.Add(std::move(logo));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+
+	auto fpsGameObject = std::make_unique<dae::GameObject>();
+	fpsGameObject->SetPosition(10, 10);
+
+	fpsGameObject->AddComponent<dae::TextComponent>("FPS: 0", font);
+	fpsGameObject->AddComponent<dae::FPSComponent>();
+
+	scene.Add(std::move(fpsGameObject));
+
 	auto textGo = std::make_unique<dae::GameObject>();
 	textGo->SetPosition(292, 20);
 	textGo->AddComponent<dae::TextComponent>("Programming 4 Assignment", font)

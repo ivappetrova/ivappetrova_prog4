@@ -10,14 +10,14 @@ dae::TextureComponent::TextureComponent(GameObject* owner)
 
 void dae::TextureComponent::Render() const
 {
-	if (m_texture)
+	if (m_pTexture)
 	{
-		const auto& pos = m_owner->GetTransform().GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+		const auto& POS = m_pOwner->GetTransform().GetPosition();
+		Renderer::GetInstance().RenderTexture(*m_pTexture, POS.x, POS.y);
 	}
 }
 
 void dae::TextureComponent::SetTexture(const std::string& filename)
 {
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
 }

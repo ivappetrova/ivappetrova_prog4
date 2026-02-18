@@ -19,6 +19,6 @@ namespace dae
 		Font & operator= (const Font &) = delete;
 		Font & operator= (const Font &&) = delete;
 	private:
-		TTF_Font* m_font;
+		TTF_Font* m_pFont;
 	};
 }

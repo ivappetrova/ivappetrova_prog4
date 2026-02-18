@@ -20,7 +20,10 @@ namespace dae
 		Minigin& operator=(Minigin&& other) = delete;
 
 	private:
-		bool m_quit{};
-		std::chrono::high_resolution_clock::time_point m_lastTime{ std::chrono::high_resolution_clock::now() };
+		bool m_Quit{};
+		std::chrono::high_resolution_clock::time_point m_LastTime{ std::chrono::high_resolution_clock::now() };
+
+		float m_Lag{};
+		static constexpr float m_FixedTimeStep{ 1.0f / 60.0f };
 	};
 }

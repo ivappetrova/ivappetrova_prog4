@@ -6,10 +6,11 @@ namespace dae
 	class Component
 	{
 	public:
-		explicit Component(GameObject* owner) : m_owner(owner) {}
+		explicit Component(GameObject* owner) : m_pOwner(owner) {}
 		virtual ~Component() = default;
 		virtual void Update(float /*deltaTime*/) {}
 		virtual void Render() const {}
+		virtual void FixedUpdate(float /*fixedDelta*/) {}
 
 		Component(const Component&) = delete;
 		Component(Component&&) = delete;
@@ -17,6 +18,6 @@ namespace dae
 		Component& operator=(const Component&&) = delete;
 
 	protected:
-		GameObject* m_owner;
+		GameObject* m_pOwner;
 	};
 }

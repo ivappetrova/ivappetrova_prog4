@@ -11,12 +11,15 @@
 //#include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "Minigin.h"
-#include "InputManager.h"
 #include "SceneManager.h"
+#include "InputManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 
-SDL_Window* g_window{};
+#include <thread>
+#include <chrono>
+
+SDL_Window* g_pWindow{};
 
 void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 {
@@ -64,26 +67,26 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
 
-	g_window = SDL_CreateWindow(
+	g_pWindow = SDL_CreateWindow(
 		"Programming 4 assignment",
 		1024,
 		576,
 		SDL_WINDOW_OPENGL
 	);
-	if (g_window == nullptr) 
+	if (g_pWindow == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
-	Renderer::GetInstance().Init(g_window);
+	Renderer::GetInstance().Init(g_pWindow);
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
 dae::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
-	SDL_DestroyWindow(g_window);
-	g_window = nullptr;
+	SDL_DestroyWindow(g_pWindow);
+	g_pWindow = nullptr;
 	SDL_Quit();
 }
 
@@ -91,7 +94,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 #ifndef __EMSCRIPTEN__
-	while (!m_quit)
+	while (!m_Quit)
 		RunOneFrame();
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
@@ -100,11 +103,42 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 void dae::Minigin::RunOneFrame()
 {
-	const auto currentTime = std::chrono::high_resolution_clock::now();
-	const float deltaTime = std::chrono::duration<float>(currentTime - m_lastTime).count();
-	m_lastTime = currentTime;
+	using clock = std::chrono::high_resolution_clock;
 
-	m_quit = !InputManager::GetInstance().ProcessInput();
-	SceneManager::GetInstance().Update(deltaTime);
+	const auto CURRENT_FRAME = clock::now();
+	const float DELTA_TIME =
+		std::chrono::duration<float>(CURRENT_FRAME - m_LastTime).count();
+	m_LastTime = CURRENT_FRAME;
+
+	m_Lag += DELTA_TIME;
+
+	// Input
+	m_Quit = !InputManager::GetInstance().ProcessInput();
+
+	// Fixed update (physics / deterministic logic)
+	while (m_Lag >= m_FixedTimeStep)
+	{
+		SceneManager::GetInstance().FixedUpdate(m_FixedTimeStep);
+		m_Lag -= m_FixedTimeStep;
+	}
+
+	// Variable update
+	SceneManager::GetInstance().Update(DELTA_TIME);
+
+	// Render
 	Renderer::GetInstance().Render();
+
+	// Optional sleep to avoid turbo mode
+	constexpr float TARGET_FRAME_TIME = 1.0f / 60.0f;
+	const auto FRAME_END = clock::now();
+	const float FRAME_TIME =
+		std::chrono::duration<float>(FRAME_END - CURRENT_FRAME).count();
+
+	if (FRAME_TIME < TARGET_FRAME_TIME)
+	{
+		std::this_thread::sleep_for(
+			std::chrono::duration<float>(TARGET_FRAME_TIME - FRAME_TIME)
+		);
+	}
 }
+
