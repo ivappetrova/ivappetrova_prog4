@@ -1,27 +1,51 @@
 #pragma once
-#include <string>
+#include <vector>
 #include <memory>
+#include <type_traits>
 #include "Transform.h"
 
 namespace dae
 {
-	class Texture2D;
-	class GameObject 
+	class Component;
+
+	class GameObject final
 	{
-		Transform m_transform{};
-		std::shared_ptr<Texture2D> m_texture{};
 	public:
-		virtual void Update();
-		virtual void Render() const;
+		GameObject();
+		~GameObject();
 
-		void SetTexture(const std::string& filename);
+		void Update(float deltaTime);
+		void Render() const;
+
 		void SetPosition(float x, float y);
+		const Transform& GetTransform() const { return m_transform; }
 
-		GameObject() = default;
-		virtual ~GameObject();
-		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		template<typename T, typename... Args>
+		T* AddComponent(Args&&... args)
+		{
+			static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
+			auto& comp = m_components.emplace_back(
+				std::make_unique<T>(this, std::forward<Args>(args)...)
+			);
+			return static_cast<T*>(comp.get());
+		}
+
+		template<typename T>
+		T* GetComponent() const
+		{
+			for (auto& comp : m_components)
+				if (auto* c = dynamic_cast<T*>(comp.get()))
+					return c;
+			return nullptr;
+		}
+
+		GameObject(const GameObject&) = delete;
+		GameObject(GameObject&&) = delete;
+		GameObject& operator=(const GameObject&) = delete;
+		GameObject& operator=(GameObject&&) = delete;
+
+	private:
+		Transform m_transform{};
+		std::vector<std::unique_ptr<Component>> m_components{};
 	};
 }
