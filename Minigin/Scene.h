@@ -27,7 +27,6 @@ namespace dae
 	private:
 		friend class SceneManager;
 		explicit Scene() = default;
-
 		std::vector < std::unique_ptr<GameObject>> m_pObjects{};
 	};
 

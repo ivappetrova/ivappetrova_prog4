@@ -95,7 +95,9 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	load();
 #ifndef __EMSCRIPTEN__
 	while (!m_Quit)
+	{
 		RunOneFrame();
+	}
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #endif
@@ -129,7 +131,16 @@ void dae::Minigin::RunOneFrame()
 
 	if (FRAME_TIME < TARGET_FRAME_TIME)
 	{
-		std::this_thread::sleep_for(std::chrono::duration<float>(TARGET_FRAME_TIME - FRAME_TIME));
+		const auto SLEEP_DURATION = std::chrono::duration<float>(TARGET_FRAME_TIME - FRAME_TIME - 0.002f);
+		if (SLEEP_DURATION.count() > 0)
+		{
+			std::this_thread::sleep_for(SLEEP_DURATION);
+		}
+
+		while (std::chrono::duration<float>(clock::now() - CURRENT_FRAME).count() < TARGET_FRAME_TIME) 
+		{
+			// spin until the frame rate is reached
+		}
 	}
 }
 

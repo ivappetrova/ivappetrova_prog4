@@ -11,8 +11,7 @@ void Scene::Add(std::unique_ptr<GameObject> object)
 
 void Scene::Remove(const GameObject& object)
 {
-	m_pObjects.erase(
-		std::remove_if(m_pObjects.begin(), m_pObjects.end(), [&object](const auto& ptr) { return ptr.get() == &object; }), m_pObjects.end() );
+	m_pObjects.erase(std::remove_if(m_pObjects.begin(), m_pObjects.end(), [&object](const auto& ptr) { return ptr.get() == &object; }), m_pObjects.end() );
 }
 
 void Scene::RemoveAll()
@@ -26,6 +25,11 @@ void Scene::Update(float deltaTime)
 	{
 		objectPtr->Update(deltaTime);
 	}
+
+	m_pObjects.erase(
+		std::remove_if(m_pObjects.begin(), m_pObjects.end(),
+			[](const auto& ptr) { return ptr->IsMarkedForDestroy(); }),
+		m_pObjects.end());
 }
 
 void Scene::Render() const

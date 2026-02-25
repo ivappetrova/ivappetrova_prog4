@@ -12,17 +12,21 @@ dae::TextComponent::TextComponent(GameObject* owner, const std::string& text,
 {
 }
 
-void dae::TextComponent::Update([[maybe_unused]] float deltaTime)
+void dae::TextComponent::Update(float)
 {
 	if (m_NeedsUpdate)
 	{
 		const auto SURFACE = TTF_RenderText_Blended(m_pFont->GetFont(), m_Text.c_str(), m_Text.length(), m_Color);
 		if (!SURFACE)
+		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+		}
 
 		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), SURFACE);
 		if (!texture)
+		{
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
+		}
 
 		SDL_DestroySurface(SURFACE);
 		m_pTextTexture = std::make_shared<Texture2D>(texture);
@@ -34,8 +38,7 @@ void dae::TextComponent::Render() const
 {
 	if (m_pTextTexture)
 	{
-		const auto& pos = m_pOwner->GetTransform().GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTextTexture, pos.x, pos.y);
+		RenderTexture(*m_pTextTexture);
 	}
 }
 

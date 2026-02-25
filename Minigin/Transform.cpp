@@ -1,13 +1,13 @@
 #include "Transform.h"
 
-void dae::Transform::SetPosition(const float x, const float y, const float z)
+void dae::Transform::SetLocalPosition(const glm::vec3& position)
 {
-	m_Position.x = x;
-	m_Position.y = y;
-	m_Position.z = z;
+	m_LocalPosition = position;
+	m_IsDirty = true;
 }
 
-void dae::Transform::SetPosition(const glm::vec3& position) 
-{ 
-	m_Position = position; 
+void dae::Transform::SetWorldPosition(const glm::vec3& pos) const
+{
+	m_WorldPosition = pos;
+	m_IsDirty = false;
 }

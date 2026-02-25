@@ -12,8 +12,7 @@ void dae::TextureComponent::Render() const
 {
 	if (m_pTexture)
 	{
-		const auto& POS = m_pOwner->GetTransform().GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTexture, POS.x, POS.y);
+		RenderTexture(*m_pTexture);
 	}
 }
 

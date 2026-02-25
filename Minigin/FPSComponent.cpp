@@ -19,7 +19,7 @@ void dae::FPSComponent::Update(float deltaTime)
 
 	if (m_ElapsedTime >= 1.0f)
 	{
-		const float FPS = m_FrameCount;
+		const float FPS = m_FrameCount/m_ElapsedTime;
 		std::ostringstream stream;
 		stream << std::fixed << std::setprecision(2) << FPS;
 		std::string fpsStr = stream.str();

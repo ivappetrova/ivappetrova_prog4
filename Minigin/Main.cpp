@@ -13,6 +13,7 @@
 #include "TextureComponent.h"
 #include "TextComponent.h"
 #include "FPSComponent.h"
+#include "RotatorComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -27,25 +28,30 @@ static void load()
 
 	auto logo = std::make_unique<dae::GameObject>();
 	logo->AddComponent<dae::TextureComponent>()->SetTexture("logo.png");
-	logo->SetPosition(358, 180);
+	logo->SetLocalPosition(358, 180);
 	scene.Add(std::move(logo));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto fpsGo = std::make_unique<dae::GameObject>();
+	fpsGo->SetLocalPosition(10, 10);
+	fpsGo->AddComponent<dae::TextComponent>("FPS: 0", font);
+	fpsGo->AddComponent<dae::FPSComponent>();
+	scene.Add(std::move(fpsGo));
 
-	auto fpsGameObject = std::make_unique<dae::GameObject>();
-	fpsGameObject->SetPosition(10, 10);
+	auto bubbleUPtr = std::make_unique<dae::GameObject>();
+	bubbleUPtr->AddComponent<dae::TextureComponent>()->SetTexture("bubble.png");
+	bubbleUPtr->AddComponent<dae::RotatorComponent>(100.f, 1.f, 180.f, 350.f);
+	dae::GameObject* bubbleRaw = bubbleUPtr.get();
 
-	fpsGameObject->AddComponent<dae::TextComponent>("FPS: 0", font);
-	fpsGameObject->AddComponent<dae::FPSComponent>();
+	auto bobbleUPtr = std::make_unique<dae::GameObject>();
+	bobbleUPtr->AddComponent<dae::TextureComponent>()->SetTexture("bobble.png");
+	bobbleUPtr->AddComponent<dae::RotatorComponent>(50.f, -2.f);
+	bobbleUPtr->SetParent(bubbleRaw, false);
 
-	scene.Add(std::move(fpsGameObject));
-
-	auto textGo = std::make_unique<dae::GameObject>();
-	textGo->SetPosition(292, 20);
-	textGo->AddComponent<dae::TextComponent>("Programming 4 Assignment", font)
-		->SetColor({ 255, 255, 0, 255 });
-	scene.Add(std::move(textGo));
+	scene.Add(std::move(bubbleUPtr));
+	scene.Add(std::move(bobbleUPtr));
 }
+
 
 int main(int, char*[]) {
 #if __EMSCRIPTEN__
