@@ -14,6 +14,7 @@ dae::GameObject::~GameObject()
 	for (auto* child : m_pChildren)
 	{
 		child->m_pParent = nullptr;
+		delete child;
 	}
 }
 
@@ -23,6 +24,11 @@ void dae::GameObject::Update(float deltaTime)
 	{
 		comp->Update(deltaTime);
 	}
+
+	for (auto* child : m_pChildren)
+	{
+		child->Update(deltaTime);
+	}
 }
 
 void dae::GameObject::Render() const
@@ -31,6 +37,11 @@ void dae::GameObject::Render() const
 	{
 		comp->Render();
 	}
+
+	for (auto* child : m_pChildren)
+	{
+		child->Render();
+	}
 }
 
 void dae::GameObject::FixedUpdate(float fixedDelta)
@@ -38,6 +49,11 @@ void dae::GameObject::FixedUpdate(float fixedDelta)
 	for (auto& comp : m_pComponents)
 	{
 		comp->FixedUpdate(fixedDelta);
+	}
+
+	for (auto* child : m_pChildren)
+	{
+		child->FixedUpdate(fixedDelta);
 	}
 }
 
@@ -87,7 +103,9 @@ void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 	else
 	{
 		if (keepWorldPosition)
+		{
 			SetLocalPosition(GetWorldPosition() - parent->GetWorldPosition());
+		}
 		SetPositionDirty();
 	}
 

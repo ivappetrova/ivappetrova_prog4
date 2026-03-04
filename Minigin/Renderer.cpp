@@ -132,17 +132,15 @@ void dae::Renderer::DrawExercise1() const
 			}
 		}
 
-		// draw the graph if we have data
+		// draw data if there is new data
 		if (!timings.empty())
 		{
-			// labels for the x-axis steps (1, 2, 4 ... 1024)
 			ImGui::Text("Step size: 1 -> 1024");
 			ImGui::PlotLines("##timings", timings.data(), (int)timings.size(),
 				0, "ms per step", 0.0f,
 				*std::max_element(timings.begin(), timings.end()) * 1.2f,
 				ImVec2(300, 150));
 
-			// also show raw values below the graph
 			int stepsize = 1;
 			for (float t : timings)
 			{
@@ -239,14 +237,10 @@ void dae::Renderer::DrawExercise2() const
 		// draw the graph if we have data
 		if (!timings.empty())
 		{
-			// labels for the x-axis steps (1, 2, 4 ... 1024)
 			ImGui::Text("Step size: 1 -> 1024");
-			ImGui::PlotLines("##timings", timings.data(), (int)timings.size(),
-				0, "ms per step", 0.0f,
-				*std::max_element(timings.begin(), timings.end()) * 1.2f,
-				ImVec2(300, 150));
+			ImGui::PlotLines("##timings", timings.data(), (int)timings.size(), 0, "ms per step", 0.0f, 
+						     *std::max_element(timings.begin(), timings.end()) * 1.2f, ImVec2(300, 150));
 
-			// also show raw values below the graph
 			int stepsize = 1;
 			for (float t : timings)
 			{

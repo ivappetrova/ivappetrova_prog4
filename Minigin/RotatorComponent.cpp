@@ -2,16 +2,23 @@
 #include "GameObject.h"
 #include <cmath>
 
-dae::RotatorComponent::RotatorComponent(GameObject* owner, float radius, float speed, float centerX, float centerY)
-	: Component(owner), m_Radius(radius), m_Speed(speed), m_Angle(0.f), m_CenterX(centerX), m_CenterY(centerY)
+
+dae::RotatorComponent::RotatorComponent(GameObject* owner, float radius, float speed)
+	: Component(owner), m_Radius(radius), m_Speed(speed), m_Angle(0.f)
 {
 }
 
 void dae::RotatorComponent::Update(float deltaTime)
 {
+
+
 	m_Angle += m_Speed * deltaTime;
-	GetOwner()->SetLocalPosition(
-		m_CenterX + std::cos(m_Angle) * m_Radius,
-		m_CenterY + std::sin(m_Angle) * m_Radius
-	);
+
+	// clamp angle 
+	if (m_Angle >= 2.f * m_PI)
+	{
+		m_Angle -= 2.f * m_PI;
+	}
+
+	GetOwner()->SetLocalPosition(std::cos(m_Angle) * m_Radius, std::sin(m_Angle) * m_Radius);
 }

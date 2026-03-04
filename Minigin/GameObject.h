@@ -22,14 +22,11 @@ namespace dae
 		// Local position — marks dirty
 		void SetLocalPosition(float x, float y);
 		void SetLocalPosition(const glm::vec3& pos);
-
 		// World position — recalculates lazily if dirty
 		const glm::vec3& GetWorldPosition() const;
 
 		const Transform& GetTransform() const { return m_Transform; }
 
-		// Hierarchy — SetParent is the primary interface (slide 16)
-		// keepWorldPosition: if true, local position adjusts so world position stays the same
 		void SetParent(GameObject* parent, bool keepWorldPosition = false);
 		GameObject* GetParent() const { return m_pParent; }
 		size_t GetChildCount() const { return m_pChildren.size(); }
@@ -74,7 +71,6 @@ namespace dae
 
 	private:
 		bool IsChild(const GameObject* candidate) const;
-
 		void AddChild(GameObject* child);
 		void RemoveChild(GameObject* child);
 
