@@ -10,6 +10,9 @@
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlrenderer3.h>
 
+#include <vector>
+#include <chrono>
+
 void dae::Renderer::Init(SDL_Window* window)
 {
 	m_pWindow = window;
@@ -43,7 +46,10 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDLRenderer3_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow(); // For demonstration purposes, do not keep this in your engine
+	
+	DrawExercise1();
+	DrawExercise2();
+
 	ImGui::Render();
 
 	const auto& color = GetBackgroundColor();
@@ -89,3 +95,165 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_pRenderer; }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////// Exercise 1 
+void dae::Renderer::DrawExercise1() const
+{
+
+	ImGui::SetNextWindowPos(ImVec2(10, 50), ImGuiCond_Once);
+	if (ImGui::Begin("Exercise 1"))
+	{
+		static int nSamples1{ 100 };
+		static std::vector<float> timings{};
+
+		ImGui::InputInt("# samples", &nSamples1);
+
+		if (ImGui::Button("Thrash the cache with GameObject3D"))
+		{
+			std::vector<int> myArr(1'000'000);
+			timings.clear();
+
+			for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
+			{
+				float total = 0;
+
+				for (int sample = 0; sample < nSamples1; ++sample)
+				{
+					auto start = std::chrono::high_resolution_clock::now();
+					for (size_t i = 0; i < myArr.size(); i += stepsize)
+					{
+						myArr[i] *= 2;
+					}
+					auto end = std::chrono::high_resolution_clock::now();
+					total += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+				}
+
+				timings.push_back((float)total / nSamples1);
+			}
+		}
+
+		// draw the graph if we have data
+		if (!timings.empty())
+		{
+			// labels for the x-axis steps (1, 2, 4 ... 1024)
+			ImGui::Text("Step size: 1 -> 1024");
+			ImGui::PlotLines("##timings", timings.data(), (int)timings.size(),
+				0, "ms per step", 0.0f,
+				*std::max_element(timings.begin(), timings.end()) * 1.2f,
+				ImVec2(300, 150));
+
+			// also show raw values below the graph
+			int stepsize = 1;
+			for (float t : timings)
+			{
+				ImGui::Text("Step %4d: %.1f us", stepsize, t);
+				stepsize *= 2;
+			}
+		}
+	}
+	ImGui::End();
+}
+
+struct Transform
+{
+	float matrix[16] =
+	{ 1, 0, 0, 0,
+	  0, 1, 0, 0,
+	  0, 0, 1, 0,
+	  0, 0, 0, 1 };
+};
+
+class GameObject3D
+{
+public:
+	Transform local;
+	int id;
+};
+
+class GameObject3DAlt
+{
+public:
+	Transform* local;
+	int id;
+};
+
+void dae::Renderer::DrawExercise2() const
+{
+	/////////////////////////////// Exercise 2 
+	ImGui::SetNextWindowPos(ImVec2(300, 50), ImGuiCond_Once);
+	if (ImGui::Begin("Exercise 2"))
+	{
+		static int nSamples1{ 100 };
+		static std::vector<float> timings{};
+
+		ImGui::InputInt("# samples", &nSamples1);
+
+		if (ImGui::Button("Thrash the cache with GameObject3D"))
+		{
+			std::vector<GameObject3D> myArr(1'000'000);
+			timings.clear();
+
+			for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
+			{
+				float total = 0;
+
+				for (int sample = 0; sample < nSamples1; ++sample)
+				{
+					auto start = std::chrono::high_resolution_clock::now();
+					for (size_t i = 0; i < myArr.size(); i += stepsize)
+					{
+						myArr[i].id *= 2;
+					}
+					auto end = std::chrono::high_resolution_clock::now();
+					total += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+				}
+
+				timings.push_back((float)total / nSamples1);
+			}
+		}
+
+		if (ImGui::Button("Thrash the cache with GameObject3DAlt"))
+		{
+			std::vector<GameObject3DAlt> myArr(1'000'000);
+			timings.clear();
+
+			for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
+			{
+				float total = 0;
+
+				for (int sample = 0; sample < nSamples1; ++sample)
+				{
+					auto start = std::chrono::high_resolution_clock::now();
+					for (size_t i = 0; i < myArr.size(); i += stepsize)
+					{
+						myArr[i].id *= 2;
+					}
+					auto end = std::chrono::high_resolution_clock::now();
+					total += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+				}
+
+				timings.push_back((float)total / nSamples1);
+			}
+		}
+
+		// draw the graph if we have data
+		if (!timings.empty())
+		{
+			// labels for the x-axis steps (1, 2, 4 ... 1024)
+			ImGui::Text("Step size: 1 -> 1024");
+			ImGui::PlotLines("##timings", timings.data(), (int)timings.size(),
+				0, "ms per step", 0.0f,
+				*std::max_element(timings.begin(), timings.end()) * 1.2f,
+				ImVec2(300, 150));
+
+			// also show raw values below the graph
+			int stepsize = 1;
+			for (float t : timings)
+			{
+				ImGui::Text("Step %4d: %.1f us", stepsize, t);
+				stepsize *= 2;
+			}
+		}
+	}
+	ImGui::End();
+}

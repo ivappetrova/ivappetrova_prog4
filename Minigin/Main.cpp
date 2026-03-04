@@ -38,18 +38,22 @@ static void load()
 	fpsGo->AddComponent<dae::FPSComponent>();
 	scene.Add(std::move(fpsGo));
 
-	auto bubbleUPtr = std::make_unique<dae::GameObject>();
-	bubbleUPtr->AddComponent<dae::TextureComponent>()->SetTexture("bubble.png");
-	bubbleUPtr->AddComponent<dae::RotatorComponent>(100.f, 1.f, 180.f, 350.f);
-	dae::GameObject* bubbleRaw = bubbleUPtr.get();
+	/////////////////////// Week 02- Bubble and bobble rotating 
 
-	auto bobbleUPtr = std::make_unique<dae::GameObject>();
-	bobbleUPtr->AddComponent<dae::TextureComponent>()->SetTexture("bobble.png");
-	bobbleUPtr->AddComponent<dae::RotatorComponent>(50.f, -2.f);
-	bobbleUPtr->SetParent(bubbleRaw, false);
+	//auto bubbleUPtr = std::make_unique<dae::GameObject>();
+	//bubbleUPtr->AddComponent<dae::TextureComponent>()->SetTexture("bubble.png");
+	//bubbleUPtr->AddComponent<dae::RotatorComponent>(100.f, 1.f, 180.f, 350.f);
+	//dae::GameObject* bubbleRaw = bubbleUPtr.get();
+	//
+	//auto bobbleUPtr = std::make_unique<dae::GameObject>();
+	//bobbleUPtr->AddComponent<dae::TextureComponent>()->SetTexture("bobble.png");
+	//bobbleUPtr->AddComponent<dae::RotatorComponent>(50.f, -2.f);
+	//bobbleUPtr->SetParent(bubbleRaw, false);
+	//
+	//scene.Add(std::move(bubbleUPtr));
+	//scene.Add(std::move(bobbleUPtr));
 
-	scene.Add(std::move(bubbleUPtr));
-	scene.Add(std::move(bobbleUPtr));
+
 }
 
 
