@@ -27,10 +27,11 @@ namespace dae
 
 		const Transform& GetTransform() const { return m_Transform; }
 
+		// Parent is non-owning: the scene/parent owns children, not the other way around
 		void SetParent(GameObject* parent, bool keepWorldPosition = false);
 		GameObject* GetParent() const { return m_pParent; }
 		size_t GetChildCount() const { return m_pChildren.size(); }
-		GameObject* GetChildAt(size_t index) const { return m_pChildren[index]; }
+		GameObject* GetChildAt(size_t index) const { return m_pChildren[index].get(); }
 
 		void MarkForDestroy() { m_IsMarkedForDestroy = true; }
 		bool IsMarkedForDestroy() const { return m_IsMarkedForDestroy; }
@@ -71,8 +72,10 @@ namespace dae
 
 	private:
 		bool IsChild(const GameObject* candidate) const;
-		void AddChild(GameObject* child);
-		void RemoveChild(GameObject* child);
+		// Takes ownership of the child
+		void AddChild(std::unique_ptr<GameObject> child);
+		// Releases ownership and returns the child
+		std::unique_ptr<GameObject> RemoveChild(GameObject* child);
 
 		void UpdateWorldPosition() const;
 		void SetPositionDirty();
@@ -81,7 +84,9 @@ namespace dae
 		std::vector<std::unique_ptr<Component>> m_pComponents{};
 		bool m_IsMarkedForDestroy{ false };
 
+		// Non-owning: parent owns this object (via m_pChildren)
 		GameObject* m_pParent{ nullptr };
-		std::vector<GameObject*> m_pChildren{}; 
+		// Owning: this object owns its children
+		std::vector<std::unique_ptr<GameObject>> m_pChildren{};
 	};
 }
