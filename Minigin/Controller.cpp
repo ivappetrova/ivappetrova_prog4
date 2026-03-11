@@ -1,5 +1,7 @@
 #include "Controller.h"
 
+#if defined(_WIN32) // for emscripten-> windows implementation
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <Xinput.h>
@@ -24,29 +26,24 @@ namespace dae
 
 			m_IsConnected = (XInputGetState(m_ControllerIndex, &m_CurrentState) == ERROR_SUCCESS);
 
-			// XOR previous and current to find changed buttons
-			const WORD buttonChanges = m_CurrentState.Gamepad.wButtons ^ m_PreviousState.Gamepad.wButtons;
-
-			// Changed AND currently down = pressed this frame
-			m_ButtonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
-
-			// Changed AND currently up = released this frame
-			m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
+			const WORD BUTTON_CHANGES = m_CurrentState.Gamepad.wButtons ^ m_PreviousState.Gamepad.wButtons;
+			m_ButtonsPressedThisFrame = BUTTON_CHANGES & m_CurrentState.Gamepad.wButtons;
+			m_ButtonsReleasedThisFrame = BUTTON_CHANGES & ~m_CurrentState.Gamepad.wButtons;
 		}
 
 		bool IsDown(unsigned int button)    const 
 		{ 
-			return m_ButtonsPressedThisFrame & button; 
+			return (m_ButtonsPressedThisFrame & button) != 0; 
 		}
 
 		bool IsUp(unsigned int button)      const 
-		{
-			return m_ButtonsReleasedThisFrame & button; 
+		{ 
+			return (m_ButtonsReleasedThisFrame & button) != 0; 
 		}
 
 		bool IsPressed(unsigned int button) const 
 		{ 
-			return m_CurrentState.Gamepad.wButtons & button; 
+			return (m_CurrentState.Gamepad.wButtons & button) != 0; 
 		}
 
 		bool IsConnected() const 
@@ -62,7 +59,43 @@ namespace dae
 		WORD          m_ButtonsReleasedThisFrame{};
 		bool          m_IsConnected{ false };
 	};
+}
 
+#else // Non-Windows
+namespace dae
+{
+	class Controller::ControllerImpl
+	{
+	public:
+		explicit ControllerImpl(unsigned int) {}
+		void Update() {}
+		bool IsDown(unsigned int) const 
+		{ 
+			return false; 
+		}
+
+		bool IsUp(unsigned int) const 
+		{ 
+			return false; 
+		}
+
+		bool IsPressed(unsigned int) const 
+		{ 
+			return false; 
+		}
+
+		bool IsConnected() const 
+		{ 
+			return false; 
+		}
+	};
+}
+
+#endif
+
+// Controller forwarding methods for all platforms
+namespace dae
+{
 	Controller::Controller(unsigned int controllerIndex)
 		: m_pImpl(std::make_unique<ControllerImpl>(controllerIndex))
 	{
