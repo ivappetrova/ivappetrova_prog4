@@ -15,6 +15,7 @@
 #include "InputManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "DeltaTime.h"
 
 #include <thread>
 #include <chrono>
@@ -110,6 +111,7 @@ void dae::Minigin::RunOneFrame()
 	const auto CURRENT_FRAME = clock::now();
 	const float DELTA_TIME = std::chrono::duration<float>(CURRENT_FRAME - m_LastTime).count();
 	m_LastTime = CURRENT_FRAME;
+	DeltaTime::Set(DELTA_TIME);
 
 	m_Lag += DELTA_TIME;
 

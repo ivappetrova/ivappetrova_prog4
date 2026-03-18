@@ -82,16 +82,16 @@ static void load()
 	dae::GameObject* pChar1 = character1.get();
 	scene.Add(std::move(character1));
 
-	const float SPEED1 = 2.f;
+	const float SPEED1 = 50.f;
 
 	input.BindKeyboardCommand(SDL_SCANCODE_W, dae::InputManager::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar1, 0.f, -SPEED1));
+								std::make_unique<dae::MoveCommand>(pChar1, 0.f, -1.f, SPEED1));
 	input.BindKeyboardCommand(SDL_SCANCODE_S, dae::InputManager::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar1, 0.f, SPEED1));
+								std::make_unique<dae::MoveCommand>(pChar1, 0.f, 1.f, SPEED1));
 	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar1, -SPEED1, 0.f));
+								std::make_unique<dae::MoveCommand>(pChar1, -1.f, 0.f, SPEED1));
 	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar1, SPEED1, 0.f));
+								std::make_unique<dae::MoveCommand>(pChar1, 1.f, 0.f, SPEED1));
 
 	///////////// Bobble
 	auto character2 = std::make_unique<dae::GameObject>();
@@ -103,13 +103,13 @@ static void load()
 	const float SPEED2 = SPEED1 * 2.f;  
 
 	input.BindControllerCommand(0, dae::Controller::Button::DPadUp, dae::Controller::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar2, 0.f, -SPEED2));
+								std::make_unique<dae::MoveCommand>(pChar2, 0.f, -1.f, SPEED2));
 	input.BindControllerCommand(0, dae::Controller::Button::DPadDown, dae::Controller::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar2, 0.f, SPEED2));
+								std::make_unique<dae::MoveCommand>(pChar2, 0.f, 1.f, SPEED2));
 	input.BindControllerCommand(0, dae::Controller::Button::DPadLeft, dae::Controller::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar2, -SPEED2, 0.f));
+								std::make_unique<dae::MoveCommand>(pChar2, -1.f, 0.f, SPEED2));
 	input.BindControllerCommand(0, dae::Controller::Button::DPadRight, dae::Controller::KeyState::Pressed,
-								std::make_unique<dae::MoveCommand>(pChar2, SPEED2, 0.f));
+								std::make_unique<dae::MoveCommand>(pChar2, 1.f, 0.f, SPEED2));
 }
 
 

@@ -85,7 +85,9 @@ namespace dae
 			}
 
 			if (triggered)
+			{
 				binding.command->Execute();
+			}
 		}
 
 		return true;
