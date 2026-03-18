@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Subject.h"
 #include "Event.h"
+#include "PlayerPointsComponent.h"
 
 namespace dae
 {
@@ -12,18 +13,25 @@ namespace dae
 			: Component(owner), m_HP(maxHP), m_MaxHP(maxHP) {
 		}
 
-		void TakeDamage(int damage)
+		void TakeDamage(int damage, GameObject* attacker = nullptr)
 		{
 			if (m_HP <= 0) return;
 			m_HP -= damage;
+
 			if (m_HP <= 0)
 			{
 				m_HP = 0;
 				NotifyObservers(Event{ EVENT_PLAYER_DIED }, GetOwner());
+				if (attacker)
+					if (auto* pts = attacker->GetComponent<PlayerPointsComponent>())
+						pts->AddPoints(200);
 			}
 			else
 			{
 				NotifyObservers(Event{ EVENT_PLAYER_HIT }, GetOwner());
+				if (attacker)
+					if (auto* pts = attacker->GetComponent<PlayerPointsComponent>())
+						pts->AddPoints(50);
 			}
 		}
 

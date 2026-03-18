@@ -33,6 +33,9 @@ namespace dae
 	// Pre-defined event IDs
 	inline constexpr EventId EVENT_PLAYER_DIED = make_sdbm_hash("PlayerDied");
 	inline constexpr EventId EVENT_PLAYER_HIT = make_sdbm_hash("PlayerHit");
+	inline constexpr EventId EVENT_PLAYER_GET_POINTS = make_sdbm_hash("PlayerGetPoints");
+	inline constexpr EventId EVENT_ENEMY_HIT = make_sdbm_hash("EnemyHit");
+	inline constexpr EventId EVENT_ENEMY_DIED = make_sdbm_hash("EnemyDied");
 
 	struct Event
 	{
