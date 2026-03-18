@@ -70,20 +70,31 @@ static void load()
 	auto& input = dae::InputManager::GetInstance();
 
 	auto fontInstructions = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+	auto fontName = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 30);
 
 
 	////////////////////// Bubble
 
 	// Instructions
 	auto bubbleInstructions = std::make_unique<dae::GameObject>();
-	bubbleInstructions->SetLocalPosition(10, 70);
-	bubbleInstructions->AddComponent<dae::TextComponent>("Use WASD to move Bubble", fontInstructions);
+	bubbleInstructions->SetLocalPosition(10, 60);
+	bubbleInstructions->AddComponent<dae::TextComponent>("Bubble", fontName);
 	scene.Add(std::move(bubbleInstructions));
 
+	auto bubbleMoveInstructions = std::make_unique<dae::GameObject>();
+	bubbleMoveInstructions->SetLocalPosition(10, 100);
+	bubbleMoveInstructions->AddComponent<dae::TextComponent>("Move: WASD", fontInstructions);
+	scene.Add(std::move(bubbleMoveInstructions));
+
 	auto bubbleDmgInstructions = std::make_unique<dae::GameObject>();
-	bubbleDmgInstructions->SetLocalPosition(10, 100);
-	bubbleDmgInstructions->AddComponent<dae::TextComponent>("Use P to deal dmg to Bubble", fontInstructions);
+	bubbleDmgInstructions->SetLocalPosition(10, 130);
+	bubbleDmgInstructions->AddComponent<dae::TextComponent>("Deal Dmg: O", fontInstructions);
 	scene.Add(std::move(bubbleDmgInstructions));
+
+	auto bubblePickUpInstructions = std::make_unique<dae::GameObject>();
+	bubblePickUpInstructions->SetLocalPosition(10, 160);
+	bubblePickUpInstructions->AddComponent<dae::TextComponent>("Pick Up: P", fontInstructions);
+	scene.Add(std::move(bubblePickUpInstructions));
 
 	// Player initialization
 	auto character1 = std::make_unique<dae::GameObject>();
@@ -96,7 +107,7 @@ static void load()
 
 	// Lives display
 	auto livesGo = std::make_unique<dae::GameObject>();
-	livesGo->SetLocalPosition(10, 130);
+	livesGo->SetLocalPosition(10, 190);
 	livesGo->AddComponent<dae::TextComponent>("Lives: 3", fontInstructions);
 	auto* pLivesDisplay = livesGo->AddComponent<dae::LivesDisplayComponent>(3);
 	scene.Add(std::move(livesGo));
@@ -105,7 +116,7 @@ static void load()
 
 	// Died display
 	auto diedGo = std::make_unique<dae::GameObject>();
-	diedGo->SetLocalPosition(10, 160);
+	diedGo->SetLocalPosition(10, 220);
 	diedGo->AddComponent<dae::TextComponent>("", fontInstructions);
 	auto* pDiedDisplay = diedGo->AddComponent<dae::PlayerDiedDisplayComponent>();
 	scene.Add(std::move(diedGo));
@@ -117,7 +128,7 @@ static void load()
 
 	// Points display
 	auto pointsGo = std::make_unique<dae::GameObject>();
-	pointsGo->SetLocalPosition(10, 190);
+	pointsGo->SetLocalPosition(10, 250);
 	pointsGo->AddComponent<dae::TextComponent>("Points: 0", fontInstructions);
 	auto* pPointsDisplay = pointsGo->AddComponent<dae::PointsDisplayComponent>();
 	scene.Add(std::move(pointsGo));
@@ -129,14 +140,24 @@ static void load()
 
 	// Instructions
 	auto bobbleInstructions = std::make_unique<dae::GameObject>();
-	bobbleInstructions->SetLocalPosition(500, 70);
-	bobbleInstructions->AddComponent<dae::TextComponent>("Use D-Pad to move Bobble", fontInstructions);
+	bobbleInstructions->SetLocalPosition(500, 60);
+	bobbleInstructions->AddComponent<dae::TextComponent>("Bobble", fontName);
 	scene.Add(std::move(bobbleInstructions));
 
+	auto bobbleMoveInstructions = std::make_unique<dae::GameObject>();
+	bobbleMoveInstructions->SetLocalPosition(500, 100);
+	bobbleMoveInstructions->AddComponent<dae::TextComponent>("Move: D-Pad", fontInstructions);
+	scene.Add(std::move(bobbleMoveInstructions));
+
 	auto bobbleDmgInstructions = std::make_unique<dae::GameObject>();
-	bobbleDmgInstructions->SetLocalPosition(500, 100);
-	bobbleDmgInstructions->AddComponent<dae::TextComponent>("Use A (gamepad) to deal dmg to Bubble", fontInstructions);
+	bobbleDmgInstructions->SetLocalPosition(500, 130);
+	bobbleDmgInstructions->AddComponent<dae::TextComponent>("Deal Dmg: X (gamepad)", fontInstructions);
 	scene.Add(std::move(bobbleDmgInstructions));
+
+	auto bobblePickUpInstructions = std::make_unique<dae::GameObject>();
+	bobblePickUpInstructions->SetLocalPosition(500, 160);
+	bobblePickUpInstructions->AddComponent<dae::TextComponent>("Pick Up: A (gamepad)", fontInstructions);
+	scene.Add(std::move(bobblePickUpInstructions));
 
 	// Player initialization
 	auto character2 = std::make_unique<dae::GameObject>();
@@ -149,7 +170,7 @@ static void load()
 
 	// Lives display
 	auto livesGo2 = std::make_unique<dae::GameObject>();
-	livesGo2->SetLocalPosition(500, 130);
+	livesGo2->SetLocalPosition(500, 190);
 	livesGo2->AddComponent<dae::TextComponent>("Lives: 3", fontInstructions);
 	auto* pLivesDisplay2 = livesGo2->AddComponent<dae::LivesDisplayComponent>(3);
 	scene.Add(std::move(livesGo2));
@@ -158,7 +179,7 @@ static void load()
 	
 	// Died display
 	auto diedGo2 = std::make_unique<dae::GameObject>();
-	diedGo2->SetLocalPosition(500, 160);
+	diedGo2->SetLocalPosition(500, 220);
 	diedGo2->AddComponent<dae::TextComponent>("", fontInstructions);
 	auto* pDiedDisplay2 = diedGo2->AddComponent<dae::PlayerDiedDisplayComponent>();
 	scene.Add(std::move(diedGo2));
@@ -170,7 +191,7 @@ static void load()
 
 	// Points display
 	auto pointsGo2 = std::make_unique<dae::GameObject>();
-	pointsGo2->SetLocalPosition(500, 190);
+	pointsGo2->SetLocalPosition(500, 250);
 	pointsGo2->AddComponent<dae::TextComponent>("Points: 0", fontInstructions);
 	auto* pPointsDisplay2 = pointsGo2->AddComponent<dae::PointsDisplayComponent>();
 	scene.Add(std::move(pointsGo2));

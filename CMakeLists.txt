@@ -40,7 +40,10 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Subject.h
   Minigin/HealthComponent.h 
   Minigin/LivesDisplayComponent.h 
-  Minigin/PlayerDiedDisplayComponent.h "Minigin/PickUpCommand.h" "Minigin/PlayerPointsComponent.h" "Minigin/PointsDisplayComponent.h")
+  Minigin/PlayerDiedDisplayComponent.h 
+  Minigin/PickUpCommand.h 
+  Minigin/PlayerPointsComponent.h 
+  Minigin/PointsDisplayComponent.h)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
