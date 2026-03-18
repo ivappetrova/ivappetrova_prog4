@@ -16,6 +16,12 @@ void dae::TextComponent::Update(float)
 {
 	if (m_NeedsUpdate)
 	{
+		if (m_Text.empty())
+		{
+			m_NeedsUpdate = false;
+			return;
+		}
+
 		const auto SURFACE = TTF_RenderText_Blended(m_pFont->GetFont(), m_Text.c_str(), m_Text.length(), m_Color);
 		if (!SURFACE)
 		{

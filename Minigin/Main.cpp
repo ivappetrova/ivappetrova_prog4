@@ -17,6 +17,10 @@
 #include "MoveCommand.h"
 #include "Controller.h"
 #include "InputManager.h"
+#include "DealDamageCommand.h"
+#include "HealthComponent.h"
+#include "LivesDisplayComponent.h"
+#include "PlayerDiedDisplayComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -58,31 +62,51 @@ static void load()
 	//scene.Add(std::move(pivot));
 
 
-	////////////////////////////////////////////////// Week 04 - Input
+	////////////////////////////////////////////////// Week 04 - Input & Week 05 - Observer and Event Queue
 
 	auto& input = dae::InputManager::GetInstance();
 
 	auto fontInstructions = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
+
+	////////////////////// Bubble
 	auto bubbleInstructions = std::make_unique<dae::GameObject>();
-	bubbleInstructions->SetLocalPosition(10, 100);
+	bubbleInstructions->SetLocalPosition(10, 70);
 	bubbleInstructions->AddComponent<dae::TextComponent>("Use WASD to move Bubble", fontInstructions);
 	scene.Add(std::move(bubbleInstructions));
 
-	auto bobbleInstructions = std::make_unique<dae::GameObject>();
-	bobbleInstructions->SetLocalPosition(10, 130);
-	bobbleInstructions->AddComponent<dae::TextComponent>("Use D-Pad to move Bobble", fontInstructions);
-	scene.Add(std::move(bobbleInstructions));
+	auto bubbleDmgInstructions = std::make_unique<dae::GameObject>();
+	bubbleDmgInstructions->SetLocalPosition(10, 100);
+	bubbleDmgInstructions->AddComponent<dae::TextComponent>("Use P to deal dmg to Bubble", fontInstructions);
+	scene.Add(std::move(bubbleDmgInstructions));
 
-
-	///////////// Bubble
 	auto character1 = std::make_unique<dae::GameObject>();
 	character1->AddComponent<dae::TextureComponent>()->SetTexture("bubble.png");
-	character1->SetLocalPosition(200, 300);
+	character1->SetLocalPosition(10, 300);
 	dae::GameObject* pChar1 = character1.get();
 	scene.Add(std::move(character1));
 
+	auto* pHealth = pChar1->AddComponent<dae::HealthComponent>(3);
+
+	// Lives display
+	auto livesGo = std::make_unique<dae::GameObject>();
+	livesGo->SetLocalPosition(10, 130);
+	livesGo->AddComponent<dae::TextComponent>("Lives: 3", fontInstructions);
+	auto* pLivesDisplay = livesGo->AddComponent<dae::LivesDisplayComponent>(3);
+	scene.Add(std::move(livesGo));
+
+	pHealth->AddObserver(pLivesDisplay);
+
+	auto diedGo = std::make_unique<dae::GameObject>();
+	diedGo->SetLocalPosition(10, 160);
+	diedGo->AddComponent<dae::TextComponent>("", fontInstructions);
+	auto* pDiedDisplay = diedGo->AddComponent<dae::PlayerDiedDisplayComponent>();
+	scene.Add(std::move(diedGo));
+
+	pHealth->AddObserver(pDiedDisplay);
+
 	const float SPEED1 = 50.f;
+	const int DAMAGE = 1;
 
 	input.BindKeyboardCommand(SDL_SCANCODE_W, dae::InputManager::KeyState::Pressed,
 								std::make_unique<dae::MoveCommand>(pChar1, 0.f, -1.f, SPEED1));
@@ -92,15 +116,47 @@ static void load()
 								std::make_unique<dae::MoveCommand>(pChar1, -1.f, 0.f, SPEED1));
 	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Pressed,
 								std::make_unique<dae::MoveCommand>(pChar1, 1.f, 0.f, SPEED1));
+	input.BindKeyboardCommand(SDL_SCANCODE_P, dae::InputManager::KeyState::Up,
+							    std::make_unique<dae::DealDamageCommand>(pChar1, DAMAGE));
 
-	///////////// Bobble
+	////////////////////// Bobble
+
+	auto bobbleInstructions = std::make_unique<dae::GameObject>();
+	bobbleInstructions->SetLocalPosition(500, 70);
+	bobbleInstructions->AddComponent<dae::TextComponent>("Use D-Pad to move Bobble", fontInstructions);
+	scene.Add(std::move(bobbleInstructions));
+
+	auto bobbleDmgInstructions = std::make_unique<dae::GameObject>();
+	bobbleDmgInstructions->SetLocalPosition(500, 100);
+	bobbleDmgInstructions->AddComponent<dae::TextComponent>("Use A (gamepad) to deal dmg to Bubble", fontInstructions);
+	scene.Add(std::move(bobbleDmgInstructions));
+
 	auto character2 = std::make_unique<dae::GameObject>();
 	character2->AddComponent<dae::TextureComponent>()->SetTexture("bobble.png");
-	character2->SetLocalPosition(400, 300);
+	character2->SetLocalPosition(500, 300);
 	dae::GameObject* pChar2 = character2.get();
 	scene.Add(std::move(character2));
 
-	const float SPEED2 = SPEED1 * 2.f;  
+	auto* pHealth2 = pChar2->AddComponent<dae::HealthComponent>(3);
+
+	// Lives display
+	auto livesGo2 = std::make_unique<dae::GameObject>();
+	livesGo2->SetLocalPosition(500, 130);
+	livesGo2->AddComponent<dae::TextComponent>("Lives: 3", fontInstructions);
+	auto* pLivesDisplay2 = livesGo2->AddComponent<dae::LivesDisplayComponent>(3);
+	scene.Add(std::move(livesGo2));
+
+	pHealth2->AddObserver(pLivesDisplay2);
+
+	auto diedGo2 = std::make_unique<dae::GameObject>();
+	diedGo2->SetLocalPosition(500, 160);
+	diedGo2->AddComponent<dae::TextComponent>("", fontInstructions); 
+	auto* pDiedDisplay2 = diedGo2->AddComponent<dae::PlayerDiedDisplayComponent>();
+	scene.Add(std::move(diedGo2));
+
+	pHealth2->AddObserver(pDiedDisplay2);
+
+	const float SPEED2 = SPEED1 * 2.f;
 
 	input.BindControllerCommand(0, dae::Controller::Button::DPadUp, dae::Controller::KeyState::Pressed,
 								std::make_unique<dae::MoveCommand>(pChar2, 0.f, -1.f, SPEED2));
@@ -110,6 +166,9 @@ static void load()
 								std::make_unique<dae::MoveCommand>(pChar2, -1.f, 0.f, SPEED2));
 	input.BindControllerCommand(0, dae::Controller::Button::DPadRight, dae::Controller::KeyState::Pressed,
 								std::make_unique<dae::MoveCommand>(pChar2, 1.f, 0.f, SPEED2));
+	input.BindControllerCommand(0, dae::Controller::Button::ButtonA, dae::Controller::KeyState::Up,
+								std::make_unique<dae::DealDamageCommand>(pChar2, DAMAGE));
+								
 }
 
 

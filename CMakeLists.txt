@@ -32,7 +32,13 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Component.cpp
   Minigin/RotatorComponent.cpp
   Minigin/Controller.cpp
- "Minigin/MoveCommand.h" "Minigin/DeltaTime.h")
+  Minigin/MoveCommand.h 
+  Minigin/DeltaTime.h 
+  Minigin/DealDamageCommand.h
+  Minigin/Event.h 
+  Minigin/IObserver.h
+  Minigin/Subject.h
+  Minigin/HealthComponent.h "Minigin/LivesDisplayComponent.h" "Minigin/PlayerDiedDisplayComponent.h")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

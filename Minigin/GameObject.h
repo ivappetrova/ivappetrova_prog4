@@ -88,5 +88,6 @@ namespace dae
 		GameObject* m_pParent{ nullptr };
 		// Owning: this object owns its children
 		std::vector<std::unique_ptr<GameObject>> m_pChildren{};
+
 	};
 }
