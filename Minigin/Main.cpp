@@ -24,6 +24,10 @@
 #include "PlayerPointsComponent.h"
 #include "PointsDisplayComponent.h"
 #include "PickUpCommand.h"
+#include "ServiceLocator.h"
+#include "PlaySoundCommand.h"
+#include "SoundSystem.h"
+#include "LoggingSoundSystem.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -35,11 +39,6 @@ static void load()
 	auto bg = std::make_unique<dae::GameObject>();
 	bg->AddComponent<dae::TextureComponent>()->SetTexture("background.png");
 	scene.Add(std::move(bg));
-
-	/*auto logo = std::make_unique<dae::GameObject>();
-	logo->AddComponent<dae::TextureComponent>()->SetTexture("logo.png");
-	logo->SetLocalPosition(358, 180);
-	scene.Add(std::move(logo));*/
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto fpsGo = std::make_unique<dae::GameObject>();
@@ -65,12 +64,36 @@ static void load()
 	//scene.Add(std::move(pivot));
 
 
-	////////////////////////////////////////////////// Week 04 - Input & Week 05 - Observer and Event Queue
+	/////////////////////////////////////////////////////////////////////////////////////////// Test scene 
 
+	// input
 	auto& input = dae::InputManager::GetInstance();
 
+	// text formatting
 	auto fontInstructions = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 	auto fontName = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 30);
+
+	// sound system
+	auto& soundSystem = dae::ServiceLocator::GetSoundSystem();
+
+	const dae::sound_id SND_DEATH = soundSystem.AddSound("Data/sound1.mp3");
+	const dae::sound_id SND_HIT = soundSystem.AddSound("Data/sound2.mp3");
+	const dae::sound_id SND_POINT = soundSystem.AddSound("Data/sound3.mp3");
+	
+	////////////////////// PLAY SOUND COMMANDS
+	input.BindKeyboardCommand(SDL_SCANCODE_1, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
+	input.BindKeyboardCommand(SDL_SCANCODE_2, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_DEATH, 1.0f));
+	input.BindKeyboardCommand(SDL_SCANCODE_3, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
+
+	input.BindKeyboardCommand(SDL_SCANCODE_KP_1, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
+	input.BindKeyboardCommand(SDL_SCANCODE_KP_2, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_DEATH, 1.0f));
+	input.BindKeyboardCommand(SDL_SCANCODE_KP_3, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
 
 
 	////////////////////// Bubble
@@ -88,12 +111,12 @@ static void load()
 
 	auto bubbleDmgInstructions = std::make_unique<dae::GameObject>();
 	bubbleDmgInstructions->SetLocalPosition(10, 130);
-	bubbleDmgInstructions->AddComponent<dae::TextComponent>("Deal Dmg: O", fontInstructions);
+	bubbleDmgInstructions->AddComponent<dae::TextComponent>("Deal Dmg + SOUND: O", fontInstructions);
 	scene.Add(std::move(bubbleDmgInstructions));
 
 	auto bubblePickUpInstructions = std::make_unique<dae::GameObject>();
 	bubblePickUpInstructions->SetLocalPosition(10, 160);
-	bubblePickUpInstructions->AddComponent<dae::TextComponent>("Pick Up: P", fontInstructions);
+	bubblePickUpInstructions->AddComponent<dae::TextComponent>("Pick Up + SOUND: P", fontInstructions);
 	scene.Add(std::move(bubblePickUpInstructions));
 
 	// Player initialization
@@ -151,12 +174,12 @@ static void load()
 
 	auto bobbleDmgInstructions = std::make_unique<dae::GameObject>();
 	bobbleDmgInstructions->SetLocalPosition(500, 130);
-	bobbleDmgInstructions->AddComponent<dae::TextComponent>("Deal Dmg: X (gamepad)", fontInstructions);
+	bobbleDmgInstructions->AddComponent<dae::TextComponent>("Deal Dmg + SOUND: X (gamepad)", fontInstructions);
 	scene.Add(std::move(bobbleDmgInstructions));
 
 	auto bobblePickUpInstructions = std::make_unique<dae::GameObject>();
 	bobblePickUpInstructions->SetLocalPosition(500, 160);
-	bobblePickUpInstructions->AddComponent<dae::TextComponent>("Pick Up: A (gamepad)", fontInstructions);
+	bobblePickUpInstructions->AddComponent<dae::TextComponent>("Pick Up + SOUND: A (gamepad)", fontInstructions);
 	scene.Add(std::move(bobblePickUpInstructions));
 
 	// Player initialization
@@ -214,8 +237,12 @@ static void load()
 							  std::make_unique<dae::MoveCommand>(pChar1, 1.f, 0.f, SPEED1));
 	input.BindKeyboardCommand(SDL_SCANCODE_O, dae::InputManager::KeyState::Up,
 							  std::make_unique<dae::DealDamageCommand>(pChar2, DAMAGE, pChar1));
+	input.BindKeyboardCommand(SDL_SCANCODE_O, dae::InputManager::KeyState::Up,
+							  std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
 	input.BindKeyboardCommand(SDL_SCANCODE_P, dae::InputManager::KeyState::Up,
 							  std::make_unique<dae::PickUpCommand>(pChar1, POINTS));
+	input.BindKeyboardCommand(SDL_SCANCODE_P, dae::InputManager::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
 
 
 	input.BindControllerCommand(0, dae::Controller::Button::DPadUp, dae::Controller::KeyState::Pressed,
@@ -228,9 +255,18 @@ static void load()
 								std::make_unique<dae::MoveCommand>(pChar2, 1.f, 0.f, SPEED2));
 	input.BindControllerCommand(0, dae::Controller::Button::ButtonX, dae::Controller::KeyState::Up,
 							    std::make_unique<dae::DealDamageCommand>(pChar1, DAMAGE, pChar2));
+	input.BindControllerCommand(0, dae::Controller::Button::ButtonX, dae::Controller::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
 	input.BindControllerCommand(0, dae::Controller::Button::ButtonA, dae::Controller::KeyState::Up,
 								std::make_unique<dae::PickUpCommand>(pChar2, POINTS));
+	input.BindControllerCommand(0, dae::Controller::Button::ButtonA, dae::Controller::KeyState::Up,
+		std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
 
+	//////////// SOUND INSTRUCTIONS
+	auto soundInstructions = std::make_unique<dae::GameObject>();
+	soundInstructions->SetLocalPosition(10, 500);
+	soundInstructions->AddComponent<dae::TextComponent>("Click 1/2/3 to test sound", fontName);
+	scene.Add(std::move(soundInstructions));
 								
 }
 
@@ -244,6 +280,13 @@ int main(int, char*[]) {
 		data_location = "../Data/";
 #endif
 	dae::Minigin engine(data_location);
+
+#if _DEBUG
+	dae::ServiceLocator::RegisterSoundSystem( std::make_unique<dae::LoggingSoundSystem>(std::make_unique<dae::SoundSystem>()));
+#else
+	dae::ServiceLocator::RegisterSoundSystem(std::make_unique<dae::SoundSystem>());
+#endif
+
 	engine.Run(load);
     return 0;
 }

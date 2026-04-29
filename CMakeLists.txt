@@ -32,6 +32,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Component.cpp
   Minigin/RotatorComponent.cpp
   Minigin/Controller.cpp
+  Minigin/SoundSystem.cpp
   Minigin/MoveCommand.h 
   Minigin/DeltaTime.h 
   Minigin/DealDamageCommand.h
@@ -43,7 +44,13 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/PlayerDiedDisplayComponent.h 
   Minigin/PickUpCommand.h 
   Minigin/PlayerPointsComponent.h 
-  Minigin/PointsDisplayComponent.h)
+  Minigin/PointsDisplayComponent.h 
+  Minigin/ISoundSystem.h 
+  Minigin/SoundSystem.h
+  Minigin/NullSoundSystem.h
+  Minigin/LoggingSoundSystem.h
+  Minigin/ServiceLocator.h
+  Minigin/PlaySoundCommand.h)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -173,8 +180,8 @@ elseif(WIN32)
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>")
 
-  # Link XInput for controller support (Windows only)
-  target_link_libraries("${TARGET_NAME}" PUBLIC xinput)
+  # Link XInput for controller support and winmm for audio (both built into Windows)
+  target_link_libraries("${TARGET_NAME}" PUBLIC xinput winmm)
 
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
