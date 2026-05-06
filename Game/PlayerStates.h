@@ -19,9 +19,8 @@ namespace dae
 	class IdleState final : public PlayerState
 	{
 	public:
-		void Enter(Player& player) override
+		void Enter(Player& /*player*/) override
 		{
-			player.SetVelocity(0.f, 0.f);
 			std::cout << "Entered IdleState" << std::endl;
 		}
 
@@ -34,9 +33,8 @@ namespace dae
 	class MoveState final : public PlayerState
 	{
 	public:
-		void Enter(Player& player) override
+		void Enter(Player& /*player*/) override
 		{
-			player.SetVelocity(0.f, 0.f);
 			std::cout << "Entered MoveState" << std::endl;
 		}
 
@@ -59,17 +57,15 @@ namespace dae
 	class JumpState final : public PlayerState
 	{
 	public:
-		void Enter(Player& player) override
+		void Enter(Player& /*player*/) override
 		{
-			player.SetVelocity(0.f, 0.f);
 			std::cout << "Entered JumpState" << std::endl;
 		}
 
 		PlayerState* HandleInput(Player& player) override;
 
-		void Update(Player& player, float deltaTime) override
+		void Update(Player& /*player*/, float /*deltaTime*/) override
 		{
-			player.SetVelocity(0.f, 0.f * deltaTime);
 		}
 	};
 
@@ -77,17 +73,15 @@ namespace dae
 	class FallState final : public PlayerState
 	{
 	public:
-		void Enter(Player& player) override
+		void Enter(Player& /*player*/) override
 		{
-			player.SetVelocity(0.f, 0.f);
 			std::cout << "Entered FallState" << std::endl;
 		}
 
 		PlayerState* HandleInput(Player& player) override;
 
-		void Update(Player& player, float deltaTime) override
+		void Update(Player& /*player*/, float /*deltaTime*/) override
 		{
-			player.SetVelocity(0.f, 0.f * deltaTime);
 		}
 
 	};
