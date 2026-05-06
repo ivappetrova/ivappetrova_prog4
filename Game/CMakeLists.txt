@@ -50,11 +50,17 @@ if(EMSCRIPTEN)
     # Use custom toolchain
     set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/EmscriptenToolchain.cmake)
 
-    # Apply flags
+    # Apply flags + force output into the top-level build dir (build-web/)
     set_target_properties(${TARGET_NAME} PROPERTIES
         COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
         LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
-		OUTPUT_NAME "minigin_web"
+        OUTPUT_NAME "minigin_web"
+
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}"
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}"
+        RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}"
+        RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${CMAKE_BINARY_DIR}"
     )
 
     # Copy web files
@@ -62,8 +68,8 @@ if(EMSCRIPTEN)
         COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/web" "$<TARGET_FILE_DIR:${TARGET_NAME}>/"
     )
 
-	# Output as HTML
-    set(CMAKE_EXECUTABLE_SUFFIX ".html")  
+    # Output as HTML
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
 # Windows build
 elseif(WIN32)
