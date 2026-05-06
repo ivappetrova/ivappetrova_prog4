@@ -3,7 +3,7 @@
 # Set target name based on platform
 if(EMSCRIPTEN)
 # Web build
-    set(TARGET_NAME BubbleBobble_web)   
+    set(TARGET_NAME minigin_web)   
     set(TARGET_PARAM)
 else()
 # Desktop build
