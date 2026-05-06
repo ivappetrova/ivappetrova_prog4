@@ -43,18 +43,8 @@ static void SpawnConsole()
 	freopen_s(&f, "CONIN$", "r", stdin);
 }
 #else
-static void SpawnConsole() {} // no-op on non-Windows (incl. web)
+static void SpawnConsole() {}
 #endif
-
-void SpawnConsole()
-{
-	AllocConsole();
-	FILE* f;
-	freopen_s(&f, "CONOUT$", "w", stdout);
-	freopen_s(&f, "CONOUT$", "w", stderr);
-	freopen_s(&f, "CONIN$", "r", stdin);
-}
-//
 
 static dae::GameObject* MakePlayer(
 	dae::Scene& scene,
