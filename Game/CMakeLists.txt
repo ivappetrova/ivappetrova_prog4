@@ -54,6 +54,7 @@ if(EMSCRIPTEN)
     set_target_properties(${TARGET_NAME} PROPERTIES
         COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
         LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
+		OUTPUT_NAME "minigin_web"
     )
 
     # Copy web files
