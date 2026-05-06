@@ -23,7 +23,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
     PlayerPointsComponent.h
     PlaySoundCommand.h
     PointsDisplayComponent.h
-)
+	PlayerState.h
+	Player.cpp 
+	PlayerStates.h )
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE
