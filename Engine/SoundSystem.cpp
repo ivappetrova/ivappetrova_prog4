@@ -1,11 +1,5 @@
 #include "SoundSystem.h"
 
-// Windows MCI
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <mmsystem.h>
-#pragma comment(lib, "winmm.lib")
-
 #include <vector>
 #include <string>
 #include <thread>
@@ -16,6 +10,14 @@
 
 namespace dae
 {
+#if defined(_WIN32)
+
+	// Windows MCI
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+
 	struct AudioClip
 	{
 		std::string filePath;
@@ -23,9 +25,7 @@ namespace dae
 		bool loaded{ false };
 
 		explicit AudioClip(std::string path, std::string al)
-			: filePath(std::move(path)), alias(std::move(al)) 
-		{
-		}
+			: filePath(std::move(path)), alias(std::move(al)) {}
 
 		~AudioClip()
 		{
@@ -36,10 +36,7 @@ namespace dae
 			}
 		}
 
-		bool IsLoaded() const 
-		{ 
-			return loaded; 
-		}
+		bool IsLoaded() const { return loaded; }
 
 		void Load()
 		{
@@ -84,35 +81,34 @@ namespace dae
 		}
 	};
 
-	// -------------------------------------------------------------------------
-	// Play request — placed in the queue by Play()
-	// -------------------------------------------------------------------------
-	struct PlayRequest
+#else
+	// Non-Windows fallback (Emscripten/Linux/macOS):
+	// Build succeeds; sound calls become no-ops (or log once if you prefer).
+	struct AudioClip
 	{
-		sound_id id;
-		float    volume;
+		explicit AudioClip(std::string, std::string) {}
+		bool IsLoaded() const { return true; }
+		void Load() {}
+		void Play(float) {}
 	};
+#endif
 
-	// -------------------------------------------------------------------------
-	// Impl — all MCI state + threading lives here
-	// -------------------------------------------------------------------------
+	struct PlayRequest { sound_id id; float volume; };
+
 	struct SoundSystem::Impl
 	{
 		std::vector<std::unique_ptr<AudioClip>> clips;
-		std::mutex                              clipsMutex;
+		std::mutex clipsMutex;
 
 		std::queue<PlayRequest> requestQueue;
-		std::mutex              queueMutex;
+		std::mutex queueMutex;
 		std::condition_variable cv;
-		bool                    quit{ false };
-		unsigned int            aliasCounter{ 0 };
+		bool quit{ false };
+		unsigned int aliasCounter{ 0 };
 
 		std::thread workerThread;
 
-		Impl()
-		{
-			workerThread = std::thread(&Impl::WorkerLoop, this);
-		}
+		Impl() { workerThread = std::thread(&Impl::WorkerLoop, this); }
 
 		~Impl()
 		{
@@ -125,10 +121,7 @@ namespace dae
 				workerThread.join();
 		}
 
-		std::string MakeAlias()
-		{
-			return "sound" + std::to_string(aliasCounter++);
-		}
+		std::string MakeAlias() { return "sound" + std::to_string(aliasCounter++); }
 
 		void WorkerLoop()
 		{
@@ -176,13 +169,8 @@ namespace dae
 		}
 	};
 
-	// -------------------------------------------------------------------------
-	// SoundSystem public API
-	// -------------------------------------------------------------------------
-
 	SoundSystem::SoundSystem()
-		: m_pImpl(std::make_unique<Impl>())
-	{}
+		: m_pImpl(std::make_unique<Impl>()) {}
 
 	SoundSystem::~SoundSystem() = default;
 
