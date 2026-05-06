@@ -31,7 +31,7 @@
 namespace fs = std::filesystem;
 
 // for debugging, might remove later
-#if defined(_WIN32) && !defined(__EMSCRIPTEN__)
+#if defined(_WIN32) && !defined(__EMSCRIPTEN__) && _DEBUG
 #include <windows.h>
 
 static void SpawnConsole()
@@ -42,8 +42,6 @@ static void SpawnConsole()
 	freopen_s(&f, "CONOUT$", "w", stderr);
 	freopen_s(&f, "CONIN$", "r", stdin);
 }
-#else
-static void SpawnConsole() {}
 #endif
 
 static dae::GameObject* MakePlayer(
