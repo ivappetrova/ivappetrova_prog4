@@ -31,7 +31,20 @@
 namespace fs = std::filesystem;
 
 // for debugging, might remove later
+#if defined(_WIN32) && !defined(__EMSCRIPTEN__)
 #include <windows.h>
+
+static void SpawnConsole()
+{
+	AllocConsole();
+	FILE* f;
+	freopen_s(&f, "CONOUT$", "w", stdout);
+	freopen_s(&f, "CONOUT$", "w", stderr);
+	freopen_s(&f, "CONIN$", "r", stdin);
+}
+#else
+static void SpawnConsole() {} // no-op on non-Windows (incl. web)
+#endif
 
 void SpawnConsole()
 {
@@ -224,7 +237,7 @@ int main(int, char* [])
 #endif
 
 	// for debugging, might remove later
-#if _DEBUG
+#if _DEBUG && defined(_WIN32) && !defined(__EMSCRIPTEN__)
 	SpawnConsole();
 #endif
 
