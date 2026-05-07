@@ -13,7 +13,7 @@ namespace dae
 	{
 	public:
 		GameObject();
-		virtual ~GameObject();
+		~GameObject();
 
 		void Update(float deltaTime);
 		void Render() const;
