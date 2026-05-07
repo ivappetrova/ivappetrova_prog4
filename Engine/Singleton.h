@@ -11,6 +11,7 @@ namespace dae
 			return instance;
 		}
 
+		// Rule of 5
 		virtual ~Singleton() = default;
 		Singleton(const Singleton& other) = delete;
 		Singleton(Singleton&& other) = delete;

@@ -14,6 +14,7 @@ namespace dae
 		void Run(const std::function<void()>& load);
 		void RunOneFrame();
 
+		// Rule of 5
 		Minigin(const Minigin& other) = delete;
 		Minigin(Minigin&& other) = delete;
 		Minigin& operator=(const Minigin& other) = delete;

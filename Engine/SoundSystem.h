@@ -8,11 +8,12 @@ namespace dae
 	{
 	public:
 		SoundSystem();
-		~SoundSystem() override;
+		~SoundSystem();
 
 		sound_id AddSound(const std::string& filePath) override;
 		void Play(sound_id id, float volume) override;
 
+		// Rule of 5
 		SoundSystem(const SoundSystem&) = delete;
 		SoundSystem(SoundSystem&&) = delete;
 		SoundSystem& operator=(const SoundSystem&) = delete;

@@ -16,6 +16,7 @@ namespace dae
 		void Update(float deltaTime);
 		void Render() const;
 
+		// Rule of 5
 		~Scene() = default;
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;

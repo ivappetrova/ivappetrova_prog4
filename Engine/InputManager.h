@@ -34,14 +34,6 @@ namespace dae
 
 		void UnbindAll();
 
-		void Cleanup()
-		{
-			m_ControllerBindings.clear();
-			m_KeyboardBindings.clear();
-			for (auto& ctrl : m_pControllers)
-				ctrl.reset();
-		}
-
 	private:
 		friend class Singleton<InputManager>;
 		InputManager() = default;

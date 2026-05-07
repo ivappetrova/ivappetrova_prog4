@@ -8,8 +8,6 @@ namespace dae
 	class Subject
 	{
 	public:
-		virtual ~Subject() = default;
-
 		void AddObserver(IObserver* observer)
 		{
 			m_pObservers.push_back(observer);

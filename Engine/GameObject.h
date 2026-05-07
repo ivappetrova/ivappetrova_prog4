@@ -13,7 +13,7 @@ namespace dae
 	{
 	public:
 		GameObject();
-		~GameObject();
+		virtual ~GameObject();
 
 		void Update(float deltaTime);
 		void Render() const;
@@ -65,6 +65,7 @@ namespace dae
 				m_pComponents.end());
 		}
 
+		// Rule of 5
 		GameObject(const GameObject&) = delete;
 		GameObject(GameObject&&) = delete;
 		GameObject& operator=(const GameObject&) = delete;

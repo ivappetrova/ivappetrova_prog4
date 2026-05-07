@@ -12,8 +12,9 @@ namespace dae
 	public:
 		TTF_Font* GetFont() const;
 		explicit Font(const std::string& fullPath, float size);
-		~Font();
+		virtual ~Font();
 
+		// Rule of 5
 		Font(const Font &) = delete;
 		Font(Font &&) = delete;
 		Font & operator= (const Font &) = delete;

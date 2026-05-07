@@ -4,7 +4,7 @@
 namespace dae
 {
 	class GameObject;
-	class GameObjectCommand : public Command
+	class GameObjectCommand: public Command
 	{
 	public:
 		explicit GameObjectCommand(GameObject* gameObject) : m_pGameObject(gameObject) {}

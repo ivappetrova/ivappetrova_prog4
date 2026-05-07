@@ -32,7 +32,7 @@ namespace dae
 		};
 
 		explicit Controller(unsigned int controllerIndex);
-		~Controller();
+		virtual ~Controller();
 
 		void Update();
 

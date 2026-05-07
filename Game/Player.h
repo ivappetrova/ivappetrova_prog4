@@ -40,6 +40,13 @@ namespace dae
 		void ChangeState(PlayerState* newState);
 		const char* GetCurrentStateName() const;
 
+
+		// Rule of 5
+		Player(const Player&) = delete;
+		Player(Player&&) = delete;
+		Player& operator=(const Player&) = delete;
+		Player& operator=(Player&&) = delete;
+
 	private:
 		void InitObserver();
 		void ClearFrameInput();
