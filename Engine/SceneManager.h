@@ -16,6 +16,8 @@ namespace dae
 		void Update(float deltaTime);
 		void Render();
 		void FixedUpdate(float fixedDelta);
+
+		void Cleanup() { m_pScenes.clear(); }
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

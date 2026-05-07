@@ -230,5 +230,11 @@ int main(int, char* [])
 #endif
 
 	engine.Run(load);
+
+	dae::InputManager::GetInstance().Cleanup();
+	dae::SceneManager::GetInstance().Cleanup(); 
+	dae::ResourceManager::GetInstance().Cleanup(); 
+	dae::ServiceLocator::RegisterSoundSystem(nullptr);
+
 	return 0;
 }

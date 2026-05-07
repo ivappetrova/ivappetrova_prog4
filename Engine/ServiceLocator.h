@@ -9,16 +9,18 @@ namespace dae
 	class ServiceLocator final
 	{
 	public:
-		[[nodiscard]] static ISoundSystem& GetSoundSystem()
-		{
-			return *m_pSoundSystem;
-		}
-
 		static void RegisterSoundSystem(std::unique_ptr<ISoundSystem> soundSystem)
 		{
-			m_pSoundSystem = soundSystem
-				? std::move(soundSystem)
-				: std::make_unique<NullSoundSystem>();
+			m_pSoundSystem = std::move(soundSystem);
+		}
+
+		[[nodiscard]] static ISoundSystem& GetSoundSystem()
+		{
+			if (!m_pSoundSystem)
+			{
+				m_pSoundSystem = std::make_unique<NullSoundSystem>();
+			}
+			return *m_pSoundSystem;
 		}
 
 		ServiceLocator() = delete;
