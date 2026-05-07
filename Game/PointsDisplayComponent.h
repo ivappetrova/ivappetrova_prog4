@@ -1,9 +1,12 @@
-#pragma once
+#ifndef POINTSDISPLAYCOMPONENT_H
+#define POINTSDISPLAYCOMPONENT_H
+
+#include <string>
+
 #include "Component.h"
 #include "IObserver.h"
 #include "TextComponent.h"
 #include "Event.h"
-#include <string>
 
 namespace dae
 {
@@ -37,3 +40,4 @@ namespace dae
 		}
 	};
 }
+#endif

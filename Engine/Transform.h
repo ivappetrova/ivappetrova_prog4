@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
+
 #include <glm/glm.hpp>
 
 namespace dae
@@ -21,3 +23,4 @@ namespace dae
 		mutable bool m_IsDirty{ true };      
 	};
 }
+#endif

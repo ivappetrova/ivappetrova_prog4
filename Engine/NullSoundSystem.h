@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NULLSOUNDSYSTEM_H
+#define NULLSOUNDSYSTEM_H
+
 #include "ISoundSystem.h"
 
 namespace dae
@@ -10,3 +12,4 @@ namespace dae
 		void Play(sound_id, float) override {}
 	};
 }
+#endif

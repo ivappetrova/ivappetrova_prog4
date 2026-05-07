@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MINIGIN_H
+#define MINIGIN_H
+
 #include <string>
 #include <functional>
 #include <filesystem>
@@ -28,3 +30,4 @@ namespace dae
 		static constexpr float m_FixedTimeStep{ 1.0f / 60.0f };
 	};
 }
+#endif

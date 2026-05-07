@@ -1,6 +1,9 @@
-#pragma once
-#include "ISoundSystem.h"
+#ifndef SOUNDSYSTEM_H
+#define SOUNDSYSTEM_H
+
 #include <memory>
+
+#include "ISoundSystem.h"
 
 namespace dae
 {
@@ -24,3 +27,4 @@ namespace dae
 		std::unique_ptr<Impl> m_pImpl;
 	};
 }
+#endif

@@ -1,7 +1,10 @@
-#pragma once
-#include "ISoundSystem.h"
+#ifndef LOGGINGSOUNDSYSTEM_H
+#define LOGGINGSOUNDSYSTEM_H
+
 #include <memory>
 #include <iostream>
+
+#include "ISoundSystem.h"
 
 namespace dae
 {
@@ -28,3 +31,4 @@ namespace dae
 		std::unique_ptr<ISoundSystem> m_pWrapped;
 	};
 }
+#endif

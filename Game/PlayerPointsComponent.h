@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLAYERPOINTSCOMPONENT_H
+#define PLAYERPOINTSCOMPONENT_H
+
 #include "Component.h"
 #include "Subject.h"
 #include "Event.h"
@@ -26,3 +28,4 @@ namespace dae
 		int m_Points;
 	};
 }
+#endif

@@ -1,8 +1,11 @@
-#pragma once
+#ifndef PLAYERSTATES_H
+#define PLAYERSTATES_H
+
+#include <iostream>
+
 #include "PlayerState.h"
 #include "Player.h"
 #include "GameObject.h"
-#include <iostream>
 
 namespace dae
 {
@@ -111,9 +114,13 @@ namespace dae
 			if (m_Timer <= 0.f)
 			{
 				if (m_WasMoving && player.GetMoveDirX() != 0.f)
+				{
 					player.ChangeState(new MoveState{});
+				}
 				else
+				{
 					player.ChangeState(new IdleState{});
+				}
 			}
 		}
 
@@ -149,7 +156,9 @@ namespace dae
 
 			m_Timer -= deltaTime;
 			if (m_Timer <= 0.f)
+			{
 				player.ChangeState(new IdleState{});
+			}
 		}
 
 	private:
@@ -161,31 +170,58 @@ namespace dae
 
 	inline PlayerState* IdleState::HandleInput(Player& player)
 	{
-		if (player.WantsShoot()) return new ShootState{ false };
-		if (player.WantsJump())  return new JumpState{};
-		if (player.GetMoveDirX() != 0.f) return new MoveState{};
+		if (player.WantsShoot())
+		{
+			return new ShootState{ false };
+		}
+		if (player.WantsJump())
+		{
+			return new JumpState{};
+		}
+		if (player.GetMoveDirX() != 0.f)
+		{
+			return new MoveState{};
+		}
 		return nullptr;
 	}
 
 	inline PlayerState* MoveState::HandleInput(Player& player)
 	{
-		if (player.WantsShoot()) return new ShootState{ true };
-		if (player.WantsJump())  return new JumpState{};
-		if (player.GetMoveDirX() == 0.f) return new IdleState{};
+		if (player.WantsShoot())
+		{
+			return new ShootState{ true };
+		}
+		if (player.WantsJump())
+		{
+			return new JumpState{};
+		}
+		if (player.GetMoveDirX() == 0.f)
+		{
+			return new IdleState{};
+		}
 		return nullptr;
 	}
 
 	inline PlayerState* JumpState::HandleInput(Player& player)
 	{
-		if (player.WantsShoot())         return new ShootState{ false };
-		if (player.GetVelocityY() >= 0.f) return new FallState{};
+		if (player.WantsShoot())
+		{
+			return new ShootState{ false };
+		}
+		if (player.GetVelocityY() >= 0.f)
+		{
+			return new FallState{};
+		}
 		return nullptr;
 	}
 
 	inline PlayerState* FallState::HandleInput(Player& player)
 	{
-		if (player.IsGrounded()) return new IdleState{};
+		if (player.IsGrounded())
+		{
+			return new IdleState{};
+		}
 		return nullptr;
 	}
-
 }
+#endif

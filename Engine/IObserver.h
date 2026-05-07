@@ -1,4 +1,6 @@
-#pragma once
+#ifndef IOBSERVER_H
+#define IOBSERVER_H
+
 #include "Event.h"
 
 namespace dae
@@ -11,3 +13,4 @@ namespace dae
 		virtual void Notify(const Event& event, GameObject* actor) = 0;
 	};
 }
+#endif

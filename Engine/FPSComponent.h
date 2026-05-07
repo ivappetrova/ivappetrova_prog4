@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FPSCOMPONENT_H
+#define FPSCOMPONENT_H
+
 #include "Component.h"
 
 namespace dae
@@ -19,3 +21,4 @@ namespace dae
 		float m_FrameCount{};
 	};
 }
+#endif

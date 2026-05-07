@@ -1,4 +1,6 @@
-#pragma once
+#ifndef HEALTHCOMPONENT_H
+#define HEALTHCOMPONENT_H
+
 #include "Component.h"
 #include "Subject.h"
 #include "Event.h"
@@ -43,3 +45,4 @@ namespace dae
 		int m_MaxHP;
 	};
 }
+#endif

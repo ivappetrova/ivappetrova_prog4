@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DEALDAMAGECOMMAND_H
+#define DEALDAMAGECOMMAND_H
+
 #include "GameObjectCommand.h"
 #include "HealthComponent.h"
 
@@ -22,3 +24,4 @@ namespace dae
 		GameObject* m_pAttacker;
 	};
 }
+#endif

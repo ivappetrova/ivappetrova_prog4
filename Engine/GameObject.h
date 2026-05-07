@@ -1,8 +1,11 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
+
 #include <vector>
 #include <memory>
 #include <type_traits>
 #include <glm/glm.hpp>
+
 #include "Transform.h"
 
 namespace dae
@@ -92,3 +95,4 @@ namespace dae
 
 	};
 }
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
 #include <memory>
 
 namespace dae
@@ -51,3 +53,4 @@ namespace dae
 		std::unique_ptr<ControllerImpl> m_pImpl;
 	};
 }
+#endif

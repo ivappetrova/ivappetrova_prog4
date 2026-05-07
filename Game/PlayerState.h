@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYERSTATE_H
+#define PLAYERSTATE_H
 
 namespace dae
 {
@@ -22,5 +23,5 @@ namespace dae
 	protected:
 		PlayerState() = default;
 	};
-
 } 
+#endif

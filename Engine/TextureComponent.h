@@ -1,6 +1,9 @@
-#pragma once
+#ifndef TEXTURECOMPONENT_H
+#define TEXTURECOMPONENT_H
+
 #include <memory>
 #include <string>
+
 #include "Component.h"
 
 namespace dae
@@ -16,3 +19,4 @@ namespace dae
 		std::shared_ptr<Texture2D> m_pTexture{};
 	};
 }
+#endif

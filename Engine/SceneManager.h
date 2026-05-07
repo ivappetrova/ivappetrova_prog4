@@ -1,7 +1,10 @@
-#pragma once
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
+
 #include <vector>
 #include <string>
 #include <memory>
+
 #include "Scene.h"
 #include "Singleton.h"
 
@@ -23,3 +26,4 @@ namespace dae
 		std::vector<std::unique_ptr<Scene>> m_pScenes{};
 	};
 }
+#endif

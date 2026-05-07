@@ -1,7 +1,10 @@
-#pragma once
+#ifndef SCENE_H
+#define SCENE_H
+
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "GameObject.h"
 
 namespace dae
@@ -30,5 +33,5 @@ namespace dae
 		explicit Scene() = default;
 		std::vector < std::unique_ptr<GameObject>> m_pObjects{};
 	};
-
 }
+#endif

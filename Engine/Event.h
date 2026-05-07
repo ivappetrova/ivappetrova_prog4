@@ -1,4 +1,6 @@
-#pragma once
+#ifndef EVENT_H
+#define EVENT_H
+
 #include <cstdint>
 #include <cstddef> 
 
@@ -6,7 +8,6 @@ namespace dae
 {
 	using EventId = unsigned int;
 
-	// Compile-time SDBM hash (from the slides)
 	template <int length> struct sdbm_hash
 	{
 		consteval static unsigned int _calculate(const char* const text, unsigned int& value)
@@ -44,3 +45,4 @@ namespace dae
 		explicit Event(EventId _id) : id{ _id } {}
 	};
 }
+#endif

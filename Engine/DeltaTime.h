@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DELTATIME_H
+#define DELTATIME_H
 
 namespace dae
 {
@@ -14,3 +15,4 @@ namespace dae
 		static inline float m_DeltaTime{ 0.f };
 	};
 }
+#endif

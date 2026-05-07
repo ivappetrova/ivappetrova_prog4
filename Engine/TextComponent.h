@@ -1,7 +1,10 @@
-#pragma once
+#ifndef TEXTCOMPONENT_H
+#define TEXTCOMPONENT_H
+
 #include <string>
 #include <memory>
 #include <SDL3/SDL.h>
+
 #include "Component.h"
 
 namespace dae
@@ -24,3 +27,4 @@ namespace dae
 		std::shared_ptr<Texture2D> m_pTextTexture{};
 	};
 }
+#endif

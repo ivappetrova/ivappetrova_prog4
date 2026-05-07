@@ -1,8 +1,11 @@
-#pragma once
+#ifndef INPUTMANAGER_H
+#define INPUTMANAGER_H
+
 #include <memory>
 #include <vector>
 #include <map>
 #include <SDL3/SDL.h>
+
 #include "Singleton.h"
 #include "Controller.h"
 #include "Command.h"
@@ -67,3 +70,4 @@ namespace dae
 		std::vector<SDL_Scancode> m_KeysUpThisFrame;
 	};
 }
+#endif

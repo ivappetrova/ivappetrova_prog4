@@ -1,4 +1,6 @@
-#pragma	once
+#ifndef GAMEOBJECTCOMMAND_H
+#define GAMEOBJECTCOMMAND_H
+
 #include "Command.h"
 
 namespace dae
@@ -23,3 +25,4 @@ namespace dae
 		GameObject* m_pGameObject;
 	};
 }
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PICKUPCOMMAND_H
+#define PICKUPCOMMAND_H
+
 #include "GameObjectCommand.h"
 #include "GameObject.h"
 #include "PlayerPointsComponent.h"
@@ -16,10 +18,13 @@ namespace dae
 		void Execute() override
 		{
 			if (auto* points = GetGameObject()->GetComponent<PlayerPointsComponent>())
+			{
 				points->AddPoints(m_Points);
+			}
 		}
 
 	private:
 		int m_Points;
 	};
 }
+#endif

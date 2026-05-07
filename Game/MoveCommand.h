@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MOVECOMMAND_H
+#define MOVECOMMAND_H
+
 #include "Command.h"
 #include "GameObject.h"
 #include "Player.h"
@@ -26,3 +28,4 @@ namespace dae
 		float m_DirX;
 	};
 }
+#endif

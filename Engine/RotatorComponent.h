@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ROTATORCOMPONENT_H
+#define ROTATORCOMPONENT_H
+
 #include "Component.h"
 
 namespace dae
@@ -17,3 +19,4 @@ namespace dae
 		const float m_PI{ 3.14159265f };
 	};
 }
+#endif

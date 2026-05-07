@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLAYERDIEDDISPLAYCOMPONENT_H
+#define PLAYERDIEDDISPLAYCOMPONENT_H
+
 #include "Component.h"
 #include "IObserver.h"
 #include "TextComponent.h"
@@ -23,3 +25,4 @@ namespace dae
 		}
 	};
 }
+#endif

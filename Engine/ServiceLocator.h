@@ -1,7 +1,10 @@
-#pragma once
+#ifndef SERVICELOCATOR_H
+#define SERVICELOCATOR_H
+
+#include <memory>
+
 #include "ISoundSystem.h"
 #include "NullSoundSystem.h"
-#include <memory>
 
 namespace dae
 {
@@ -33,3 +36,4 @@ namespace dae
 		};
 	};
 }
+#endif

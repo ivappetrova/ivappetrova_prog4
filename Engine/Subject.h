@@ -1,5 +1,8 @@
-#pragma once
+#ifndef SUBJECT_H
+#define SUBJECT_H
+
 #include <vector>
+
 #include "IObserver.h"
 #include "Event.h"
 
@@ -31,3 +34,4 @@ namespace dae
 		std::vector<IObserver*> m_pObservers;
 	};
 }
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FONT_H
+#define FONT_H
+
 #include <string>
 
 struct TTF_Font;
@@ -23,3 +25,4 @@ namespace dae
 		TTF_Font* m_pFont;
 	};
 }
+#endif

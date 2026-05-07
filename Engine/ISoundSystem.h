@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ISOUNDSYSTEM_H
+#define ISOUNDSYSTEM_H
+
 #include <string>
 
 namespace dae
@@ -15,3 +17,4 @@ namespace dae
 
 	};
 }
+#endif

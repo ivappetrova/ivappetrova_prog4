@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
 namespace dae
 {
@@ -26,3 +27,4 @@ namespace dae
 		GameObject* m_pOwner;
 	};
 }
+#endif

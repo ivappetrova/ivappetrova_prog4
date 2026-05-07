@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include "Component.h"
 #include "IObserver.h"
 #include "Event.h"
@@ -61,5 +63,5 @@ namespace dae
 		float m_VelocityY{ 0.f };
 		bool  m_IsGrounded{ true };
 	};
-
 }
+#endif

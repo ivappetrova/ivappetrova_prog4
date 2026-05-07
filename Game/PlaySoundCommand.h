@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLAYSOUNDCOMMAND_H
+#define PLAYSOUNDCOMMAND_H
+
 #include "Command.h"
 #include "ServiceLocator.h"
 
@@ -22,3 +24,4 @@ namespace dae
 		float    m_Volume;
 	};
 }
+#endif
