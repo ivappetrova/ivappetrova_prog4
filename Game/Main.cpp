@@ -64,6 +64,7 @@ static dae::GameObject* MakePlayer(
 
 	auto livesGO = std::make_unique<dae::GameObject>();
 	livesGO->SetLocalPosition(labelX, 100);
+	livesGO->AddComponent<dae::TextureComponent>();
 	livesGO->AddComponent<dae::TextComponent>("Lives: 3", font);
 	auto* pLivesDisplay = livesGO->AddComponent<dae::LivesDisplayComponent>(3);
 	scene.Add(std::move(livesGO));
@@ -71,6 +72,7 @@ static dae::GameObject* MakePlayer(
 
 	auto diedGO = std::make_unique<dae::GameObject>();
 	diedGO->SetLocalPosition(labelX, 130);
+	diedGO->AddComponent<dae::TextureComponent>();
 	diedGO->AddComponent<dae::TextComponent>("", font);
 	auto* pDiedDisplay = diedGO->AddComponent<dae::PlayerDiedDisplayComponent>();
 	scene.Add(std::move(diedGO));
@@ -78,6 +80,7 @@ static dae::GameObject* MakePlayer(
 
 	auto pointsGO = std::make_unique<dae::GameObject>();
 	pointsGO->SetLocalPosition(labelX, 250);
+	pointsGO->AddComponent<dae::TextureComponent>();
 	pointsGO->AddComponent<dae::TextComponent>("Points: 0", font);
 	auto* pPointsDisplay = pointsGO->AddComponent<dae::PointsDisplayComponent>();
 	scene.Add(std::move(pointsGO));
@@ -99,6 +102,7 @@ static void load()
 
 	auto fpsGo = std::make_unique<dae::GameObject>();
 	fpsGo->SetLocalPosition(10, 10);
+	fpsGo->AddComponent<dae::TextureComponent>();
 	fpsGo->AddComponent<dae::TextComponent>("FPS: 0", font36);
 	fpsGo->AddComponent<dae::FPSComponent>();
 	scene.Add(std::move(fpsGo));
@@ -126,21 +130,25 @@ static void load()
 
 	auto bubbleLabel = std::make_unique<dae::GameObject>();
 	bubbleLabel->SetLocalPosition(10, 60);
+	bubbleLabel->AddComponent<dae::TextureComponent>();
 	bubbleLabel->AddComponent<dae::TextComponent>("Bubble", font20);
 	scene.Add(std::move(bubbleLabel));
 
 	auto bubbleMove = std::make_unique<dae::GameObject>();
 	bubbleMove->SetLocalPosition(10, 160);
+	bubbleMove->AddComponent<dae::TextureComponent>();
 	bubbleMove->AddComponent<dae::TextComponent>("Move: A/D", font20);
 	scene.Add(std::move(bubbleMove));
 
 	auto bubbleDmg = std::make_unique<dae::GameObject>();
 	bubbleDmg->SetLocalPosition(10, 190);
+	bubbleDmg->AddComponent<dae::TextureComponent>();
 	bubbleDmg->AddComponent<dae::TextComponent>("Deal Dmg + Sound: O", font20);
 	scene.Add(std::move(bubbleDmg));
 
 	auto bubblePickup = std::make_unique<dae::GameObject>();
 	bubblePickup->SetLocalPosition(10, 220);
+	bubblePickup->AddComponent<dae::TextureComponent>();
 	bubblePickup->AddComponent<dae::TextComponent>("Pick Up + Sound: P", font20);
 	scene.Add(std::move(bubblePickup));
 
@@ -155,21 +163,25 @@ static void load()
 
 	auto bobbleLabel = std::make_unique<dae::GameObject>();
 	bobbleLabel->SetLocalPosition(500, 60);
+	bobbleLabel->AddComponent<dae::TextureComponent>();
 	bobbleLabel->AddComponent<dae::TextComponent>("Bobble", font20);
 	scene.Add(std::move(bobbleLabel));
 
 	auto bobbleMove = std::make_unique<dae::GameObject>();
 	bobbleMove->SetLocalPosition(500, 160);
+	bobbleMove->AddComponent<dae::TextureComponent>();
 	bobbleMove->AddComponent<dae::TextComponent>("Move: D-Pad Left/Right", font20);
 	scene.Add(std::move(bobbleMove));
 
 	auto bobbleDmg = std::make_unique<dae::GameObject>();
 	bobbleDmg->SetLocalPosition(500, 190);
+	bobbleDmg->AddComponent<dae::TextureComponent>();
 	bobbleDmg->AddComponent<dae::TextComponent>("Deal Dmg + Sound: X (gamepad)", font20);
 	scene.Add(std::move(bobbleDmg));
 
 	auto bobblePickup = std::make_unique<dae::GameObject>();
 	bobblePickup->SetLocalPosition(500, 220);
+	bobblePickup->AddComponent<dae::TextureComponent>();
 	bobblePickup->AddComponent<dae::TextComponent>("Pick Up + Sound: A (gamepad)", font20);
 	scene.Add(std::move(bobblePickup));
 
@@ -199,6 +211,7 @@ static void load()
 
 	auto soundHud = std::make_unique<dae::GameObject>();
 	soundHud->SetLocalPosition(10, 500);
+	soundHud->AddComponent<dae::TextureComponent>();
 	soundHud->AddComponent<dae::TextComponent>("1/2/3 - test sounds", font20);
 	scene.Add(std::move(soundHud));
 }

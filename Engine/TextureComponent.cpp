@@ -20,3 +20,8 @@ void dae::TextureComponent::SetTexture(const std::string& filename)
 {
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
 }
+
+void dae::TextureComponent::SetTexture(std::shared_ptr<Texture2D> texture)
+{
+	m_pTexture = std::move(texture);
+}

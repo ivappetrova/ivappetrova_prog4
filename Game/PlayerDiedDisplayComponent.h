@@ -20,7 +20,9 @@ namespace dae
 			if (event.id == EVENT_PLAYER_DIED)
 			{
 				if (auto* text = GetOwner()->GetComponent<TextComponent>())
+				{ 
 					text->SetText("Player Died!");
+				}
 			}
 		}
 	};

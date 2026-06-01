@@ -7,6 +7,7 @@
 #include "IObserver.h"
 #include "TextComponent.h"
 #include "Event.h"
+#include "PlayerPointsComponent.h"
 
 namespace dae
 {
@@ -23,7 +24,9 @@ namespace dae
 			if (event.id == EVENT_PLAYER_GET_POINTS)
 			{
 				if (auto* pts = actor->GetComponent<PlayerPointsComponent>())
+				{
 					m_Points = pts->GetPoints();
+				}
 				UpdateText();
 			}
 		}
@@ -36,7 +39,9 @@ namespace dae
 		void UpdateText()
 		{
 			if (auto* text = GetOwner()->GetComponent<TextComponent>())
+			{
 				text->SetText("Points: " + std::to_string(m_Points));
+			}
 		}
 	};
 }

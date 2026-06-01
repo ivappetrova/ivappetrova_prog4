@@ -162,7 +162,7 @@ namespace dae
 		}
 
 	private:
-		float m_Timer{ 0.f };
+		float m_Timer{ 0.5f };
 		const float KNOCKBACK_VX = -150.f;
 	};
 

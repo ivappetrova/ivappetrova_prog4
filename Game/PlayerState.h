@@ -14,7 +14,8 @@ namespace dae
 		virtual PlayerState* HandleInput(Player& player) = 0;
 		virtual void Update(Player& player, float deltaTime) = 0;
 		virtual void Exit(Player& /*player*/) {}
-
+		
+		// Rule of 5
 		PlayerState(const PlayerState&) = delete;
 		PlayerState(PlayerState&&) = delete;
 		PlayerState& operator=(const PlayerState&) = delete;

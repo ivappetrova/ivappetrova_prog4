@@ -14,6 +14,7 @@ namespace dae
 		virtual void Render() const {}
 		virtual void FixedUpdate(float /*fixedDelta*/) {}
 
+		// Rule of 5
 		Component(const Component&) = delete;
 		Component(Component&&) = delete;
 		Component& operator=(const Component&) = delete;

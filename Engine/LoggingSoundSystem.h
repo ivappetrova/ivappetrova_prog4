@@ -18,13 +18,15 @@ namespace dae
 
 		sound_id AddSound(const std::string& filePath) override
 		{
-			const sound_id id = m_pWrapped->AddSound(filePath);
-			return id;
+			const sound_id ID = m_pWrapped->AddSound(filePath);
+			std::cout << "[LoggingSoundSystem] AddSound: " << filePath << " -> id: " << ID << std::endl;
+			return ID;
 		}
 
 		void Play(sound_id id, float volume) override
 		{
 			m_pWrapped->Play(id, volume);
+			std::cout << "[LoggingSoundSystem] Play: id=" << id << " volume=" << volume << std::endl;
 		}
 
 	private:
