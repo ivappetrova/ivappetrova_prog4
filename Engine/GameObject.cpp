@@ -15,10 +15,27 @@ dae::GameObject::~GameObject()
 			siblings.end());
 	}
 
-	for (auto& child : m_pChildren)
+	// unique ptr childten are automatically destroyed
+
+	// or
+
+	// keep world pos when the parent is destroyed
+	//for (auto& child : m_pChildren)
+	//{
+	//	child->SetLocalPosition(child->GetWorldPosition());
+	//	child->m_pParent = nullptr;
+	//}
+
+	// or
+
+	// null out children's parent ptr before they get destroyed,
+	// so their destructors don't try to erase from our already-dying vector
+	/*for (auto& child : m_pChildren)
 	{
 		child->m_pParent = nullptr;
-	}
+	}*/
+	// m_pChildren vector destructor now safely destroys all children
+
 }
 
 void dae::GameObject::Update(float deltaTime)

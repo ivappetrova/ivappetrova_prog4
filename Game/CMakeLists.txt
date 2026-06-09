@@ -14,18 +14,28 @@ endif()
 # Create executable with game files
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
     Main.cpp
-    DealDamageCommand.h
-    HealthComponent.h
-    LivesDisplayComponent.h
-    MoveCommand.h
-    PickUpCommand.h
-    PlayerDiedDisplayComponent.h
-    PlayerPointsComponent.h
-    PlaySoundCommand.h
-    PointsDisplayComponent.h
-	PlayerState.h
-	Player.cpp 
-	PlayerStates.h )
+
+	Player.cpp
+	PlayerStates.h
+
+    Components/HealthComponent.h
+    Components/LivesDisplayComponent.h
+    Components/PlayerDiedDisplayComponent.h
+    Components/PlayerPointsComponent.h
+    Components/PointsDisplayComponent.h
+
+	Commands/DealDamageCommand.h
+    Commands/MoveCommand.h
+    Commands/PickUpCommand.h
+    Commands/PlaySoundCommand.h
+	
+	States/PlayerState.h
+	States/IdleState.cpp
+	States/MoveState.cpp
+	States/JumpState.cpp
+	States/FallState.cpp
+	States/ShootState.cpp
+	States/TakeDmgState.cpp)
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE

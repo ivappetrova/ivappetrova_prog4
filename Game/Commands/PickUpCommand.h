@@ -3,7 +3,7 @@
 
 #include "GameObjectCommand.h"
 #include "GameObject.h"
-#include "PlayerPointsComponent.h"
+#include "Components/PlayerPointsComponent.h"
 
 namespace dae
 {

@@ -15,8 +15,6 @@ namespace dae
 		float m_Radius{};
 		float m_Speed{};
 		float m_Angle{};
-
-		const float m_PI{ 3.14159265f };
 	};
 }
 #endif

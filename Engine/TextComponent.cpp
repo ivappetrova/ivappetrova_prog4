@@ -7,11 +7,15 @@
 #include "Texture2D.h"
 #include "GameObject.h"
 
-dae::TextComponent::TextComponent(GameObject* owner, const std::string& text,
-	std::shared_ptr<Font> font, const SDL_Color& color)
+dae::TextComponent::TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color)
 	: Component(owner), m_Text(text), m_Color(color), m_pFont(std::move(font)) 
 {
 	m_pTextureComponent = owner->GetComponent<TextureComponent>();
+
+	if (!m_pTextureComponent)
+	{
+		m_pTextureComponent = owner->AddComponent<TextureComponent>();
+	}
 }
 
 void dae::TextComponent::Update(float)
@@ -38,10 +42,7 @@ void dae::TextComponent::Update(float)
 
 		SDL_DestroySurface(SURFACE);
 
-		if (m_pTextureComponent)
-		{
-			m_pTextureComponent->SetTexture(std::make_shared<Texture2D>(texture));
-		}
+		m_pTextureComponent->SetTexture(std::make_shared<Texture2D>(texture));
 
 		m_NeedsUpdate = false;
 	}

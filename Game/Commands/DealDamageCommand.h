@@ -2,7 +2,7 @@
 #define DEALDAMAGECOMMAND_H
 
 #include "GameObjectCommand.h"
-#include "HealthComponent.h"
+#include "Components/HealthComponent.h"
 
 namespace dae
 {
