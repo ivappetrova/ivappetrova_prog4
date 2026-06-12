@@ -1,5 +1,6 @@
-#ifndef TAKE_DMG_STATE
-#define TAKE_DMG_STATE
+#pragma once
+#ifndef TAKEDMGSTATE_H
+#define TAKEDMGSTATE_H
 
 #include "PlayerState.h"
 
@@ -8,14 +9,16 @@ namespace dae
 	class TakeDmgState final : public PlayerState
 	{
 	public:
-		void Enter(PlayerComponent& PlayerComponent) override;
-		PlayerState* HandleInput(PlayerComponent& PlayerComponent) override;
-		void Update(PlayerComponent& PlayerComponent, float deltaTime) override;
-		void Exit(PlayerComponent& PlayerComponent) override;
+		void Enter(PlayerComponent& player)  override;
+		void Exit(PlayerComponent& player)   override;
+		PlayerState* HandleInput(PlayerComponent& player) override;
+		void Update(PlayerComponent& player, float deltaTime) override;
 
 	private:
-		float m_Timer{ 0.5f };
-		static constexpr float KNOCKBACK_VX{ -150.f };
+		static constexpr float KNOCKBACK_VX{ -200.f };
+		static constexpr float INVINCIBLE_TIME{ 3.f };
+
+		float m_Timer{ INVINCIBLE_TIME };
 	};
 }
 #endif

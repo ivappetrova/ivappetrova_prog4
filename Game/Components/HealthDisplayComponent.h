@@ -14,15 +14,17 @@ namespace dae
 	class HealthDisplayComponent final : public Component, public IObserver
 	{
 	public:
-		HealthDisplayComponent(GameObject* owner, int startingLives = 3)
-			: Component(owner), m_Lives(startingLives) {
+		HealthDisplayComponent(GameObject* owner, HealthComponent* pHealth)
+			: Component(owner), m_Lives(pHealth ? pHealth->GetHP() : 0)
+		{
 		}
 
-		void Notify(const Event& event, GameObject* /*actor*/) override
+		void Notify(const Event& event, GameObject* actor) override
 		{
-			if (event.id == EVENT_PLAYER_HIT || event.id == EVENT_PLAYER_DIED)
+			if ((event.id == EVENT_PLAYER_HIT || event.id == EVENT_PLAYER_DIED) && actor)
 			{
-				--m_Lives;
+				if (auto* health = actor->GetComponent<HealthComponent>())
+					m_Lives = health->GetHP();
 				UpdateText();
 			}
 		}

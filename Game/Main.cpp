@@ -29,6 +29,7 @@
 #include "Commands/MoveCommand.h"
 #include "Commands/JumpCommand.h"
 #include "Commands/ShootCommand.h"
+#include "Commands/SkipLevelCommand.h"
 
 #include "Components/PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
@@ -62,7 +63,7 @@ static dae::GameObject* MakePlayer(dae::Scene& scene, const std::string& texture
 	characterGO->AddComponent<dae::TextureComponent>(60.f, 60.f)->SetTexture(texture);
 	characterGO->SetLocalPosition(startX, startY);
 
-	characterGO->AddComponent<dae::HealthComponent>(3);
+	characterGO->AddComponent<dae::HealthComponent>(4);
 	characterGO->AddComponent<dae::ScoreComponent>();
 	characterGO->AddComponent<dae::PhysicsComponent>(windowHeight);
 	characterGO->AddComponent<dae::PlayerComponent>(150.f, scene);
@@ -84,7 +85,8 @@ static void MakeHUD(dae::Scene& scene, dae::GameObject* pPlayer, float labelX, f
 	// Lives
 	auto livesGO = std::make_unique<dae::GameObject>();
 	livesGO->SetLocalPosition(labelX, labelY);
-	auto* pLivesDisplay = livesGO->AddComponent<dae::HealthDisplayComponent>(4);
+	livesGO->AddComponent<dae::TextComponent>("Lives: 4", font);
+	auto* pLivesDisplay = livesGO->AddComponent<dae::HealthDisplayComponent>(pHealth);
 	scene.Add(std::move(livesGO));
 	if (pHealth) pHealth->AddObserver(pLivesDisplay);
 
@@ -104,25 +106,20 @@ static void load(float windowWidth, float windowHeight)
 	auto font20 = dae::ResourceManager::GetInstance().LoadFont("Fonts/pixelify.ttf", 36);
 
 	auto& soundSystem = dae::ServiceLocator::GetSoundSystem();
-	const dae::sound_id SND_HIT = soundSystem.AddSound("Data/Sounds/sound1.mp3");
-	const dae::sound_id SND_DEATH = soundSystem.AddSound("Data/Sounds/sound2.mp3");
-	const dae::sound_id SND_POINT = soundSystem.AddSound("Data/Sounds/sound3.mp3");
+	const dae::sound_id SOUND_SHOOT = soundSystem.AddSound("Data/Sounds/sound1.mp3");
+	const dae::sound_id SOUND_HIT = soundSystem.AddSound("Data/Sounds/sound2.mp3");
+	const dae::sound_id SOUND_POINT = soundSystem.AddSound("Data/Sounds/sound3.mp3");
 
 	dae::GameObject* pChar1 = MakePlayer(scene, "bubble.png", 100.f, 100.f, windowHeight);
 	MakeHUD(scene, pChar1, 100.f, 100.f, font20);
 
 	auto& input = dae::InputManager::GetInstance();
 
-	input.BindKeyboardCommand(SDL_SCANCODE_1, dae::InputManager::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
-	input.BindKeyboardCommand(SDL_SCANCODE_2, dae::InputManager::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_DEATH, 1.0f));
-	input.BindKeyboardCommand(SDL_SCANCODE_3, dae::InputManager::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
-
-	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Down, std::make_unique<dae::MoveCommand>(pChar1, -1.f));
-	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Up, std::make_unique<dae::MoveCommand>(pChar1, 0.f));
-	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Down, std::make_unique<dae::MoveCommand>(pChar1, 1.f));
-	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Up, std::make_unique<dae::MoveCommand>(pChar1, 0.f));
+	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar1, -1.f));
+	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar1, 1.f));
 	input.BindKeyboardCommand(SDL_SCANCODE_W, dae::InputManager::KeyState::Down, std::make_unique<dae::JumpCommand>(pChar1));
-	input.BindKeyboardCommand(SDL_SCANCODE_K, dae::InputManager::KeyState::Down, std::make_unique<dae::ShootCommand>(pChar1, scene));
+
+	input.BindKeyboardCommand(SDL_SCANCODE_P, dae::InputManager::KeyState::Down, std::make_unique<dae::ShootCommand>(pChar1, scene));
 
 	auto pLoader = std::make_shared<dae::LevelLoader>("Data/enemies.json");
 
@@ -133,7 +130,11 @@ static void load(float windowWidth, float windowHeight)
 		std::vector<dae::GameObject*>{ pChar1 },
 		windowWidth,
 		windowHeight);
+
+	auto* pManagerRaw = managerGO.get();
 	scene.Add(std::move(managerGO));
+	input.BindKeyboardCommand(SDL_SCANCODE_F1, dae::InputManager::KeyState::Up, std::make_unique<dae::SkipLevelCommand>(pManagerRaw));
+
 }
 
 int main(int, char* [])

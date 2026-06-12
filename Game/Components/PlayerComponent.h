@@ -26,7 +26,7 @@ namespace dae
 		void SetShootInput(bool wants);
 
 		// Read by states to decide transitions
-		float GetMoveDirX() const { return m_MoveDirX; }
+		float GetMoveDirX() const;
 		bool  WantsJump()   const { return m_WantsJump; }
 		bool  WantsShoot()  const { return m_WantsShoot; }
 		bool  IsGrounded()  const;
@@ -48,6 +48,12 @@ namespace dae
 		void ChangeState(PlayerState* newState);
 		const char* GetCurrentStateName() const;
 
+		void CheckEnemyCollisions();
+		void TakeDamage() const;
+
+		void  SetInvincible(float duration) { m_InvincibleTimer = duration; }
+		bool  IsInvincible() const { return m_InvincibleTimer > 0.f; }
+
 		// Rule of 5
 		PlayerComponent(const PlayerComponent&) = delete;
 		PlayerComponent(PlayerComponent&&) = delete;
@@ -60,9 +66,11 @@ namespace dae
 		PlayerState* m_pCurrentState{ nullptr };
 		PhysicsComponent* m_pPhysics{ nullptr };
 
-		float m_MoveDirX{ 0.f };
+		bool m_MoveLeft{ false };
+		bool m_MoveRight{ false };
 		bool  m_WantsJump{ false };
 		bool  m_WantsShoot{ false };
+		float m_InvincibleTimer{ 0.f };
 
 		float m_MoveSpeed;
 		Scene& m_Scene;

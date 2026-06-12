@@ -13,6 +13,7 @@ namespace dae
 	class GameObject;
 	class EnemyComponent;
 	class BoxColliderComponent;
+	class PickupComponent;
 
 	class LevelManagerComponent final : public Component
 	{
@@ -26,6 +27,7 @@ namespace dae
 			float                             windowHeight);
 
 		void Update(float deltaTime) override;
+		void SkipLevel();
 
 		// Rule of 5
 		LevelManagerComponent(const LevelManagerComponent&) = delete;
@@ -35,15 +37,17 @@ namespace dae
 
 	private:
 		void LoadLevel(int idx);
-		void CheckCollisions();
+		void SpawnExitPortal();
 
 		Scene& m_Scene;
 		std::shared_ptr<LevelLoader>     m_pLoader;
 		std::vector<GameObject*>         m_Players;
 		std::vector<GameObject*>         m_Enemies;
 		std::vector<GameObject*>         m_LevelObjects;
+		GameObject* m_pExitPortal{ nullptr };
 		int                              m_CurrentLevel{ 0 };
 		bool                             m_Transitioning{ false };
+		bool                             m_PortalSpawned{ false };
 		float                            m_WindowWidth;
 		float                            m_WindowHeight;
 	};

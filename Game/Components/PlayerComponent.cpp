@@ -7,6 +7,10 @@
 #include "TextureComponent.h"
 #include <cassert>
 #include <cmath>
+#include "Components/EnemyComponent.h"
+#include "Components/BoxColliderComponent.h"
+#include "States/TakeDmgState.h"
+#include <iostream>
 
 namespace dae
 {
@@ -41,15 +45,24 @@ namespace dae
 
 		m_pCurrentState->Update(*this, deltaTime);
 
+		CheckEnemyCollisions();
 		m_WantsJump = false;
 		m_WantsShoot = false;
+		m_MoveLeft = false;
+		m_MoveRight = false;
+
+
+		if (m_InvincibleTimer > 0.f)
+		{
+			m_InvincibleTimer -= deltaTime;
+		}	
 	}
 
 	void PlayerComponent::Notify(const Event& event, GameObject* /*actor*/)
 	{
 		if (event.id == EVENT_PLAYER_HIT || event.id == EVENT_PLAYER_DIED)
 		{
-			if (dynamic_cast<TakeDmgState*>(m_pCurrentState) == nullptr)
+			if (!IsInvincible() && dynamic_cast<TakeDmgState*>(m_pCurrentState) == nullptr)
 			{
 				ChangeState(new TakeDmgState{});
 			}
@@ -59,13 +72,24 @@ namespace dae
 	// ── Input ────────────────────────────────────────────────────────────────
 	void PlayerComponent::SetMoveInput(float dirX)
 	{
-		m_MoveDirX = dirX;
-		if (dirX != 0.f)
+		if (dirX > 0.f) m_MoveRight = true;
+		else if (dirX < 0.f) m_MoveLeft = true;
+
+		const float resolved = GetMoveDirX();
+		if (resolved != 0.f)
 			if (auto* tex = GetOwner()->GetComponent<TextureComponent>())
-				tex->FlipX = dirX > 0.f;
+				tex->FlipX = resolved > 0.f;
 	}
+
 	void PlayerComponent::SetJumpInput(bool wants) { if (wants) m_WantsJump = true; }
 	void PlayerComponent::SetShootInput(bool wants) { if (wants) m_WantsShoot = true; }
+
+	float PlayerComponent::GetMoveDirX() const
+	{
+		if (m_MoveRight && !m_MoveLeft) return  1.f;
+		if (m_MoveLeft && !m_MoveRight) return -1.f;
+		return 0.f;
+	}
 
 	// ── Physics queries ──────────────────────────────────────────────────────
 	bool  PlayerComponent::IsGrounded()   const { return m_pPhysics ? m_pPhysics->IsGrounded() : false; }
@@ -136,5 +160,36 @@ namespace dae
 	{
 		if (auto* health = GetOwner()->GetComponent<HealthComponent>())
 			health->AddObserver(this);
+	}
+
+	void PlayerComponent::CheckEnemyCollisions()
+	{
+		if (IsInvincible()) return;
+
+		auto* pMyCol = GetOwner()->GetComponent<BoxColliderComponent>();
+		if (!pMyCol) return;
+
+		for (const auto& pGO : m_Scene.GetGameObjects())
+		{
+			if (!pGO || !pGO->IsActive()) continue;
+			auto* pEnemy = pGO->GetComponent<EnemyComponent>();
+			if (!pEnemy || !pEnemy->IsAlive()) continue;
+			auto* pEnemyCol = pGO->GetComponent<BoxColliderComponent>();
+			if (!pEnemyCol) continue;
+
+			if (pMyCol->Overlaps(*pEnemyCol))
+			{
+				std::cout << "[Collision] Hit! Invincible=" << IsInvincible()
+					<< " Timer=" << m_InvincibleTimer << "\n";
+				ChangeState(new TakeDmgState{});
+				return;
+			}
+		}
+	}
+
+	void PlayerComponent::TakeDamage() const
+	{
+		if (auto* health = GetOwner()->GetComponent<HealthComponent>())
+			health->TakeDamage(1);
 	}
 }

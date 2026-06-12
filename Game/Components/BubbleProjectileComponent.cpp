@@ -5,6 +5,7 @@
 #include "Components/PickupComponent.h"
 #include "Components/PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
+#include "Components/LevelCollisionComponent.h"
 #include "EnemyType.h"
 
 #include "Scene.h"
@@ -214,9 +215,29 @@ namespace dae
 	{
 		if (m_pTrappedEnemy)
 		{
-			// Place enemy at the bubble's current position before re-enabling
 			const auto bubblePos = GetOwner()->GetWorldPosition();
-			m_pTrappedEnemy->SetLocalPosition(bubblePos.x, bubblePos.y);
+
+			// Clamp Y so the enemy never spawns above the ceiling.
+			// PhysicsComponent uses 60.f as the ceiling cutoff; add the
+			// collider height so the bottom anchor (worldPos.y) is fully below it.
+			constexpr float CEILING_Y = 60.f;
+			float spawnY = bubblePos.y;
+
+			if (auto* col = m_pTrappedEnemy->GetComponent<BoxColliderComponent>())
+			{
+				const float minSafeY = CEILING_Y + col->GetHeight() + 1.f;
+				if (spawnY < minSafeY)
+					spawnY = minSafeY;
+			}
+
+			m_pTrappedEnemy->SetLocalPosition(bubblePos.x, spawnY);
+
+			if (auto* phys = m_pTrappedEnemy->GetComponent<PhysicsComponent>())
+			{
+				phys->SetVelocityY(0.f);
+				phys->SetVelocityX(0.f);
+			}
+
 			m_pTrappedEnemy->SetActive(true);
 			m_pTrappedEnemy = nullptr;
 			std::cout << "[Bubble] Enemy escaped!\n";

@@ -51,7 +51,7 @@ EnemyType.h
 EnemyTypeRegistry.cpp
 LevelLoader.cpp
 
-	  "Components/LevelManagerComponent.cpp" "Components/BubbleProjectileComponent.cpp" "Components/PickUpComponent.cpp" "Commands/ShootCommand.h")
+	  "Components/LevelManagerComponent.cpp" "Components/BubbleProjectileComponent.cpp" "Components/PickUpComponent.cpp" "Commands/ShootCommand.h" "Commands/SkipLevelCommand.h")
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE
