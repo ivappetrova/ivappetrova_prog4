@@ -10,9 +10,9 @@ namespace dae
 	public:
 		explicit ShootState(bool wasMoving = false);
 
-		void Enter(Player& player) override;
-		PlayerState* HandleInput(Player& player) override;
-		void Update(Player& player, float deltaTime) override;
+		void Enter(PlayerComponent& PlayerComponent) override;
+		PlayerState* HandleInput(PlayerComponent& PlayerComponent) override;
+		void Update(PlayerComponent& PlayerComponent, float deltaTime) override;
 
 	private:
 		float m_Timer{ 0.f };

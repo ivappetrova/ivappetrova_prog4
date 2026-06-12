@@ -3,7 +3,7 @@
 
 #include "GameObjectCommand.h"
 #include "GameObject.h"
-#include "Components/PlayerPointsComponent.h"
+#include "Components/ScoreComponent.h"
 
 namespace dae
 {
@@ -17,9 +17,9 @@ namespace dae
 
 		void Execute() override
 		{
-			if (auto* points = GetGameObject()->GetComponent<PlayerPointsComponent>())
+			if (auto* pScore = GetGameObject()->GetComponent<ScoreComponent>())
 			{
-				points->AddPoints(m_Points);
+				pScore->AddPoints(m_Points);
 			}
 		}
 

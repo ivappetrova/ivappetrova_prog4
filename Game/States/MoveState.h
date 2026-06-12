@@ -8,12 +8,10 @@ namespace dae
 	class MoveState final : public PlayerState
 	{
 	public:
-		void Enter(Player& player) override;
-		PlayerState* HandleInput(Player& player) override;
-		void Update(Player& player, float deltaTime) override;
-
-	private:
-		static constexpr float WALK_SPEED{ 80.f };
+		void Enter(PlayerComponent& PlayerComponent) override;
+		PlayerState* HandleInput(PlayerComponent& PlayerComponent) override;
+		void Update(PlayerComponent& PlayerComponent, float deltaTime) override;
+		void Exit(PlayerComponent& PlayerComponent) override;
 	};
 }
 #endif

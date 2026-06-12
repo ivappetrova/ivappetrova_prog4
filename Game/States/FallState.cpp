@@ -1,26 +1,28 @@
 #include "FallState.h"
 #include "IdleState.h"
-#include "Player.h"
+#include "Components/PlayerComponent.h"
 #include <iostream>
 
 namespace dae
 {
-	void FallState::Enter(Player& /*player*/)
+	void FallState::Enter(PlayerComponent& /*PlayerComponent*/)
 	{
-		std::cout << "Entered FallState" << std::endl;
+		std::cout << "Entered FallState\n";
 	}
 
-	PlayerState* FallState::HandleInput(Player& player)
+	PlayerState* FallState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		if (player.IsGrounded())
-		{ 
-			return new IdleState{};
-		}
-
+		if (PlayerComponent.IsGrounded()) return new IdleState{};
 		return nullptr;
 	}
 
-	void FallState::Update(Player& /*player*/, float /*deltaTime*/) 
+	void FallState::Update(PlayerComponent& PlayerComponent, float /*deltaTime*/)
 	{
+		// Allow steering while falling
+		const float dir = PlayerComponent.GetMoveDirX();
+		if (dir != 0.f)
+			PlayerComponent.RequestMove(dir);
+		else
+			PlayerComponent.StopMove();
 	}
 }

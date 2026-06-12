@@ -1,7 +1,7 @@
 #include "ShootState.h"
 #include "IdleState.h"
 #include "MoveState.h"
-#include "Player.h"
+#include "Components/PlayerComponent.h"
 #include <iostream>
 
 namespace dae
@@ -9,27 +9,26 @@ namespace dae
 	ShootState::ShootState(bool wasMoving)
 		: m_WasMoving(wasMoving) {}
 
-	void ShootState::Enter(Player& /*player*/)
+	void ShootState::Enter(PlayerComponent& PlayerComponent)
 	{
+		std::cout << "Entered ShootState\n";
 		m_Timer = SHOOT_DURATION;
+		PlayerComponent.StopMove();   // freeze horizontal while shooting
 		// TODO: spawn projectile here
-		std::cout << "Entered ShootState" << std::endl;
 	}
 
-	PlayerState* ShootState::HandleInput(Player& player)
+	PlayerState* ShootState::HandleInput(PlayerComponent& PlayerComponent)
 	{
 		if (m_Timer <= 0.f)
 		{
-			if (m_WasMoving && player.GetMoveDirX() != 0.f)
-			{
+			if (m_WasMoving && PlayerComponent.GetMoveDirX() != 0.f)
 				return new MoveState{};
-			}
 			return new IdleState{};
 		}
 		return nullptr;
 	}
 
-	void ShootState::Update(Player& /*player*/, float deltaTime)
+	void ShootState::Update(PlayerComponent& /*PlayerComponent*/, float deltaTime)
 	{
 		m_Timer -= deltaTime;
 	}

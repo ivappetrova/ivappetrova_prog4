@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "Subject.h"
 #include "Event.h"
-#include "PlayerPointsComponent.h"
+#include "ScoreComponent.h"
 
 namespace dae
 {
@@ -12,7 +12,8 @@ namespace dae
 	{
 	public:
 		HealthComponent(GameObject* owner, int maxHP = 3)
-			: Component(owner), m_HP(maxHP), m_MaxHP(maxHP) {
+			: Component(owner), m_HP(maxHP), m_MaxHP(maxHP) 
+		{
 		}
 
 		void TakeDamage(int damage, GameObject* attacker = nullptr)
@@ -25,15 +26,23 @@ namespace dae
 				m_HP = 0;
 				NotifyObservers(Event{ EVENT_PLAYER_DIED }, GetOwner());
 				if (attacker)
-					if (auto* pts = attacker->GetComponent<PlayerPointsComponent>())
-						pts->AddPoints(200);
+				{
+					if (auto* pScore = attacker->GetComponent<ScoreComponent>())
+					{
+						pScore->AddPoints(200);
+					}	
+				}
 			}
 			else
 			{
 				NotifyObservers(Event{ EVENT_PLAYER_HIT }, GetOwner());
 				if (attacker)
-					if (auto* pts = attacker->GetComponent<PlayerPointsComponent>())
-						pts->AddPoints(50);
+				{
+					if (auto* pScore = attacker->GetComponent<ScoreComponent>())
+					{
+						pScore->AddPoints(50);
+					}
+				}
 			}
 		}
 

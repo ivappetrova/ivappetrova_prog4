@@ -15,19 +15,25 @@ endif()
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
     Main.cpp
 
-	Player.cpp
 	PlayerStates.h
 
     Components/HealthComponent.h
-    Components/LivesDisplayComponent.h
+    Components/HealthDisplayComponent.h
     Components/PlayerDiedDisplayComponent.h
-    Components/PlayerPointsComponent.h
-    Components/PointsDisplayComponent.h
+    Components/ScoreComponent.h
+    Components/ScoreDisplayComponent.h
+	Components/LevelCollisionComponent.cpp
+	Components/LevelDebugDrawComponent.cpp
+	Components/BoxColliderComponent.cpp
+	Components/BoxColliderDebugDrawComponent.cpp 
+	Components/PhysicsComponent.cpp
+	Components/PlayerComponent.cpp
 
 	Commands/DealDamageCommand.h
     Commands/MoveCommand.h
     Commands/PickUpCommand.h
     Commands/PlaySoundCommand.h
+	Commands/JumpCommand.h
 	
 	States/PlayerState.h
 	States/IdleState.cpp
@@ -35,7 +41,11 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	States/JumpState.cpp
 	States/FallState.cpp
 	States/ShootState.cpp
-	States/TakeDmgState.cpp)
+	States/TakeDmgState.cpp
+
+
+	SVGParser.cpp
+	 )
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE

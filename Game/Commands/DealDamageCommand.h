@@ -15,8 +15,10 @@ namespace dae
 
 		void Execute() override
 		{
-			if (auto* health = GetGameObject()->GetComponent<HealthComponent>())
-				health->TakeDamage(m_Damage, m_pAttacker);
+			if (auto* pHealth = GetGameObject()->GetComponent<HealthComponent>())
+			{
+				pHealth->TakeDamage(m_Damage, m_pAttacker);
+			}
 		}
 
 	private:

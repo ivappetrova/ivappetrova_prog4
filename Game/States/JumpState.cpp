@@ -1,23 +1,24 @@
 #include "JumpState.h"
 #include "FallState.h"
 #include "ShootState.h"
-#include "Player.h"
+#include "Components/PlayerComponent.h"
 #include <iostream>
 
 namespace dae
 {
-	void JumpState::Enter(Player& /*player*/)
+	void JumpState::Enter(PlayerComponent& PlayerComponent)
 	{
 		std::cout << "Entered JumpState" << std::endl;
+		PlayerComponent.Jump();
 	}
 
-	PlayerState* JumpState::HandleInput(Player& player)
+	PlayerState* JumpState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		if (player.WantsShoot())
+		if (PlayerComponent.WantsShoot())
 		{
 			return new ShootState{ false };
 		}
-		if (player.GetVelocityY() >= 0.f)
+		if (PlayerComponent.GetVelocityY() >= 0.f)
 		{
 			return new FallState{};
 		}
@@ -25,7 +26,12 @@ namespace dae
 		return nullptr;
 	}
 
-	void JumpState::Update(Player& /*player*/, float /*deltaTime*/) 
+	void JumpState::Update(PlayerComponent& PlayerComponent, float /*deltaTime*/)
 	{
+		const float dir = PlayerComponent.GetMoveDirX();
+		if (dir != 0.f)
+			PlayerComponent.RequestMove(dir);
+		else
+			PlayerComponent.StopMove();
 	}
 }

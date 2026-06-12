@@ -15,10 +15,10 @@
 #include "InputManager.h"
 
 #include "Components/HealthComponent.h"
-#include "Components/LivesDisplayComponent.h"
+#include "Components/HealthDisplayComponent.h"
 #include "Components/PlayerDiedDisplayComponent.h"
-#include "Components/PlayerPointsComponent.h"
-#include "Components/PointsDisplayComponent.h"
+#include "Components/ScoreComponent.h"
+#include "Components/ScoreDisplayComponent.h"
 
 #include "ServiceLocator.h"
 #include "SoundSystem.h"
@@ -28,8 +28,15 @@
 #include "Commands/DealDamageCommand.h"
 #include "Commands/PickUpCommand.h"
 #include "Commands/MoveCommand.h"
+#include "Commands/JumpCommand.h"
 
-#include "Player.h"
+#include "Components/PlayerComponent.h"
+#include "Components/PhysicsComponent.h"
+
+#include "Components/LevelCollisionComponent.h"
+#include "Components/LevelDebugDrawComponent.h"
+#include "Components/BoxColliderComponent.h"
+#include "Components/BoxColliderDebugDrawComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -48,23 +55,28 @@ static void SpawnConsole()
 }
 #endif
 
-static dae::GameObject* MakePlayer( dae::Scene& scene, const std::string& texture, float startX, float startY, float labelX, std::shared_ptr<dae::Font> font)
+static dae::GameObject* MakePlayer(dae::Scene& scene, const std::string& texture, float startX, float startY, float labelX, std::shared_ptr<dae::Font> font, float windowHeight)
 {
 	auto characterGO = std::make_unique<dae::GameObject>();
-	characterGO->AddComponent<dae::TextureComponent>()->SetTexture(texture);
+	characterGO->AddComponent<dae::TextureComponent>(60.f, 60.f)->SetTexture(texture);
 	characterGO->SetLocalPosition(startX, startY);
 
 	auto* pHealth = characterGO->AddComponent<dae::HealthComponent>(3);
-	auto* pPoints = characterGO->AddComponent<dae::PlayerPointsComponent>();
-	characterGO->AddComponent<dae::Player>();
+	auto* pPoints = characterGO->AddComponent<dae::ScoreComponent>();\
+	const float PLAYER_SPEED{ 150.f };
+	characterGO->AddComponent<dae::PhysicsComponent>(windowHeight);
+	characterGO->AddComponent<dae::PlayerComponent>(PLAYER_SPEED);
 
-	dae::GameObject* pChar = characterGO.get(); 
+	characterGO->AddComponent<dae::BoxColliderComponent>(60.f, 60.f);
+	characterGO->AddComponent<dae::BoxColliderDebugDrawComponent>();
+
+	dae::GameObject* pChar = characterGO.get();
 	scene.Add(std::move(characterGO));
 
 	auto livesGO = std::make_unique<dae::GameObject>();
 	livesGO->SetLocalPosition(labelX, 100);
 	livesGO->AddComponent<dae::TextComponent>("Lives: 3", font);
-	auto* pLivesDisplay = livesGO->AddComponent<dae::LivesDisplayComponent>(3);
+	auto* pLivesDisplay = livesGO->AddComponent<dae::HealthDisplayComponent>(3);
 	scene.Add(std::move(livesGO));
 	pHealth->AddObserver(pLivesDisplay);
 
@@ -78,23 +90,37 @@ static dae::GameObject* MakePlayer( dae::Scene& scene, const std::string& textur
 	auto pointsGO = std::make_unique<dae::GameObject>();
 	pointsGO->SetLocalPosition(labelX, 250);
 	pointsGO->AddComponent<dae::TextComponent>("Points: 0", font);
-	auto* pPointsDisplay = pointsGO->AddComponent<dae::PointsDisplayComponent>();
+	auto* pPointsDisplay = pointsGO->AddComponent<dae::ScoreDisplayComponent>();
 	scene.Add(std::move(pointsGO));
 	pPoints->AddObserver(pPointsDisplay);
 
 	return pChar;
 }
 
-static void load()
+static void load(float windowWidth, float windowHeight)
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
+	// Level
+
 	auto bg = std::make_unique<dae::GameObject>();
-	bg->AddComponent<dae::TextureComponent>()->SetTexture("background.png");
+	bg->SetLocalPosition(0.f, windowHeight);
+	bg->AddComponent<dae::TextureComponent>(windowWidth, windowHeight)->SetTexture("background.png");
 	scene.Add(std::move(bg));
 
-	auto font36 = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto font20 = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+	auto levelGO = std::make_unique<dae::GameObject>();
+	levelGO->SetLocalPosition(0.f, windowHeight);
+	levelGO->AddComponent<dae::TextureComponent>(windowWidth, windowHeight)->SetTexture("Maps/level3.png");
+	auto* pLevelCol = levelGO->AddComponent<dae::LevelCollisionComponent>();
+	pLevelCol->LoadFromSVG("Data/Maps/level3.svg", windowWidth, windowHeight);
+
+	levelGO->AddComponent<dae::LevelDebugDrawComponent>(pLevelCol);
+	scene.Add(std::move(levelGO));
+
+	//
+
+	auto font36 = dae::ResourceManager::GetInstance().LoadFont("Fonts/Lingua.otf", 36);
+	auto font20 = dae::ResourceManager::GetInstance().LoadFont("Fonts/Lingua.otf", 20);
 
 	auto fpsGo = std::make_unique<dae::GameObject>();
 	fpsGo->SetLocalPosition(10, 10);
@@ -103,52 +129,53 @@ static void load()
 	scene.Add(std::move(fpsGo));
 
 	auto& soundSystem = dae::ServiceLocator::GetSoundSystem();
-	const dae::sound_id SND_HIT = soundSystem.AddSound("Data/sound1.mp3");
-	const dae::sound_id SND_DEATH = soundSystem.AddSound("Data/sound2.mp3");
-	const dae::sound_id SND_POINT = soundSystem.AddSound("Data/sound3.mp3");
+	const dae::sound_id SND_HIT = soundSystem.AddSound("Sounds/sound1.mp3");
+	const dae::sound_id SND_DEATH = soundSystem.AddSound("Sounds/sound2.mp3");
+	const dae::sound_id SND_POINT = soundSystem.AddSound("Sounds/sound3.mp3");
 
 	auto& input = dae::InputManager::GetInstance();
 
-	input.BindKeyboardCommand(SDL_SCANCODE_1, dae::InputManager::KeyState::Up,
-		std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
-	input.BindKeyboardCommand(SDL_SCANCODE_2, dae::InputManager::KeyState::Up,
-		std::make_unique<dae::PlaySoundCommand>(SND_DEATH, 1.0f));
-	input.BindKeyboardCommand(SDL_SCANCODE_3, dae::InputManager::KeyState::Up,
-		std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
+	input.BindKeyboardCommand(SDL_SCANCODE_1, dae::InputManager::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
+	input.BindKeyboardCommand(SDL_SCANCODE_2, dae::InputManager::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_DEATH, 1.0f));
+	input.BindKeyboardCommand(SDL_SCANCODE_3, dae::InputManager::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_POINT, 0.6f));
 
-	const int DAMAGE = 1;
-	const int POINTS = 20;
+	const int DAMAGE{ 1 };
+	const int POINTS{ 20 };
 
 	////////////// Bubble
-	dae::GameObject* pChar1 = MakePlayer(scene, "bubble.png", 10.f, 300.f, 10.f, font20);
+	dae::GameObject* pChar1 = MakePlayer(scene, "bubble.png", 100.f, 100.f, 10.f, font20, windowHeight);
+	pChar1->GetComponent<dae::PhysicsComponent>()->SetLevelCollision(pLevelCol);
 
 	auto bubbleLabel = std::make_unique<dae::GameObject>();
-	bubbleLabel->SetLocalPosition(10, 60);
+	bubbleLabel->SetLocalPosition(100, 60);
 	bubbleLabel->AddComponent<dae::TextComponent>("Bubble", font20);
 	scene.Add(std::move(bubbleLabel));
 
 	auto bubbleMove = std::make_unique<dae::GameObject>();
-	bubbleMove->SetLocalPosition(10, 160);
+	bubbleMove->SetLocalPosition(100, 160);
 	bubbleMove->AddComponent<dae::TextComponent>("Move: A/D", font20);
 	scene.Add(std::move(bubbleMove));
 
 	auto bubbleDmg = std::make_unique<dae::GameObject>();
-	bubbleDmg->SetLocalPosition(10, 190);
+	bubbleDmg->SetLocalPosition(100, 190);
 	bubbleDmg->AddComponent<dae::TextComponent>("Deal Dmg + Sound: O", font20);
 	scene.Add(std::move(bubbleDmg));
 
 	auto bubblePickup = std::make_unique<dae::GameObject>();
-	bubblePickup->SetLocalPosition(10, 220);
+	bubblePickup->SetLocalPosition(100, 220);
 	bubblePickup->AddComponent<dae::TextComponent>("Pick Up + Sound: P", font20);
 	scene.Add(std::move(bubblePickup));
 
-	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Pressed,
-		std::make_unique<dae::MoveCommand>(pChar1, -1.f));
-	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Pressed,
-		std::make_unique<dae::MoveCommand>(pChar1, 1.f));
+	// Bubble move — Pressed sets direction, Up clears it so Idle is re-entered on release
+	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar1, -1.f));
+	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Up, std::make_unique<dae::MoveCommand>(pChar1, 0.f));
+	input.BindKeyboardCommand(SDL_SCANCODE_W, dae::InputManager::KeyState::Down, std::make_unique<dae::JumpCommand>(pChar1));
+	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar1, 1.f));
+	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Up, std::make_unique<dae::MoveCommand>(pChar1, 0.f));
 
 	///////// Bobble
-	dae::GameObject* pChar2 = MakePlayer(scene, "bobble.png", 500.f, 300.f, 500.f, font20);
+	dae::GameObject* pChar2 = MakePlayer(scene, "bobble.png", 500.f, 100.f, 500.f, font20, windowHeight);
+	pChar2->GetComponent<dae::PhysicsComponent>()->SetLevelCollision(pLevelCol);
 
 	auto bobbleLabel = std::make_unique<dae::GameObject>();
 	bobbleLabel->SetLocalPosition(500, 60);
@@ -170,10 +197,11 @@ static void load()
 	bobblePickup->AddComponent<dae::TextComponent>("Pick Up + Sound: A (gamepad)", font20);
 	scene.Add(std::move(bobblePickup));
 
-	input.BindControllerCommand(0, dae::Controller::Button::DPadLeft, dae::Controller::KeyState::Pressed,
-		std::make_unique<dae::MoveCommand>(pChar2, -1.f));
-	input.BindControllerCommand(0, dae::Controller::Button::DPadRight, dae::Controller::KeyState::Pressed,
-		std::make_unique<dae::MoveCommand>(pChar2, 1.f));
+	// Bobble move — Pressed sets direction, Up clears it so Idle is re-entered on release
+	input.BindControllerCommand(0, dae::Controller::Button::DPadLeft, dae::Controller::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar2, -1.f));
+	input.BindControllerCommand(0, dae::Controller::Button::DPadLeft, dae::Controller::KeyState::Up, std::make_unique<dae::MoveCommand>(pChar2, 0.f));
+	input.BindControllerCommand(0, dae::Controller::Button::DPadRight, dae::Controller::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar2, 1.f));
+	input.BindControllerCommand(0, dae::Controller::Button::DPadRight, dae::Controller::KeyState::Up, std::make_unique<dae::MoveCommand>(pChar2, 0.f));
 
 	input.BindControllerCommand(0, dae::Controller::Button::ButtonX, dae::Controller::KeyState::Up, std::make_unique<dae::DealDamageCommand>(pChar1, DAMAGE, pChar2));
 	input.BindControllerCommand(0, dae::Controller::Button::ButtonX, dae::Controller::KeyState::Up, std::make_unique<dae::PlaySoundCommand>(SND_HIT, 0.8f));
@@ -218,7 +246,7 @@ int main(int, char* [])
 	SpawnConsole();
 #endif
 
-	engine.Run(load);
+	engine.Run([&]() { load(static_cast<float>(engine.GetWindowWidth()), static_cast<float>(engine.GetWindowHeight())); });
 
 	dae::ServiceLocator::RegisterSoundSystem(nullptr);
 

@@ -2,41 +2,31 @@
 #include "IdleState.h"
 #include "JumpState.h"
 #include "ShootState.h"
-#include "Player.h"
-#include "GameObject.h"
+#include "Components/PlayerComponent.h"
 #include <iostream>
 
 namespace dae
 {
-	void MoveState::Enter(Player& /*player*/)
+	void MoveState::Enter(PlayerComponent& /*PlayerComponent*/)
 	{
-		std::cout << "Entered MoveState" << std::endl;
+		std::cout << "Entered MoveState\n";
 	}
 
-	PlayerState* MoveState::HandleInput(Player& player)
+	PlayerState* MoveState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		if (player.WantsShoot())
-		{
-			return new ShootState{ true };
-		}
-		if (player.WantsJump())
-		{
-			return new JumpState{};
-		}	
-		if (player.GetMoveDirX() == 0.f)
-		{
-			return new IdleState{};
-		}
-			
+		if (PlayerComponent.WantsShoot())                         return new ShootState{ true };
+		if (PlayerComponent.WantsJump() && PlayerComponent.IsGrounded())   return new JumpState{};
+		if (PlayerComponent.GetMoveDirX() == 0.f)                 return new IdleState{};
 		return nullptr;
 	}
 
-	void MoveState::Update(Player& player, float deltaTime)
+	void MoveState::Update(PlayerComponent& PlayerComponent, float /*deltaTime*/)
 	{
-		player.SetVelocity(player.GetMoveDirX() * WALK_SPEED, 0.f);
+		PlayerComponent.RequestMove(PlayerComponent.GetMoveDirX());
+	}
 
-		GameObject* gameObj = player.GetGameObject();
-		const auto& POS = gameObj->GetWorldPosition();
-		gameObj->SetLocalPosition(POS.x + player.GetVelocityX() * deltaTime, POS.y);
+	void MoveState::Exit(PlayerComponent& PlayerComponent)
+	{
+		PlayerComponent.StopMove();
 	}
 }

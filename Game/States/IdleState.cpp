@@ -2,35 +2,25 @@
 #include "MoveState.h"
 #include "JumpState.h"
 #include "ShootState.h"
-#include "Player.h"
+#include "Components/PlayerComponent.h"
 #include <iostream>
 
 namespace dae
 {
-	void IdleState::Enter(Player& /*player*/)
+	void IdleState::Enter(PlayerComponent& PlayerComponent)
 	{
-		std::cout << "Entered IdleState" << std::endl;
+		std::cout << "Entered IdleState\n";
+		PlayerComponent.StopMove();
 	}
 
-	PlayerState* IdleState::HandleInput(Player& player)
+	PlayerState* IdleState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		if (player.WantsShoot())
-		{
-			return new ShootState{ false };
-		}
-		if (player.WantsJump())
-		{
-			return new JumpState{};
-		}
-		if (player.GetMoveDirX() != 0.f)
-		{
-			return new MoveState{};
-		}
-
+		if (PlayerComponent.WantsShoot())                         return new ShootState{ false };
+		if (PlayerComponent.WantsJump() && PlayerComponent.IsGrounded())   return new JumpState{};
+		if (PlayerComponent.GetMoveDirX() != 0.f)                 return new MoveState{};
 		return nullptr;
 	}
 
-	void IdleState::Update(Player& /*player*/, float /*deltaTime*/) 
-	{
-	}
+	void IdleState::Update(PlayerComponent& /*PlayerComponent*/, float /*deltaTime*/)
+	{}
 }

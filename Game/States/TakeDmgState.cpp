@@ -1,33 +1,31 @@
 #include "TakeDmgState.h"
 #include "IdleState.h"
-#include "Player.h"
-#include "GameObject.h"
+#include "Components/PlayerComponent.h"
 #include <iostream>
 
 namespace dae
 {
-	void TakeDmgState::Enter(Player& player)
+	void TakeDmgState::Enter(PlayerComponent& PlayerComponent)
 	{
-		player.SetVelocity(KNOCKBACK_VX, 0.f);
-		std::cout << "Entered TakeDmgState" << std::endl;
+		std::cout << "Entered TakeDmgState\n";
+		PlayerComponent.ApplyKnockback(KNOCKBACK_VX);
 	}
 
-	PlayerState* TakeDmgState::HandleInput(Player& /*player*/)
+	PlayerState* TakeDmgState::HandleInput(PlayerComponent& /*PlayerComponent*/)
 	{
-		if (m_Timer <= 0.f)
-		{
-			return new IdleState{};
-		}
-			
+		if (m_Timer <= 0.f) return new IdleState{};
 		return nullptr;
 	}
 
-	void TakeDmgState::Update(Player& player, float deltaTime)
+	void TakeDmgState::Update(PlayerComponent& PlayerComponent, float deltaTime)
 	{
-		GameObject* pGO = player.GetGameObject();
-		const auto& POS = pGO->GetWorldPosition();
-		pGO->SetLocalPosition(POS.x + player.GetVelocityX() * deltaTime, POS.y);
-
+		// Physics integrates position — we only manage the velocity decay here
+		PlayerComponent.DecayHorizontalVelocity(deltaTime);
 		m_Timer -= deltaTime;
+	}
+
+	void TakeDmgState::Exit(PlayerComponent& PlayerComponent)
+	{
+		PlayerComponent.StopHorizontal();
 	}
 }

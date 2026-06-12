@@ -16,6 +16,9 @@ namespace dae
 		void Run(const std::function<void()>& load);
 		void RunOneFrame();
 
+		int GetWindowWidth()  const { return m_WindowWidth; }
+		int GetWindowHeight() const { return m_WindowHeight; }
+
 		// Rule of 5
 		Minigin(const Minigin& other) = delete;
 		Minigin(Minigin&& other) = delete;
@@ -23,6 +26,10 @@ namespace dae
 		Minigin& operator=(Minigin&& other) = delete;
 
 	private:
+		int m_WindowWidth{1024};
+		int m_WindowHeight{700};
+
+
 		bool m_Quit{};
 		std::chrono::high_resolution_clock::time_point m_LastTime{ std::chrono::high_resolution_clock::now() };
 

@@ -7,13 +7,14 @@
 #include "IObserver.h"
 #include "TextComponent.h"
 #include "Event.h"
+#include "GameObject.h"
 
 namespace dae
 {
-	class LivesDisplayComponent final : public Component, public IObserver
+	class HealthDisplayComponent final : public Component, public IObserver
 	{
 	public:
-		LivesDisplayComponent(GameObject* owner, int startingLives = 3)
+		HealthDisplayComponent(GameObject* owner, int startingLives = 3)
 			: Component(owner), m_Lives(startingLives) {
 		}
 

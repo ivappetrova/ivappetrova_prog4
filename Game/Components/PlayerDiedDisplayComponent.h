@@ -21,7 +21,7 @@ namespace dae
 			{
 				if (auto* text = GetOwner()->GetComponent<TextComponent>())
 				{ 
-					text->SetText("Player Died!");
+					text->SetText("PlayerComponent Died!");
 				}
 			}
 		}

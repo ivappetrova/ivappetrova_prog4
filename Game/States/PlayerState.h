@@ -3,18 +3,18 @@
 
 namespace dae
 {
-	class Player;
+	class PlayerComponent;
 
 	class PlayerState
 	{
 	public:
 		virtual ~PlayerState() = default;
 
-		virtual void Enter(Player& /*player*/) {}
-		virtual PlayerState* HandleInput(Player& player) = 0;
-		virtual void Update(Player& player, float deltaTime) = 0;
-		virtual void Exit(Player& /*player*/) {}
-		
+		virtual void Enter(PlayerComponent& /*PlayerComponent*/) {}
+		virtual PlayerState* HandleInput(PlayerComponent& PlayerComponent) = 0;
+		virtual void Update(PlayerComponent& PlayerComponent, float deltaTime) = 0;
+		virtual void Exit(PlayerComponent& /*PlayerComponent*/) {}
+
 		// Rule of 5
 		PlayerState(const PlayerState&) = delete;
 		PlayerState(PlayerState&&) = delete;
@@ -24,5 +24,5 @@ namespace dae
 	protected:
 		PlayerState() = default;
 	};
-} 
+}
 #endif

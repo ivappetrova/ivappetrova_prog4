@@ -3,7 +3,7 @@
 
 #include "Command.h"
 #include "GameObject.h"
-#include "Player.h"
+#include "Components/PlayerComponent.h"
 
 namespace dae
 {
@@ -17,9 +17,9 @@ namespace dae
 
 		void Execute() override
 		{
-			if (auto* player = m_pGameObject->GetComponent<Player>())
+			if (auto* pPlayer = m_pGameObject->GetComponent<PlayerComponent>())
 			{
-				player->SetMoveInput(m_DirX);
+				pPlayer->SetMoveInput(m_DirX);
 			}
 		}
 

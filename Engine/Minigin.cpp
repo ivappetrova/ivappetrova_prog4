@@ -8,7 +8,6 @@
 #endif
 
 #include <SDL3/SDL.h>
-//#include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "Minigin.h"
 #include "SceneManager.h"
@@ -69,9 +68,9 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 	}
 
 	g_pWindow = SDL_CreateWindow(
-		"Programming 4 assignment",
-		1024,
-		576,
+		"Bubble Bobble- Iva Petrova",
+		m_WindowWidth,
+		m_WindowHeight,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_pWindow == nullptr) 

@@ -21,7 +21,7 @@ namespace dae
 
 	private:
 		sound_id m_Id;
-		float    m_Volume;
+		float m_Volume;
 	};
 }
 #endif
