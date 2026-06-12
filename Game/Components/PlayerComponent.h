@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "IObserver.h"
 #include "Event.h"
+#include "Scene.h"
 
 namespace dae
 {
@@ -13,7 +14,7 @@ namespace dae
 	class PlayerComponent final : public Component, public IObserver
 	{
 	public:
-		explicit PlayerComponent(GameObject* owner, float movementSpeed);
+		explicit PlayerComponent(GameObject* owner, float movementSpeed, Scene& scene);
 		~PlayerComponent() override;
 
 		void Update(float deltaTime) override;
@@ -41,6 +42,7 @@ namespace dae
 
 		GameObject* GetGameObject() const { return GetOwner(); }
 		float GetMoveSpeed() const { return m_MoveSpeed; }
+		Scene& GetScene() const { return m_Scene; }
 
 		// State machine
 		void ChangeState(PlayerState* newState);
@@ -63,6 +65,7 @@ namespace dae
 		bool  m_WantsShoot{ false };
 
 		float m_MoveSpeed;
+		Scene& m_Scene;
 	};
 }
 #endif

@@ -28,6 +28,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Components/BoxColliderDebugDrawComponent.cpp 
 	Components/PhysicsComponent.cpp
 	Components/PlayerComponent.cpp
+	Components/EnemyComponent.cpp
 
 	Commands/DealDamageCommand.h
     Commands/MoveCommand.h
@@ -43,9 +44,14 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	States/ShootState.cpp
 	States/TakeDmgState.cpp
 
-
 	SVGParser.cpp
-	 )
+	JSONParser.cpp
+
+EnemyType.h
+EnemyTypeRegistry.cpp
+LevelLoader.cpp
+
+	  "Components/LevelManagerComponent.cpp" "Components/BubbleProjectileComponent.cpp" "Components/PickUpComponent.cpp" "Commands/ShootCommand.h")
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE

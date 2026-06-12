@@ -8,9 +8,8 @@
 namespace dae
 {
 	PhysicsComponent::PhysicsComponent(GameObject* owner, float screenHeight)
-		: Component(owner), m_ScreenHeight{screenHeight}
-	{
-	}
+		: Component(owner), m_WindowHeight{ screenHeight }
+	{}
 
 	void PhysicsComponent::Update(float deltaTime)
 	{
@@ -38,8 +37,8 @@ namespace dae
 		auto* pOwner{ GetOwner() };
 		const glm::vec3 POS{ pOwner->GetWorldPosition() };
 
-		float newX {POS.x + m_Velocity.x * deltaTime};
-		float newY {POS.y + m_Velocity.y * deltaTime};
+		float newX{ POS.x + m_Velocity.x * deltaTime };
+		float newY{ POS.y + m_Velocity.y * deltaTime };
 
 		m_IsGrounded = false;
 
@@ -56,8 +55,8 @@ namespace dae
 			return;
 		}
 
-		const float BOX_COLLIDER_WIDTH { pBoxCollider->GetWidth() };
-		const float BOX_COLLIDER_HEIGHT { pBoxCollider->GetHeight() };
+		const float BOX_COLLIDER_WIDTH{ pBoxCollider->GetWidth() };
+		const float BOX_COLLIDER_HEIGHT{ pBoxCollider->GetHeight() };
 
 		///////////////////////// Vertical Check
 		{
@@ -83,13 +82,13 @@ namespace dae
 				const glm::vec2 TOP_MID{ newX + BOX_COLLIDER_WIDTH * 0.5f, newY - BOX_COLLIDER_HEIGHT };
 				const glm::vec2 TOP_RIGHT{ newX + BOX_COLLIDER_WIDTH, newY - BOX_COLLIDER_HEIGHT };
 
-				const float m_CEILING_Y{60.f};
+				const float m_CEILING_Y{ 60.f };
 
 				// The player hits his head on the ceiling only if this is the toppest part of the game, otherwise jumps on the platforms
 				if ((newY - BOX_COLLIDER_HEIGHT) < m_CEILING_Y &&
-					 (m_pLevelCollision->Overlaps(TOP_LEFT) ||
-				      m_pLevelCollision->Overlaps(TOP_MID)  ||
-					  m_pLevelCollision->Overlaps(TOP_RIGHT)))
+					(m_pLevelCollision->Overlaps(TOP_LEFT) ||
+						m_pLevelCollision->Overlaps(TOP_MID) ||
+						m_pLevelCollision->Overlaps(TOP_RIGHT)))
 				{
 					newY = POS.y;
 					m_Velocity.y = 0.f;
@@ -98,7 +97,7 @@ namespace dae
 		}
 
 		//////////////////////// Horizontal Check
-		
+
 		// If the move request changed direction or stopped, clear the blocked flag
 		if (m_MoveRequest == 0.f || (m_BlockedDirX != 0.f && m_MoveRequest != m_BlockedDirX))
 		{
@@ -140,9 +139,9 @@ namespace dae
 					return m_pLevelCollision->WallXBeside(SAMPLE, SEARCH_DIST, IS_MOVING_RIGHT);
 				};
 
-			const float WALL_TOP { FindWall(newY - BOX_COLLIDER_HEIGHT * 0.9f)};
-			const float WALL_MID { FindWall(newY - BOX_COLLIDER_HEIGHT * 0.5f)};
-			const float WALL_BOT { FindWall(newY - BOX_COLLIDER_HEIGHT * 0.1f)};
+			const float WALL_TOP{ FindWall(newY - BOX_COLLIDER_HEIGHT * 0.9f) };
+			const float WALL_MID{ FindWall(newY - BOX_COLLIDER_HEIGHT * 0.5f) };
+			const float WALL_BOT{ FindWall(newY - BOX_COLLIDER_HEIGHT * 0.1f) };
 
 			// Pick the most restrictive (closest) wall found
 			float wallX{ IS_MOVING_RIGHT ? FLT_MAX : -FLT_MAX };
@@ -166,7 +165,7 @@ namespace dae
 		}
 
 		// Teleport top if the player falls in a gap
-		if (newY > m_ScreenHeight)
+		if (newY > m_WindowHeight)
 		{
 			newY = pBoxCollider->GetHeight();
 			m_IsGrounded = false;

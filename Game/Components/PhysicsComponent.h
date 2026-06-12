@@ -17,7 +17,7 @@ namespace dae
 		void Update(float deltaTime) override;
 
 		// Movement request - used from input commands, Physics applies the request only if the wall allows it
-		void RequestMoveX(float direction, float speed); 
+		void RequestMoveX(float direction, float speed);
 		void ClearMoveX() { m_MoveRequest = 0.f; }
 
 		// For jumps, knockback
@@ -33,6 +33,8 @@ namespace dae
 		// Wire up the level collision (call once after AddComponent)
 		void SetLevelCollision(LevelCollisionComponent* levelCollider) { m_pLevelCollision = levelCollider; }
 
+		float GetWindowHeight() const { return m_WindowHeight; }
+
 		// Rule of 5
 		PhysicsComponent(const PhysicsComponent&) = delete;
 		PhysicsComponent(PhysicsComponent&&) = delete;
@@ -42,13 +44,13 @@ namespace dae
 	private:
 		void ResolveCollisions(float deltaTime);
 
-		float m_ScreenHeight;
+		float m_WindowHeight;
 
 		glm::vec2 m_Velocity{};
 		bool m_IsGrounded{ false };
 		// Horizontal move request set by input commands each frame
 		float m_MoveRequest{};  // -1, 0, or +1
-		
+
 		// Dirty flag
 		float m_BlockedDirX{};
 

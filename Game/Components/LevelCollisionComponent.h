@@ -12,6 +12,7 @@ namespace dae
 	{
 	public:
 		explicit LevelCollisionComponent(GameObject* owner);
+		~LevelCollisionComponent() override = default;
 
 		bool LoadFromSVG(const std::string& path, float targetWidth = 0.f, float targetHeight = 0.f);
 		void SetPolygons(std::vector<std::vector<glm::vec2>> polygons);

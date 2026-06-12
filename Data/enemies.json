@@ -1,0 +1,54 @@
+{
+  "enemyTypes": [
+    {
+      "id": "ZenChan",
+      "texture": "Characters/ZenChan/ZenChan.png",
+      "width": 60.0,
+      "height": 60.0
+    },
+    {
+      "id": "Maita",
+      "texture": "Characters/Maita/Maita.png",
+      "width": 60.0,
+      "height": 60.0
+    }
+  ],
+  "levels": [
+    {
+      "index": 0,
+      "backgroundTexture": "Maps/level1.png",
+      "collisionSVG": "Data/Maps/level1.svg",
+      "enemies": [
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2 - 70", "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2",       "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2 + 70",  "spawnY": 100.0 }
+      ]
+    },
+    {
+      "index": 1,
+      "backgroundTexture": "Maps/level2.png",
+      "collisionSVG": "Data/Maps/level2.svg",
+      "enemies": [
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2 - 70",  "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2",        "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2 - 120",  "spawnY": 200.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth/2 + 60",   "spawnY": 200.0 },
+        { "type": "Maita",   "spawnExprX": "windowWidth/2",        "spawnY": 400.0 }
+      ]
+    },
+    {
+      "index": 2,
+      "backgroundTexture": "Maps/level3.png",
+      "collisionSVG": "Data/Maps/level3.svg",
+      "enemies": [
+        { "type": "ZenChan", "spawnExprX": "50",                   "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth - 100",    "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "50",                   "spawnY": 200.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth - 100",    "spawnY": 200.0 },
+        { "type": "Maita",   "spawnExprX": "windowWidth/2",        "spawnY": 600.0 },
+        { "type": "Maita",   "spawnExprX": "100",                  "spawnY": 500.0 },
+        { "type": "Maita",   "spawnExprX": "windowWidth - 160",    "spawnY": 500.0 }
+      ]
+    }
+  ]
+}

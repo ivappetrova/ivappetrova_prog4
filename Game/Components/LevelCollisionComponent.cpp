@@ -11,9 +11,8 @@
 namespace dae
 {
 	LevelCollisionComponent::LevelCollisionComponent(GameObject* owner)
-		: Component(owner) 
-	{
-	}
+		: Component(owner)
+	{}
 
 	static glm::vec2 ReadSVGViewBox(const std::string& path)
 	{
@@ -48,7 +47,7 @@ namespace dae
 				const float SCALE_X = targetWidth / SVG_SIZE.x;
 				const float SCALE_Y = targetHeight / SVG_SIZE.y;
 				for (auto& poly : m_Polygons)
-				{ 
+				{
 					for (auto& p : poly)
 					{
 						p.x *= SCALE_X;
@@ -150,7 +149,7 @@ namespace dae
 		return glm::length(p - (a + t * ab));
 	}
 
-float LevelCollisionComponent::WallXBeside(const glm::vec2& point, float maxDist, bool movingRight) const
+	float LevelCollisionComponent::WallXBeside(const glm::vec2& point, float maxDist, bool movingRight) const
 	{
 		const glm::vec2 moveDir{ movingRight ? 1.f : -1.f, 0.f };
 		float best = movingRight ? FLT_MAX : -FLT_MAX;

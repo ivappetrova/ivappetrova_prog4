@@ -29,7 +29,6 @@ add_library(Engine OBJECT
     ServiceLocator.h
     Singleton.h
     Subject.h
-
 	)
 
 # Use C++20

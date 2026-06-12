@@ -39,6 +39,9 @@ namespace dae
 		void MarkForDestroy() { m_IsMarkedForDestroy = true; }
 		bool IsMarkedForDestroy() const { return m_IsMarkedForDestroy; }
 
+		void SetActive(bool active) { m_IsActive = active; }
+		bool IsActive()       const { return m_IsActive; }
+
 		template<typename T, typename... Args>
 		T* AddComponent(Args&&... args)
 		{
@@ -74,6 +77,8 @@ namespace dae
 		GameObject& operator=(const GameObject&) = delete;
 		GameObject& operator=(GameObject&&) = delete;
 
+		int m_RenderOrder{ 0 };
+
 	private:
 		bool IsChild(const GameObject* candidate) const;
 		// Takes ownership of the child
@@ -87,11 +92,13 @@ namespace dae
 		Transform m_Transform{};
 		std::vector<std::unique_ptr<Component>> m_pComponents{};
 		bool m_IsMarkedForDestroy{ false };
+		bool m_IsActive{ true };
 
 		// Non-owning: parent owns this object (via m_pChildren)
 		GameObject* m_pParent{ nullptr };
 		// Owning: this object owns its children
 		std::vector<std::unique_ptr<GameObject>> m_pChildren{};
+
 
 	};
 }

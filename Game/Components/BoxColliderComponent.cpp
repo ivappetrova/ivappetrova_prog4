@@ -10,8 +10,8 @@ namespace dae
 
 	glm::vec2 BoxColliderComponent::WorldOrigin() const
 	{
-		const glm::vec2& WORLD_ORIGIN { GetOwner()->GetWorldPosition() };
-		return { WORLD_ORIGIN.x, WORLD_ORIGIN.y - m_Height };
+		const glm::vec2& WORLD_POS{ GetOwner()->GetWorldPosition() };
+		return { WORLD_POS.x, WORLD_POS.y - m_Height };
 	}
 
 	glm::vec2 BoxColliderComponent::GetTopLeft() const 

@@ -14,10 +14,10 @@ namespace dae
 
 	PlayerState* JumpState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		if (PlayerComponent.WantsShoot())
+		/*if (PlayerComponent.WantsShoot())
 		{
 			return new ShootState{ false };
-		}
+		}*/
 		if (PlayerComponent.GetVelocityY() >= 0.f)
 		{
 			return new FallState{};

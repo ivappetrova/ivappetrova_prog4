@@ -17,6 +17,9 @@ namespace dae
 		void SetTexture(const std::string& filename);
 		void SetTexture(std::shared_ptr<Texture2D> texture);
 
+		float GetWidth()  const { return m_Width; }
+		float GetHeight() const { return m_Height; }
+
 		bool FlipX{ false };
 
 	private:

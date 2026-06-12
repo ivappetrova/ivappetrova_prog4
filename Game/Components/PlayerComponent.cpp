@@ -10,8 +10,8 @@
 
 namespace dae
 {
-	PlayerComponent::PlayerComponent(GameObject* owner, float movementSpeed)
-		: Component(owner), m_MoveSpeed{movementSpeed}
+	PlayerComponent::PlayerComponent(GameObject* owner, float movementSpeed, Scene& scene)
+		: Component(owner), m_MoveSpeed{ movementSpeed }, m_Scene{ scene }
 	{
 		m_pPhysics = owner->GetComponent<PhysicsComponent>();
 

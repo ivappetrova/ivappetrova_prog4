@@ -28,6 +28,8 @@ namespace dae
 
 		void FixedUpdate(float fixedDelta);
 
+		const std::vector<std::unique_ptr<GameObject>>& GetGameObjects() const { return m_pObjects; }
+
 	private:
 		friend class SceneManager;
 		explicit Scene() = default;

@@ -15,12 +15,14 @@ namespace dae
 
 	PlayerState* IdleState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		if (PlayerComponent.WantsShoot())                         return new ShootState{ false };
+		if (PlayerComponent.WantsShoot())                         return new ShootState{ PlayerComponent.GetScene(), false };
 		if (PlayerComponent.WantsJump() && PlayerComponent.IsGrounded())   return new JumpState{};
 		if (PlayerComponent.GetMoveDirX() != 0.f)                 return new MoveState{};
 		return nullptr;
 	}
 
 	void IdleState::Update(PlayerComponent& /*PlayerComponent*/, float /*deltaTime*/)
-	{}
+	{
+		//Update sprite
+	}
 }
