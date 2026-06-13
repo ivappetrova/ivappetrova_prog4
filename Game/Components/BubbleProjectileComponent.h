@@ -14,7 +14,7 @@ namespace dae
 	class BubbleProjectileComponent final : public Component
 	{
 	public:
-		BubbleProjectileComponent(GameObject* owner, Scene& scene, float directionX, GameObject* shooter, float windowHeight, LevelCollisionComponent* pLevelCol);
+		BubbleProjectileComponent(GameObject* owner, Scene& scene, float directionX, [[maybe_unused]] GameObject* shooter, float windowHeight, LevelCollisionComponent* pLevelCol);
 
 		void Update(float deltaTime) override;
 
@@ -42,7 +42,6 @@ namespace dae
 
 		Scene& m_Scene;
 		float m_WindowHeight;
-		GameObject* m_pShooter{ nullptr }; 
 		GameObject* m_pTrappedEnemy{ nullptr };
 
 		BoxColliderComponent* m_pCollider{ nullptr };

@@ -17,8 +17,8 @@
 
 namespace dae
 {
-	BubbleProjectileComponent::BubbleProjectileComponent(GameObject* owner, Scene& scene, float directionX, GameObject* shooter, float windowHeight, LevelCollisionComponent* pLevelCol)
-		: Component(owner), m_Scene(scene), m_DirX(directionX >= 0.f ? 1.f : -1.f) , m_pShooter(shooter), m_WindowHeight(windowHeight), m_pLevelCol(pLevelCol)
+	BubbleProjectileComponent::BubbleProjectileComponent(GameObject* owner, Scene& scene, float directionX, [[maybe_unused]] GameObject* shooter, float windowHeight, LevelCollisionComponent* pLevelCol)
+		: Component(owner), m_DirX(directionX >= 0.f ? 1.f : -1.f), m_Scene(scene), m_WindowHeight(windowHeight), m_pLevelCol(pLevelCol)
 	{
 		m_pCollider = owner->GetComponent<BoxColliderComponent>();
 	}
