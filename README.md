@@ -5,7 +5,7 @@
 <h2 align="center">Bubble Bobble</h2>
 <h3 align="center">Made by Iva Petrova, 2DAE11 </h3>
 
-<img width="300" height="168" alt="bubbob" src="https://github.com/user-attachments/assets/d87a9bb1-e325-47af-a70a-e1e0c0ab872e" />
+<img width="600" height="320" alt="bubbob" src="https://github.com/user-attachments/assets/d87a9bb1-e325-47af-a70a-e1e0c0ab872e" />
 
 
 <!-- TABLE OF CONTENTS -->
