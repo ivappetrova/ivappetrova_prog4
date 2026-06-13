@@ -2,6 +2,7 @@
 #include "JSONParser.h"
 #include "EnemyTypeRegistry.h"
 #include "Components/EnemyComponent.h"
+#include "Components/EnemyAIComponent.h"
 
 #include "Scene.h"
 #include "GameObject.h"
@@ -164,14 +165,15 @@ namespace dae
 			enemyGO->AddComponent<BoxColliderDebugDrawComponent>(255, 128, 0);
 
 			enemyGO->AddComponent<EnemyComponent>(pType);
+			enemyGO->AddComponent<EnemyAIComponent>(scene, pType->GetId(), windowHeight);
+
 
 			result.enemies.push_back(enemyGO.get());
 			result.levelObjects.push_back(enemyGO.get());
 			scene.Add(std::move(enemyGO));
 		}
 
-		std::cout << "[LevelLoader] Level " << levelIndex
-			<< " loaded: " << result.enemies.size() << " enemy/enemies.\n";
+		std::cout << "[LevelLoader] Level " << levelIndex << " loaded: " << result.enemies.size() << " enemy/enemies.\n";
 
 		return result;
 	}

@@ -31,7 +31,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Components/BubbleProjectileComponent.cpp 
 	Components/PickUpComponent.cpp
 	Components/PvPBubbleProjectileComponent.cpp 
-
+	Components/MaitaRockProjectileComponent.cpp
+	Components/EnemyAIComponent.cpp
 	
     Commands/MoveCommand.h    
     Commands/PlaySoundCommand.h
@@ -69,7 +70,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
 	EndScreen/ScoreManager.cpp
 	EndScreen/ScoreScreenData.h
-	EndScreen/ScoreScreenState.cpp)
+	EndScreen/ScoreScreenState.cpp )
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE
