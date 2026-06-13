@@ -11,13 +11,12 @@ namespace dae
 	class MaitaRockProjectileComponent final : public Component
 	{
 	public:
-		MaitaRockProjectileComponent(GameObject* owner, Scene& scene, float dirX, float windowHeight, LevelCollisionComponent* pLevelCol);
+		MaitaRockProjectileComponent(GameObject* owner, Scene& scene, float dirX, LevelCollisionComponent* pLevelCol);
 		void Update(float deltaTime) override;
 
 	private:
 		Scene& m_Scene;
 		float  m_DirX;
-		float  m_WindowHeight;
 		float  m_Speed{ 200.f };
 		float  m_Lifetime{ 4.f };
 		LevelCollisionComponent* m_pLevelCol;

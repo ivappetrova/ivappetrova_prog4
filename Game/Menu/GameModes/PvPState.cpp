@@ -101,7 +101,7 @@ namespace dae
 		levelGO->AddComponent<TextureComponent>(m_WindowWidth, m_WindowHeight)->SetTexture("Maps/level3.png");
 		auto* pLevelCol = levelGO->AddComponent<LevelCollisionComponent>();
 		pLevelCol->LoadFromSVG("Data/Maps/level3.svg", m_WindowWidth, m_WindowHeight);
-		levelGO->AddComponent<LevelDebugDrawComponent>(pLevelCol);
+		//levelGO->AddComponent<LevelDebugDrawComponent>(pLevelCol);
 		scene.Add(std::move(levelGO));
 
 		for (auto* pPlayer : { pChar1, pChar2 })

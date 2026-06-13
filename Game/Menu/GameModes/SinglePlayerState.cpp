@@ -57,7 +57,7 @@ namespace dae
 		playerGO->AddComponent<PhysicsComponent>(windowHeight);
 		playerGO->AddComponent<PlayerComponent>(PLAYER_SPEED, scene);
 		playerGO->AddComponent<BoxColliderComponent>(PLAYER_SIZE, PLAYER_SIZE);
-		playerGO->AddComponent<BoxColliderDebugDrawComponent>();
+		//playerGO->AddComponent<BoxColliderDebugDrawComponent>();
 
 		playerGO->m_RenderOrder = 10;
 

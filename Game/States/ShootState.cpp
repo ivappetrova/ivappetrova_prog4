@@ -42,10 +42,9 @@ namespace dae
 
 		auto pBubble = std::make_unique<GameObject>();
 		pBubble->SetLocalPosition(SPAWN_X, SPAWN_Y);
-		pBubble->AddComponent<TextureComponent>(BUBBLE_SIZE, BUBBLE_SIZE)
-			->SetTexture("Characters/Player/BubbleProjectile.png");
+		pBubble->AddComponent<TextureComponent>(BUBBLE_SIZE, BUBBLE_SIZE) ->SetTexture("Characters/Player/BubbleProjectile.png");
 		pBubble->AddComponent<BoxColliderComponent>(BUBBLE_SIZE, BUBBLE_SIZE);
-		pBubble->AddComponent<BoxColliderDebugDrawComponent>(255, 0, 255);
+		//pBubble->AddComponent<BoxColliderDebugDrawComponent>(255, 0, 255);
 
 		if (m_PvP)
 		{

@@ -142,9 +142,14 @@ namespace dae
 				ScoreScreenData data;
 				data.mode = GameMode::Coop;
 				if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
+				{
 					data.playerScores.push_back(pScore->GetScore());
+				}
 				if (auto* pScore = pChar2->GetComponent<ScoreComponent>())
+				{
 					data.playerScores.push_back(pScore->GetScore());
+
+				}
 				m_GSM.SwitchTo(std::make_unique<ScoreScreenState>(m_GSM, m_WindowWidth, m_WindowHeight, std::move(data)));
 			});
 
@@ -161,14 +166,6 @@ namespace dae
 		input.BindKeyboardCommand(SDL_SCANCODE_F2, InputManager::KeyState::Down, std::make_unique<MuteCommand>());
 		input.BindKeyboardCommand(SDL_SCANCODE_ESCAPE, InputManager::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
-		// or controller 1
-		input.BindControllerCommand(1, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, -1.f));
-		input.BindControllerCommand(1, Controller::Button::DPadRight, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, +1.f));
-		input.BindControllerCommand(1, Controller::Button::ButtonA, Controller::KeyState::Down, std::make_unique<JumpCommand>(pChar1));
-		input.BindControllerCommand(1, Controller::Button::ButtonB, Controller::KeyState::Down, std::make_unique<ShootCommand>(pChar1, scene, SOUND_SHOOT));
-		input.BindControllerCommand(1, Controller::Button::LeftShoulder, Controller::KeyState::Down, std::make_unique<MuteCommand>());
-		input.BindControllerCommand(1, Controller::Button::RightShoulder, Controller::KeyState::Down, std::make_unique<SkipLevelCommand>(pManagerRaw));
-		input.BindControllerCommand(1, Controller::Button::Back, Controller::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
 		// Player 2 : controller 0
 		input.BindControllerCommand(0, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar2, -1.f));
@@ -179,6 +176,14 @@ namespace dae
 		input.BindControllerCommand(0, Controller::Button::RightShoulder, Controller::KeyState::Down, std::make_unique<SkipLevelCommand>(pManagerRaw));
 		input.BindControllerCommand(0, Controller::Button::Back, Controller::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
+		// Player 1: controller 1
+		input.BindControllerCommand(1, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, -1.f));
+		input.BindControllerCommand(1, Controller::Button::DPadRight, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, +1.f));
+		input.BindControllerCommand(1, Controller::Button::ButtonA, Controller::KeyState::Down, std::make_unique<JumpCommand>(pChar1));
+		input.BindControllerCommand(1, Controller::Button::ButtonB, Controller::KeyState::Down, std::make_unique<ShootCommand>(pChar1, scene, SOUND_SHOOT));
+		input.BindControllerCommand(1, Controller::Button::LeftShoulder, Controller::KeyState::Down, std::make_unique<MuteCommand>());
+		input.BindControllerCommand(1, Controller::Button::RightShoulder, Controller::KeyState::Down, std::make_unique<SkipLevelCommand>(pManagerRaw));
+		input.BindControllerCommand(1, Controller::Button::Back, Controller::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
 		// Background music
 		m_MusicId = soundSystem.AddSound("Data/Sounds/music.mp3");

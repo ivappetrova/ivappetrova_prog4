@@ -9,8 +9,8 @@
 
 namespace dae
 {
-	MaitaRockProjectileComponent::MaitaRockProjectileComponent( GameObject* owner, Scene& scene, float dirX, float windowHeight, LevelCollisionComponent* pLevelCol)
-		: Component(owner) , m_Scene(scene) , m_DirX(dirX) , m_WindowHeight(windowHeight) , m_pLevelCol(pLevelCol)
+	MaitaRockProjectileComponent::MaitaRockProjectileComponent( GameObject* owner, Scene& scene, float dirX, LevelCollisionComponent* pLevelCol)
+		: Component(owner) , m_Scene(scene) , m_DirX(dirX) , m_pLevelCol(pLevelCol)
 	{
 	}
 

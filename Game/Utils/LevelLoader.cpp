@@ -124,7 +124,7 @@ namespace dae
 
 		auto* pLevelCol = levelGO->AddComponent<LevelCollisionComponent>();
 		pLevelCol->LoadFromSVG(levelData.collisionSVG, windowWidth, windowHeight);
-		levelGO->AddComponent<LevelDebugDrawComponent>(pLevelCol);
+		//levelGO->AddComponent<LevelDebugDrawComponent>(pLevelCol);
 		result.levelObjects.push_back(levelGO.get());
 		scene.Add(std::move(levelGO));
 
@@ -162,7 +162,7 @@ namespace dae
 			pPhys->SetLevelCollision(pLevelCol);
 
 			enemyGO->AddComponent<BoxColliderComponent>(pType->GetWidth(), pType->GetHeight());
-			enemyGO->AddComponent<BoxColliderDebugDrawComponent>(255, 128, 0);
+			//enemyGO->AddComponent<BoxColliderDebugDrawComponent>(255, 128, 0);
 
 			enemyGO->AddComponent<EnemyComponent>(pType);
 			enemyGO->AddComponent<EnemyAIComponent>(scene, pType->GetId(), windowHeight);

@@ -190,8 +190,8 @@ namespace dae
 		pRock->SetLocalPosition(SPAWN_X, SPAWN_Y);
 		pRock->AddComponent<TextureComponent>(SIZE, SIZE)->SetTexture("Characters/Maita/MaitaRock.png");
 		pRock->AddComponent<BoxColliderComponent>(SIZE, SIZE);
-		pRock->AddComponent<BoxColliderDebugDrawComponent>(255, 165, 0);
-		pRock->AddComponent<MaitaRockProjectileComponent>(m_Scene, dirX, m_WindowHeight, pLevelCol);
+		//pRock->AddComponent<BoxColliderDebugDrawComponent>(255, 165, 0);
+		pRock->AddComponent<MaitaRockProjectileComponent>(m_Scene, dirX, pLevelCol);
 
 		m_Scene.Add(std::move(pRock));
 	}
