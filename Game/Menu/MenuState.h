@@ -26,7 +26,7 @@ namespace dae
 	private:
 		void UpdateSelectorPosition();
 
-		static constexpr int NUM_OPTIONS = 2;
+		static constexpr int NUM_OPTIONS = 3;
 
 		GameStateManager& m_GSM;
 		float m_WindowWidth;

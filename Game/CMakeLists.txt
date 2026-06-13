@@ -47,21 +47,22 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	States/ShootState.cpp
 	States/TakeDmgState.cpp
 
-	SVGParser.cpp
-	JSONParser.cpp
+	Utils/SVGParser.cpp
+	Utils/JSONParser.cpp
 
-	PlayerStates.h
-	EnemyType.h
-	EnemyTypeRegistry.cpp
-	LevelLoader.cpp
-	SoundObserver.h  
+	Utils/PlayerStates.h
+	Utils/EnemyType.h
+	Utils/EnemyTypeRegistry.cpp
+	Utils/LevelLoader.cpp
+	Utils/SoundObserver.h
 	
 	Menu/MenuState.cpp
 	Menu/MenuCommands/MenuNavigateCommand.h
 	Menu/MenuCommands/MenuConfirmCommand.h 
 	Menu/MenuCommands/GoToMenuCommand.h
 	Menu/GameModes/SinglePlayerState.cpp
-	Menu/GameModes/MultiPlayerState.cpp)
+	Menu/GameModes/CoopState.cpp
+	Menu/GameModes/PvPState.cpp "Components/PvPBubbleProjectileComponent.cpp" "States/PvPShootState.cpp" "Commands/PvPShootCommand.h")
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE

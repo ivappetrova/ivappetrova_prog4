@@ -1,9 +1,8 @@
-#pragma once
 #ifndef LEVELMANAGERCOMPONENT_H
 #define LEVELMANAGERCOMPONENT_H
 
 #include "Component.h"
-#include "LevelLoader.h"
+#include "Utils/LevelLoader.h"
 #include <memory>
 #include <vector>
 
@@ -52,6 +51,6 @@ namespace dae
 		float                            m_WindowHeight;
 	};
 
-} // namespace dae
+}
 
-#endif // LEVELMANAGERCOMPONENT_H
+#endif

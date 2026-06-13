@@ -1,5 +1,5 @@
 #include "LevelCollisionComponent.h"
-#include "SVGParser.h"
+#include "Utils/SVGParser.h"
 #include <cfloat>
 #include <cmath>
 #include <glm/glm.hpp>

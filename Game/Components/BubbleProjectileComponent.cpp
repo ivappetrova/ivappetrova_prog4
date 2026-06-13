@@ -6,7 +6,7 @@
 #include "Components/PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/LevelCollisionComponent.h"
-#include "EnemyType.h"
+#include "Utils/EnemyType.h"
 
 #include "Scene.h"
 #include "GameObject.h"

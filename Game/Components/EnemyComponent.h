@@ -3,7 +3,7 @@
 #define ENEMY_COMPONENT_H
 
 #include "Component.h"
-#include "EnemyType.h"
+#include "Utils/EnemyType.h"
 
 namespace dae
 {
@@ -39,5 +39,4 @@ namespace dae
 	};
 
 }
-
 #endif

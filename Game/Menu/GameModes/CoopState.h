@@ -8,11 +8,11 @@ namespace dae
 {
 	class GameStateManager;
 
-	class MultiplayerState final : public IGameState
+	class CoopState final : public IGameState
 	{
 	public:
-		MultiplayerState(GameStateManager& gsm, float windowWidth, float windowHeight);
-		~MultiplayerState() override = default;
+		CoopState(GameStateManager& gsm, float windowWidth, float windowHeight);
+		~CoopState() override = default;
 
 		void Enter()  override;
 		void Exit()   override;

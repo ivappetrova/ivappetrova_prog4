@@ -1,4 +1,4 @@
-#include "SinglePlayerState.h"
+#include "CoopState.h"
 #include "GameStateManager.h"
 
 #include "SceneManager.h"
@@ -39,9 +39,9 @@
 namespace dae
 {
 	// -----------------------------------------------------------------------
-	// Helpers (same as the static helpers in the original main.cpp)
+	// Helpers (duplicated here; consider moving to a shared GameHelpers.h)
 	// -----------------------------------------------------------------------
-	static GameObject* MakePlayer(Scene& scene, const std::string& texture,
+	static GameObject* MakePlayerMP(Scene& scene, const std::string& texture,
 		float startX, float startY, float windowHeight)
 	{
 		auto playerGO = std::make_unique<GameObject>();
@@ -66,12 +66,13 @@ namespace dae
 		return pPlayer;
 	}
 
-	static void MakeHUD(Scene& scene, GameObject* pPlayer, float labelX, float labelY, std::shared_ptr<Font> font)
+	static void MakeHUDMP(Scene& scene, GameObject* pPlayer,
+		float labelX, float labelY,
+		std::shared_ptr<Font> font)
 	{
 		auto* pHealth = pPlayer->GetComponent<HealthComponent>();
 		auto* pPoints = pPlayer->GetComponent<ScoreComponent>();
 
-		// Lives
 		auto livesGO = std::make_unique<GameObject>();
 		livesGO->SetLocalPosition(labelX, labelY);
 		livesGO->AddComponent<TextComponent>("Lives: 4", font);
@@ -79,7 +80,6 @@ namespace dae
 		scene.Add(std::move(livesGO));
 		if (pHealth) pHealth->AddObserver(pLivesDisplay);
 
-		// Points
 		auto pointsGO = std::make_unique<GameObject>();
 		pointsGO->SetLocalPosition(labelX, labelY + 30.f);
 		pointsGO->AddComponent<TextComponent>("Points: 0", font);
@@ -90,11 +90,11 @@ namespace dae
 
 	// -----------------------------------------------------------------------
 
-	SinglePlayerState::SinglePlayerState(GameStateManager& gsm, float w, float h)
+	CoopState::CoopState(GameStateManager& gsm, float w, float h)
 		: m_GSM(gsm), m_WindowWidth(w), m_WindowHeight(h)
 	{}
 
-	void SinglePlayerState::Enter()
+	void CoopState::Enter()
 	{
 		auto& scene = SceneManager::GetInstance().CreateScene();
 		auto  font20 = ResourceManager::GetInstance().LoadFont("Fonts/pixelify.ttf", 36);
@@ -105,28 +105,35 @@ namespace dae
 		const sound_id SOUND_HIT = soundSystem.AddSound("Data/Sounds/sound2.mp3");
 		const sound_id SOUND_POINT = soundSystem.AddSound("Data/Sounds/sound3.mp3");
 
-		// Player 1
-		GameObject* pChar1 = MakePlayer(scene, "bubble.png", 100.f, 100.f, m_WindowHeight);
-		MakeHUD(scene, pChar1, 100.f, 100.f, font20);
+		// Players
+		GameObject* pChar1 = MakePlayerMP(scene, "bubble.png", 100.f, 100.f, m_WindowHeight);
+		GameObject* pChar2 = MakePlayerMP(scene, "bobble.png", m_WindowWidth - 160.f, 100.f, m_WindowHeight);
 
-		// Sound observers
-		if (auto* pHealth = pChar1->GetComponent<HealthComponent>())
-			pHealth->AddObserver(new SoundObserver{ SOUND_HIT, EVENT_PLAYER_HIT });
+		// HUDs
+		MakeHUDMP(scene, pChar1, 100.f, 100.f, font20);
+		MakeHUDMP(scene, pChar2, m_WindowWidth - 250.f, 100.f, font20);
 
-		if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
-			pScore->AddObserver(new SoundObserver{ SOUND_POINT, EVENT_PLAYER_GET_POINTS });
+		// Sound observers — both players share the same sounds
+		auto attachSounds = [&](GameObject* p)
+			{
+				if (auto* ph = p->GetComponent<HealthComponent>())
+					ph->AddObserver(new SoundObserver{ SOUND_HIT, EVENT_PLAYER_HIT });
+				if (auto* ps = p->GetComponent<ScoreComponent>())
+					ps->AddObserver(new SoundObserver{ SOUND_POINT, EVENT_PLAYER_GET_POINTS });
+			};
+		attachSounds(pChar1);
+		attachSounds(pChar2);
 
-		// Level manager
+		// Level manager — aware of both players
 		auto pLoader = std::make_shared<LevelLoader>("Data/enemies.json");
 		auto managerGO = std::make_unique<GameObject>();
-		managerGO->AddComponent<LevelManagerComponent>(scene, pLoader, std::vector<GameObject*>{ pChar1 }, m_WindowWidth, m_WindowHeight);
-		GameObject* pManagerRaw = managerGO.get(); 
+		managerGO->AddComponent<LevelManagerComponent>( scene, pLoader, std::vector<GameObject*>{ pChar1, pChar2 }, m_WindowWidth, m_WindowHeight);
+		GameObject* pManagerRaw = managerGO.get();
 		scene.Add(std::move(managerGO));
 
-		// Input — keyboard
 		auto& input = InputManager::GetInstance();
 
-		// Keyboard ----
+		// Player 1 : keyboard 
 		input.BindKeyboardCommand(SDL_SCANCODE_A, InputManager::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, -1.f));
 		input.BindKeyboardCommand(SDL_SCANCODE_D, InputManager::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, +1.f));
 		input.BindKeyboardCommand(SDL_SCANCODE_W, InputManager::KeyState::Down, std::make_unique<JumpCommand>(pChar1));
@@ -135,22 +142,31 @@ namespace dae
 		input.BindKeyboardCommand(SDL_SCANCODE_F2, InputManager::KeyState::Down, std::make_unique<MuteCommand>());
 		input.BindKeyboardCommand(SDL_SCANCODE_ESCAPE, InputManager::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
-		// Controller
-		input.BindControllerCommand(0, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, -1.f));
-		input.BindControllerCommand(0, Controller::Button::DPadRight, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, +1.f));
-		input.BindControllerCommand(0, Controller::Button::ButtonA, Controller::KeyState::Down, std::make_unique<JumpCommand>(pChar1));
-		input.BindControllerCommand(0, Controller::Button::ButtonB, Controller::KeyState::Down, std::make_unique<ShootCommand>(pChar1, scene, SOUND_SHOOT));
+		// or controller 1
+		input.BindControllerCommand(1, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, -1.f));
+		input.BindControllerCommand(1, Controller::Button::DPadRight, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, +1.f));
+		input.BindControllerCommand(1, Controller::Button::ButtonA, Controller::KeyState::Down, std::make_unique<JumpCommand>(pChar1));
+		input.BindControllerCommand(1, Controller::Button::ButtonB, Controller::KeyState::Down, std::make_unique<ShootCommand>(pChar1, scene, SOUND_SHOOT));
+		input.BindControllerCommand(1, Controller::Button::LeftShoulder, Controller::KeyState::Down, std::make_unique<MuteCommand>());
+		input.BindControllerCommand(1, Controller::Button::RightShoulder, Controller::KeyState::Down, std::make_unique<SkipLevelCommand>(pManagerRaw));
+		input.BindControllerCommand(1, Controller::Button::Back, Controller::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
+
+		// ---- Player 2 : controller 1 ----
+		input.BindControllerCommand(0, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar2, -1.f));
+		input.BindControllerCommand(0, Controller::Button::DPadRight, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar2, +1.f));
+		input.BindControllerCommand(0, Controller::Button::ButtonA, Controller::KeyState::Down, std::make_unique<JumpCommand>(pChar2));
+		input.BindControllerCommand(0, Controller::Button::ButtonB, Controller::KeyState::Down, std::make_unique<ShootCommand>(pChar2, scene, SOUND_SHOOT));
 		input.BindControllerCommand(0, Controller::Button::LeftShoulder, Controller::KeyState::Down, std::make_unique<MuteCommand>());
 		input.BindControllerCommand(0, Controller::Button::RightShoulder, Controller::KeyState::Down, std::make_unique<SkipLevelCommand>(pManagerRaw));
 		input.BindControllerCommand(0, Controller::Button::Back, Controller::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
+
 		// Background music
 		m_MusicId = soundSystem.AddSound("Data/Sounds/music.mp3");
 		soundSystem.PlayLoop(m_MusicId, 0.05f);
-
 	}
 
-	void SinglePlayerState::Exit()
+	void CoopState::Exit()
 	{
 		ServiceLocator::GetSoundSystem().Stop(m_MusicId);
 
@@ -158,13 +174,13 @@ namespace dae
 		SceneManager::GetInstance().RemoveActiveScene();
 	}
 
-	void SinglePlayerState::Update(float /*deltaTime*/)
+	void CoopState::Update(float /*deltaTime*/)
 	{
-		// SceneManager::Update is driven by Minigin's loop — nothing extra needed here.
+		// SceneManager::Update is driven by Minigin's loop.
 	}
 
-	void SinglePlayerState::Render() const
+	void CoopState::Render() const
 	{
-		// SceneManager::Render is driven by Minigin's loop — nothing extra needed here.
+		// SceneManager::Render is driven by Minigin's loop.
 	}
 }
