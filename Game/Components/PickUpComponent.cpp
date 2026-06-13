@@ -1,4 +1,4 @@
-#include "Components/PickupComponent.h"
+#include "Components/PickUpComponent.h"
 
 #include "Components/BoxColliderComponent.h"
 #include "Components/PlayerComponent.h"

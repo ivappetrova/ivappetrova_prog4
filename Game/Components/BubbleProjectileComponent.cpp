@@ -2,7 +2,7 @@
 
 #include "Components/BoxColliderComponent.h"
 #include "Components/EnemyComponent.h"
-#include "Components/PickupComponent.h"
+#include "Components/PickUpComponent.h"
 #include "Components/PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/LevelCollisionComponent.h"
