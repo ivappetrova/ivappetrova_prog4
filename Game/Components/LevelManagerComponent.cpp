@@ -3,7 +3,7 @@
 #include "EnemyComponent.h"
 #include "Components/BoxColliderComponent.h"
 #include "Components/BoxColliderDebugDrawComponent.h"
-#include "Components/PickupComponent.h"
+#include "Components/PickUpComponent.h"
 #include "Components/HealthComponent.h"
 #include "Scene.h"
 #include "GameObject.h"
@@ -112,7 +112,7 @@ namespace dae
 
 		for (const auto& pGO : m_Scene.GetGameObjects())
 		{
-			if (pGO && pGO->GetComponent<PickupComponent>())
+			if (pGO && pGO->GetComponent<PickUpComponent>())
 			{
 				m_Scene.Remove(*pGO);
 			}

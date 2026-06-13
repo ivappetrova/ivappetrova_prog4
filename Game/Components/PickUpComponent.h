@@ -9,10 +9,10 @@ namespace dae
 {
 	class BoxColliderComponent;
 
-	class PickupComponent final : public Component
+	class PickUpComponent final : public Component
 	{
 	public:
-		PickupComponent(GameObject* owner, Scene& scene, int points);
+		PickUpComponent(GameObject* owner, Scene& scene, int points);
 
 		void Update(float deltaTime) override;
 		bool IsReady() const { return m_SpawnDelay <= 0.f; }
@@ -20,10 +20,10 @@ namespace dae
 		int GetPoints() const { return m_Points; }
 
 		// Rule of 5
-		PickupComponent(const PickupComponent&) = delete;
-		PickupComponent& operator=(const PickupComponent&) = delete;
-		PickupComponent(PickupComponent&&) = delete;
-		PickupComponent& operator=(PickupComponent&&) = delete;
+		PickUpComponent(const PickUpComponent&) = delete;
+		PickUpComponent& operator=(const PickUpComponent&) = delete;
+		PickUpComponent(PickUpComponent&&) = delete;
+		PickUpComponent& operator=(PickUpComponent&&) = delete;
 
 	private:
 		Scene& m_Scene;

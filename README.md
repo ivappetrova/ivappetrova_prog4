@@ -91,7 +91,7 @@ I implemented the first 3 levels of the game. In my implementation there are 3 m
 ### Component
 - A `GameObject` is an empty container. All behaviour and data are added as components, each running independently every frame
 - This avoids deep inheritance hierarchies and lets objects be assembled from reusable parts
-- `PhysicsComponent` applies gravity and resolves collisions, `HealthComponent` tracks HP and fires events, `BubbleProjectileComponent` runs the full bubble lifecycle (traveling → trapped → burst), `PickupComponent` checks for player overlap and awards points, `LevelCollisionComponent` answers geometric queries against SVG-loaded polygon data
+- `PhysicsComponent` applies gravity and resolves collisions, `HealthComponent` tracks HP and fires events, `BubbleProjectileComponent` runs the full bubble lifecycle (traveling → trapped → burst), `PickUpComponent` checks for player overlap and awards points, `LevelCollisionComponent` answers geometric queries against SVG-loaded polygon data
 
 ### State
 - The player has a state machine where each state represents a distinct mode of behaviour. States don't own game data — they borrow it from `PlayerComponent` and drive it differently. When conditions change, the old state is deleted and a new one takes over

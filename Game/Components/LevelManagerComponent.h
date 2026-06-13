@@ -12,7 +12,7 @@ namespace dae
 	class GameObject;
 	class EnemyComponent;
 	class BoxColliderComponent;
-	class PickupComponent;
+	class PickUpComponent;
 
 	class LevelManagerComponent final : public Component
 	{

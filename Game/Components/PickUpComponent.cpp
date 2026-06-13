@@ -1,4 +1,4 @@
-#include "Components/PickupComponent.h"
+#include "Components/PickUpComponent.h"
 
 #include "Components/BoxColliderComponent.h"
 #include "Components/PlayerComponent.h"
@@ -11,13 +11,13 @@
 
 namespace dae
 {
-	PickupComponent::PickupComponent(GameObject* owner, Scene& scene, int points)
+	PickUpComponent::PickUpComponent(GameObject* owner, Scene& scene, int points)
 		: Component(owner), m_Scene(scene), m_Points(points)
 	{
 		m_pCollider = owner->GetComponent<BoxColliderComponent>();
 	}
 
-	void PickupComponent::Update(float deltaTime)	
+	void PickUpComponent::Update(float deltaTime)	
 	{
 		if (m_SpawnDelay > 0.f)
 		{

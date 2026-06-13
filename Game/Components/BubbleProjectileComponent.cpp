@@ -2,7 +2,7 @@
 
 #include "Components/BoxColliderComponent.h"
 #include "Components/EnemyComponent.h"
-#include "Components/PickupComponent.h"
+#include "Components/PickUpComponent.h"
 #include "Components/PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/LevelCollisionComponent.h"
@@ -200,7 +200,7 @@ namespace dae
 		pPhysics->SetVelocityY(-200.f);
 		if (m_pLevelCol) pPhysics->SetLevelCollision(m_pLevelCol);
 
-		foodGO->AddComponent<PickupComponent>(m_Scene, points);
+		foodGO->AddComponent<PickUpComponent>(m_Scene, points);
 
 		m_Scene.Add(std::move(foodGO));
 
