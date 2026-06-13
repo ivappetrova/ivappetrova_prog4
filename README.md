@@ -2,8 +2,11 @@
 [![Build Status](https://github.com/avadae/minigin/actions/workflows/emscripten.yml/badge.svg)](https://github.com/avadae/emscripten/actions)
 
 <!-- Game Title -->
-<h2 align="center">Bubble</h2>
+<h2 align="center">Bubble Bobble</h2>
 <h3 align="center">Made by Iva Petrova, 2DAE11 </h3>
+
+<img width="600" height="1200" alt="bubbob" src="https://github.com/user-attachments/assets/8ebb785d-8ab8-426e-8d19-42a3d60e9016" />
+
 
 <!-- TABLE OF CONTENTS -->
 <details>
