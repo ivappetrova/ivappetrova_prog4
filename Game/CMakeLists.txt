@@ -15,8 +15,6 @@ endif()
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
     Main.cpp
 
-	PlayerStates.h
-
     Components/HealthComponent.h
     Components/HealthDisplayComponent.h
     Components/PlayerDiedDisplayComponent.h
@@ -29,12 +27,17 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Components/PhysicsComponent.cpp
 	Components/PlayerComponent.cpp
 	Components/EnemyComponent.cpp
+	Components/LevelManagerComponent.cpp
+	Components/BubbleProjectileComponent.cpp 
+	Components/PickUpComponent.cpp
 
 	Commands/DealDamageCommand.h
-    Commands/MoveCommand.h
-    Commands/PickUpCommand.h
+    Commands/MoveCommand.h    
     Commands/PlaySoundCommand.h
 	Commands/JumpCommand.h
+	Commands/ShootCommand.h 
+	Commands/SkipLevelCommand.h
+	Commands/MuteCommand.h
 	
 	States/PlayerState.h
 	States/IdleState.cpp
@@ -47,11 +50,11 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	SVGParser.cpp
 	JSONParser.cpp
 
-EnemyType.h
-EnemyTypeRegistry.cpp
-LevelLoader.cpp
-
-	  "Components/LevelManagerComponent.cpp" "Components/BubbleProjectileComponent.cpp" "Components/PickUpComponent.cpp" "Commands/ShootCommand.h" "Commands/SkipLevelCommand.h")
+	PlayerStates.h
+	EnemyType.h
+	EnemyTypeRegistry.cpp
+	LevelLoader.cpp
+	SoundObserver.h )
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE
@@ -108,7 +111,7 @@ elseif(WIN32)
     target_link_libraries(${TARGET_NAME} PRIVATE xinput winmm)
 
     # Copy SDL DLLs
-    set(SDL_RUNTIME_DLLS SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+	set(SDL_RUNTIME_DLLS SDL3::SDL3 SDL3_ttf::SDL3_ttf SDL3_mixer::SDL3_mixer)
     foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
         add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different

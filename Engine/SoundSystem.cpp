@@ -7,96 +7,88 @@
 #include <condition_variable>
 #include <queue>
 #include <iostream>
+#include <limits>
+
+#include <SDL3_mixer/SDL_mixer.h>
 
 namespace dae
 {
-#if defined(_WIN32)
-
-	// Windows MCI
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <mmsystem.h>
-#pragma comment(lib, "winmm.lib")
-
 	struct AudioClip
 	{
 		std::string filePath;
-		std::string alias;
+		MIX_Audio* pAudio{ nullptr };
+		MIX_Track* pTrack{ nullptr };
+		MIX_Mixer* pMixer{ nullptr };
 		bool loaded{ false };
 
-		explicit AudioClip(std::string path, std::string al)
-			: filePath(std::move(path)), alias(std::move(al)) {}
+		explicit AudioClip(std::string path, MIX_Mixer* mixer)
+			: filePath(std::move(path)), pMixer(mixer) {}
 
 		~AudioClip()
 		{
-			if (loaded)
-			{
-				std::string cmd = "close " + alias;
-				mciSendStringA(cmd.c_str(), nullptr, 0, nullptr);
-			}
+			if (pTrack) MIX_DestroyTrack(pTrack);
+			if (pAudio) MIX_DestroyAudio(pAudio);
 		}
 
 		bool IsLoaded() const { return loaded; }
 
 		void Load()
 		{
-			std::string cmd = "open \"" + filePath + "\" type mpegvideo alias " + alias;
-			MCIERROR err = mciSendStringA(cmd.c_str(), nullptr, 0, nullptr);
-
-			if (err != 0)
+			pAudio = MIX_LoadAudio(pMixer, filePath.c_str(), false);
+			if (!pAudio)
 			{
-				cmd = "open \"" + filePath + "\" type waveaudio alias " + alias;
-				err = mciSendStringA(cmd.c_str(), nullptr, 0, nullptr);
-			}
-
-			if (err != 0)
-			{
-				char errBuf[256];
-				mciGetErrorStringA(err, errBuf, sizeof(errBuf));
-				std::cerr << "[Sound] MCI open failed for '" << filePath << "': " << errBuf << '\n';
+				std::cerr << "[Sound] MIX_LoadAudio failed for '" << filePath << "': " << SDL_GetError() << '\n';
 				return;
 			}
+
+			pTrack = MIX_CreateTrack(pMixer);
+			if (!pTrack)
+			{
+				std::cerr << "[Sound] MIX_CreateTrack failed: " << SDL_GetError() << '\n';
+				MIX_DestroyAudio(pAudio);
+				pAudio = nullptr;
+				return;
+			}
+
+			MIX_SetTrackAudio(pTrack, pAudio);
 			loaded = true;
 		}
 
 		void Play(float volume)
 		{
 			if (!loaded) return;
+			MIX_SetTrackGain(pTrack, volume);
 
-			std::string seekCmd = "seek " + alias + " to start";
-			mciSendStringA(seekCmd.c_str(), nullptr, 0, nullptr);
+			SDL_PropertiesID props = SDL_CreateProperties();
+			SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, 0);
+			MIX_PlayTrack(pTrack, props);
+			SDL_DestroyProperties(props);
+		}
 
-			const int mciVolume = static_cast<int>(volume * 1000);
-			std::string volCmd = "setaudio " + alias + " volume to " + std::to_string(mciVolume);
-			mciSendStringA(volCmd.c_str(), nullptr, 0, nullptr);
+		void PlayLoop(float volume)
+		{
+			if (!loaded) return;
+			MIX_SetTrackGain(pTrack, volume);
 
-			std::string playCmd = "play " + alias;
-			MCIERROR err = mciSendStringA(playCmd.c_str(), nullptr, 0, nullptr);
-			if (err != 0)
-			{
-				char errBuf[256];
-				mciGetErrorStringA(err, errBuf, sizeof(errBuf));
-				std::cerr << "[Sound] MCI play failed for '" << alias << "': " << errBuf << '\n';
-			}
+			SDL_PropertiesID props = SDL_CreateProperties();
+			SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, -1); // infinite
+			MIX_PlayTrack(pTrack, props);
+			SDL_DestroyProperties(props);
+		}
+
+		void SetVolume(float volume)
+		{
+			if (!loaded) return;
+			MIX_SetTrackGain(pTrack, volume);
 		}
 	};
 
-#else
-	// Non-Windows fallback (Emscripten/Linux/macOS):
-	// Build succeeds; sound calls become no-ops (or log once if you prefer).
-	struct AudioClip
-	{
-		explicit AudioClip(std::string, std::string) {}
-		bool IsLoaded() const { return true; }
-		void Load() {}
-		void Play(float) {}
-	};
-#endif
-
-	struct PlayRequest { sound_id id; float volume; };
+	struct PlayRequest { sound_id id; float volume; bool loop{ false }; };
 
 	struct SoundSystem::Impl
 	{
+		MIX_Mixer* pMixer{ nullptr };
+
 		std::vector<std::unique_ptr<AudioClip>> clips;
 		std::mutex clipsMutex;
 
@@ -104,11 +96,26 @@ namespace dae
 		std::mutex queueMutex;
 		std::condition_variable cv;
 		bool quit{ false };
-		unsigned int aliasCounter{ 0 };
+		bool muted{ false };
+		sound_id loopingId{ std::numeric_limits<sound_id>::max() };
+		float loopingVolume{ 1.f };
 
 		std::thread workerThread;
 
-		Impl() { workerThread = std::thread(&Impl::WorkerLoop, this); }
+		Impl()
+		{
+			if (!MIX_Init())
+			{
+				std::cerr << "[Sound] MIX_Init failed: " << SDL_GetError() << '\n';
+				return;
+			}
+
+			pMixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
+			if (!pMixer)
+				std::cerr << "[Sound] MIX_CreateMixerDevice failed: " << SDL_GetError() << '\n';
+
+			workerThread = std::thread(&Impl::WorkerLoop, this);
+		}
 
 		~Impl()
 		{
@@ -119,9 +126,11 @@ namespace dae
 			cv.notify_one();
 			if (workerThread.joinable())
 				workerThread.join();
-		}
 
-		std::string MakeAlias() { return "sound" + std::to_string(aliasCounter++); }
+			clips.clear(); // destroy tracks/audio before mixer
+			if (pMixer) MIX_DestroyMixer(pMixer);
+			MIX_Quit();
+		}
 
 		void WorkerLoop()
 		{
@@ -139,15 +148,17 @@ namespace dae
 
 				while (!local.empty())
 				{
-					auto [id, volume] = local.front();
+					auto [id, volume, loop] = local.front();
 					local.pop();
-					ProcessRequest(id, volume);
+					ProcessRequest(id, volume, loop);
 				}
 			}
 		}
 
-		void ProcessRequest(sound_id id, float volume)
+		void ProcessRequest(sound_id id, float volume, bool loop)
 		{
+			if (muted) return;
+
 			AudioClip* clip = nullptr;
 			{
 				std::lock_guard lock(clipsMutex);
@@ -162,10 +173,18 @@ namespace dae
 			if (!clip->IsLoaded())
 				clip->Load();
 
-			if (!clip->IsLoaded())
-				return;
+			if (!clip->IsLoaded()) return;
 
-			clip->Play(volume);
+			if (loop)
+			{
+				loopingId = id;
+				loopingVolume = volume;
+				clip->PlayLoop(volume);
+			}
+			else
+			{
+				clip->Play(volume);
+			}
 		}
 	};
 
@@ -178,7 +197,7 @@ namespace dae
 	{
 		std::lock_guard lock(m_pImpl->clipsMutex);
 		const sound_id id = static_cast<sound_id>(m_pImpl->clips.size());
-		m_pImpl->clips.push_back(std::make_unique<AudioClip>(filePath, m_pImpl->MakeAlias()));
+		m_pImpl->clips.push_back(std::make_unique<AudioClip>(filePath, m_pImpl->pMixer));
 		return id;
 	}
 
@@ -186,8 +205,33 @@ namespace dae
 	{
 		{
 			std::lock_guard lock(m_pImpl->queueMutex);
-			m_pImpl->requestQueue.push({ id, volume });
+			m_pImpl->requestQueue.push({ id, volume, false });
 		}
 		m_pImpl->cv.notify_one();
+	}
+
+	void SoundSystem::PlayLoop(sound_id id, float volume)
+	{
+		{
+			std::lock_guard lock(m_pImpl->queueMutex);
+			m_pImpl->requestQueue.push({ id, volume, true });
+		}
+		m_pImpl->cv.notify_one();
+	}
+
+	void SoundSystem::SetMuted(bool muted)
+	{
+		{
+			std::lock_guard lock(m_pImpl->queueMutex);
+			m_pImpl->muted = muted;
+		}
+
+		std::lock_guard lock(m_pImpl->clipsMutex);
+		if (m_pImpl->loopingId != std::numeric_limits<sound_id>::max() &&
+			m_pImpl->loopingId < m_pImpl->clips.size())
+		{
+			auto* clip = m_pImpl->clips[m_pImpl->loopingId].get();
+			clip->SetVolume(muted ? 0.f : m_pImpl->loopingVolume);
+		}
 	}
 }

@@ -11,37 +11,35 @@
 #include "Scene.h"
 #include "TextureComponent.h"
 #include "TextComponent.h"
-#include "FPSComponent.h"
 #include "InputManager.h"
-
-#include "Components/HealthComponent.h"
-#include "Components/HealthDisplayComponent.h"
-#include "Components/PlayerDiedDisplayComponent.h"
-#include "Components/ScoreComponent.h"
-#include "Components/ScoreDisplayComponent.h"
-
 #include "ServiceLocator.h"
 #include "SoundSystem.h"
 #include "LoggingSoundSystem.h"
 
-#include "Commands/PlaySoundCommand.h"
-#include "Commands/PickUpCommand.h"
-#include "Commands/MoveCommand.h"
-#include "Commands/JumpCommand.h"
-#include "Commands/ShootCommand.h"
-#include "Commands/SkipLevelCommand.h"
+#include "SoundObserver.h"
+#include "LevelLoader.h"
 
+#include "Components/HealthComponent.h"
+#include "Components/HealthDisplayComponent.h"
+#include "Components/ScoreComponent.h"
+#include "Components/ScoreDisplayComponent.h"
 #include "Components/PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/BoxColliderComponent.h"
 #include "Components/BoxColliderDebugDrawComponent.h"
-
-#include "LevelLoader.h"
 #include "Components/LevelManagerComponent.h"
+
+#include "Commands/MoveCommand.h"
+#include "Commands/JumpCommand.h"
+#include "Commands/ShootCommand.h"
+#include "Commands/SkipLevelCommand.h"
+#include "Commands/MuteCommand.h"
 
 #include <filesystem>
 #include <memory>
 #include <vector>
+
+
 namespace fs = std::filesystem;
 
 #if defined(_WIN32) && !defined(__EMSCRIPTEN__) && _DEBUG
@@ -56,25 +54,27 @@ static void SpawnConsole()
 }
 #endif
 
-static dae::GameObject* MakePlayer(dae::Scene& scene, const std::string& texture,
-	float startX, float startY, float windowHeight)
+static dae::GameObject* MakePlayer(dae::Scene& scene, const std::string& texture, float startX, float startY, float windowHeight)
 {
-	auto characterGO = std::make_unique<dae::GameObject>();
-	characterGO->AddComponent<dae::TextureComponent>(60.f, 60.f)->SetTexture(texture);
-	characterGO->SetLocalPosition(startX, startY);
+	auto playerGameObj = std::make_unique<dae::GameObject>();
 
-	characterGO->AddComponent<dae::HealthComponent>(4);
-	characterGO->AddComponent<dae::ScoreComponent>();
-	characterGO->AddComponent<dae::PhysicsComponent>(windowHeight);
-	characterGO->AddComponent<dae::PlayerComponent>(150.f, scene);
-	characterGO->AddComponent<dae::BoxColliderComponent>(60.f, 60.f);
-	characterGO->AddComponent<dae::BoxColliderDebugDrawComponent>();
+	const float PLAYER_SIZE{ 60.f };
+	const float PLAYER_SPEED{ 150.f };
 
-	dae::GameObject* pChar = characterGO.get();
-	pChar->m_RenderOrder = 10;
-	scene.Add(std::move(characterGO));
+	playerGameObj->AddComponent<dae::TextureComponent>(PLAYER_SIZE, PLAYER_SIZE)->SetTexture(texture);
+	playerGameObj->SetLocalPosition(startX, startY);
 
-	return pChar;
+	playerGameObj->AddComponent<dae::HealthComponent>(4);
+	playerGameObj->AddComponent<dae::ScoreComponent>();
+	playerGameObj->AddComponent<dae::PhysicsComponent>(windowHeight);
+	playerGameObj->AddComponent<dae::PlayerComponent>(PLAYER_SPEED, scene);
+	playerGameObj->AddComponent<dae::BoxColliderComponent>(PLAYER_SIZE, PLAYER_SIZE);
+	playerGameObj->AddComponent<dae::BoxColliderDebugDrawComponent>();
+
+	dae::GameObject* pPlayer = playerGameObj.get();
+	pPlayer->m_RenderOrder = 10;
+	scene.Add(std::move(playerGameObj));
+	return pPlayer;
 }
 
 static void MakeHUD(dae::Scene& scene, dae::GameObject* pPlayer, float labelX, float labelY, std::shared_ptr<dae::Font> font)
@@ -101,40 +101,50 @@ static void MakeHUD(dae::Scene& scene, dae::GameObject* pPlayer, float labelX, f
 
 static void load(float windowWidth, float windowHeight)
 {
+	// Scene
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
-
 	auto font20 = dae::ResourceManager::GetInstance().LoadFont("Fonts/pixelify.ttf", 36);
 
+	// Sounds
 	auto& soundSystem = dae::ServiceLocator::GetSoundSystem();
 	const dae::sound_id SOUND_SHOOT = soundSystem.AddSound("Data/Sounds/sound1.mp3");
 	const dae::sound_id SOUND_HIT = soundSystem.AddSound("Data/Sounds/sound2.mp3");
 	const dae::sound_id SOUND_POINT = soundSystem.AddSound("Data/Sounds/sound3.mp3");
 
+	// Player
 	dae::GameObject* pChar1 = MakePlayer(scene, "bubble.png", 100.f, 100.f, windowHeight);
 	MakeHUD(scene, pChar1, 100.f, 100.f, font20);
 
-	auto& input = dae::InputManager::GetInstance();
+	// Sound observers
+	if (auto* pHealth = pChar1->GetComponent<dae::HealthComponent>())
+	{
+		pHealth->AddObserver(new dae::SoundObserver{ SOUND_HIT, dae::EVENT_PLAYER_HIT });
+	}
 
+	if (auto* pScore = pChar1->GetComponent<dae::ScoreComponent>())
+	{
+		pScore->AddObserver(new dae::SoundObserver{ SOUND_POINT, dae::EVENT_PLAYER_GET_POINTS });
+	}
+
+	// Level manager
+	auto pLoader = std::make_shared<dae::LevelLoader>("Data/enemies.json");
+	auto managerGO = std::make_unique<dae::GameObject>();
+	managerGO->AddComponent<dae::LevelManagerComponent>(scene, pLoader, std::vector<dae::GameObject*>{ pChar1 }, windowWidth, windowHeight);
+	auto* pManagerRaw = managerGO.get();
+	scene.Add(std::move(managerGO));
+
+	// Input
+	auto& input = dae::InputManager::GetInstance();
 	input.BindKeyboardCommand(SDL_SCANCODE_A, dae::InputManager::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar1, -1.f));
 	input.BindKeyboardCommand(SDL_SCANCODE_D, dae::InputManager::KeyState::Pressed, std::make_unique<dae::MoveCommand>(pChar1, 1.f));
 	input.BindKeyboardCommand(SDL_SCANCODE_W, dae::InputManager::KeyState::Down, std::make_unique<dae::JumpCommand>(pChar1));
-
-	input.BindKeyboardCommand(SDL_SCANCODE_P, dae::InputManager::KeyState::Down, std::make_unique<dae::ShootCommand>(pChar1, scene));
-
-	auto pLoader = std::make_shared<dae::LevelLoader>("Data/enemies.json");
-
-	auto managerGO = std::make_unique<dae::GameObject>();
-	managerGO->AddComponent<dae::LevelManagerComponent>(
-		scene,
-		pLoader,
-		std::vector<dae::GameObject*>{ pChar1 },
-		windowWidth,
-		windowHeight);
-
-	auto* pManagerRaw = managerGO.get();
-	scene.Add(std::move(managerGO));
+	input.BindKeyboardCommand(SDL_SCANCODE_P, dae::InputManager::KeyState::Down, std::make_unique<dae::ShootCommand>(pChar1, scene, SOUND_SHOOT));
 	input.BindKeyboardCommand(SDL_SCANCODE_F1, dae::InputManager::KeyState::Up, std::make_unique<dae::SkipLevelCommand>(pManagerRaw));
+	input.BindKeyboardCommand(SDL_SCANCODE_F2, dae::InputManager::KeyState::Down, std::make_unique<dae::MuteCommand>());
 
+	// Background music
+	const dae::sound_id SOUND_MUSIC = soundSystem.AddSound("Data/Sounds/music.mp3");
+	soundSystem.PlayLoop(SOUND_MUSIC, 0.05f);
 }
 
 int main(int, char* [])

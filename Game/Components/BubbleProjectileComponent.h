@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+#include "ISoundSystem.h"
+
 namespace dae
 {
 	class BoxColliderComponent;

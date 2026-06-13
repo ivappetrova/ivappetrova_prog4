@@ -40,6 +40,7 @@ target_include_directories(Engine PUBLIC
     ${glm_SOURCE_DIR}
     ${sdl3_SOURCE_DIR}/include
     ${sdl3_ttf_SOURCE_DIR}/include
+	${sdl3_mixer_SOURCE_DIR}/include
     ${VLD_INCLUDE_DIR}
 )
 
@@ -47,6 +48,7 @@ target_include_directories(Engine PUBLIC
 target_link_libraries(Engine PUBLIC
     SDL3::SDL3
     SDL3_ttf::SDL3_ttf
+	SDL3_mixer::SDL3_mixer
     ${VLD_LIBRARIES}
 )
 

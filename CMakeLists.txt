@@ -86,6 +86,23 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
+# SDL3_mixer (audio)
+find_package(SDL3_mixer CONFIG QUIET)
+if(NOT SDL3_mixer_FOUND)
+    FetchContent_Declare(
+        SDL3_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG main
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+    )
+    set(SDL3MIXER_VENDORED ON)
+    set(SDL3MIXER_MP3 ON)
+    set(SDL3MIXER_MP3_DRMP3 ON)
+    set(SDL3MIXER_INSTALL OFF)
+    FetchContent_MakeAvailable(SDL3_mixer)
+endif()
+
 # Visual Leak Detector (Windows only)
 if(WIN32)
   find_package(VLD CONFIG)

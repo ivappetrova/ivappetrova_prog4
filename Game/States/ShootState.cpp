@@ -15,20 +15,21 @@
 
 #include <iostream>
 #include <memory>
+#include "ServiceLocator.h"
 
 namespace dae
 {
-	ShootState::ShootState(Scene& scene, bool wasMoving)
-		: m_Scene(scene)
-		, m_WasMoving(wasMoving)
+	ShootState::ShootState(Scene& scene, bool wasMoving, sound_id shootSound)
+		: m_Scene(scene), m_WasMoving(wasMoving), m_ShootSound(shootSound)
 	{
 	}
 
 	void ShootState::Enter(PlayerComponent& player)
 	{
-		std::cout << "[ShootState] Entered\n";
+		std::cout << "[ShootState] Entered" << std::endl;
 		m_Timer = SHOOT_DURATION;
 		player.StopMove();
+		ServiceLocator::GetSoundSystem().Play(m_ShootSound, 0.8f);
 
 		GameObject* pPlayerGO = player.GetGameObject();
 

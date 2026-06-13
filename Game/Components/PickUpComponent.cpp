@@ -6,15 +6,14 @@
 
 #include "Scene.h"
 #include "GameObject.h"
+#include "ServiceLocator.h"
 
 #include <iostream>
 
 namespace dae
 {
 	PickupComponent::PickupComponent(GameObject* owner, Scene& scene, int points)
-		: Component(owner)
-		, m_Scene(scene)
-		, m_Points(points)
+		: Component(owner), m_Scene(scene), m_Points(points)
 	{
 		m_pCollider = owner->GetComponent<BoxColliderComponent>();
 	}
@@ -52,4 +51,4 @@ namespace dae
 		}
 	}
 
-} // namespace dae
+}

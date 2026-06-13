@@ -1,10 +1,10 @@
-#pragma once
 #ifndef PICKUP_COMPONENT_H
 #define PICKUP_COMPONENT_H
 
 #include "Component.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "ISoundSystem.h"
 
 namespace dae
 {
@@ -35,7 +35,5 @@ namespace dae
 
 		float m_SpawnDelay{ 0.3f };
 	};
-
 }
-
 #endif

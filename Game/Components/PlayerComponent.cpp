@@ -11,11 +11,12 @@
 #include "Components/BoxColliderComponent.h"
 #include "States/TakeDmgState.h"
 #include <iostream>
+#include "ServiceLocator.h"
 
 namespace dae
 {
 	PlayerComponent::PlayerComponent(GameObject* owner, float movementSpeed, Scene& scene)
-		: Component(owner), m_MoveSpeed{ movementSpeed }, m_Scene{ scene }
+		: Component(owner), m_MoveSpeed(movementSpeed), m_Scene(scene)
 	{
 		m_pPhysics = owner->GetComponent<PhysicsComponent>();
 

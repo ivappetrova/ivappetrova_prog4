@@ -14,7 +14,8 @@ namespace dae
 
 		virtual sound_id AddSound(const std::string& filePath) = 0;
 		virtual void Play(sound_id id, float volume) = 0;
-
+		virtual void PlayLoop(sound_id id, float volume) = 0;
+		virtual void SetMuted(bool muted) = 0;
 	};
 }
 #endif

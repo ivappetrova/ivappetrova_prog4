@@ -10,6 +10,8 @@ namespace dae
 	public:
 		sound_id AddSound(const std::string&) override { return 0; }
 		void Play(sound_id, float) override {}
+		void PlayLoop(sound_id, float) override {}
+		void SetMuted(bool) override {}
 	};
 }
 #endif

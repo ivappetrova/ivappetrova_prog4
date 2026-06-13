@@ -13,8 +13,7 @@ namespace dae
 	public:
 		explicit LoggingSoundSystem(std::unique_ptr<ISoundSystem> wrapped)
 			: m_pWrapped(std::move(wrapped))
-		{
-		}
+		{}
 
 		sound_id AddSound(const std::string& filePath) override
 		{
@@ -27,6 +26,18 @@ namespace dae
 		{
 			m_pWrapped->Play(id, volume);
 			std::cout << "[LoggingSoundSystem] Play: id=" << id << " volume=" << volume << std::endl;
+		}
+
+		void PlayLoop(sound_id id, float volume) override
+		{
+			m_pWrapped->PlayLoop(id, volume);
+			std::cout << "[LoggingSoundSystem] PlayLoop: id=" << id << " volume=" << volume << std::endl;
+		}
+
+		void SetMuted(bool muted) override
+		{
+			m_pWrapped->SetMuted(muted);
+			std::cout << "[LoggingSoundSystem] SetMuted: " << (muted ? "true" : "false") << std::endl;
 		}
 
 	private:

@@ -200,6 +200,7 @@ namespace dae
 		auto* pPhysics = foodGO->AddComponent<PhysicsComponent>(m_WindowHeight);
 		pPhysics->SetVelocityY(-200.f);
 		if (m_pLevelCol) pPhysics->SetLevelCollision(m_pLevelCol);
+
 		foodGO->AddComponent<PickupComponent>(m_Scene, points);
 
 		m_Scene.Add(std::move(foodGO));

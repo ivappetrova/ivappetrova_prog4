@@ -15,6 +15,8 @@ namespace dae
 
 		sound_id AddSound(const std::string& filePath) override;
 		void Play(sound_id id, float volume) override;
+		void PlayLoop(sound_id id, float volume) override;
+		void SetMuted(bool muted) override;
 
 		// Rule of 5
 		SoundSystem(const SoundSystem&) = delete;

@@ -15,7 +15,7 @@ namespace dae
 		void Update(PlayerComponent& player, float deltaTime) override;
 
 	private:
-		static constexpr float KNOCKBACK_VX{ -200.f };
+		static constexpr float KNOCKBACK_VX{ -20.f };
 		static constexpr float INVINCIBLE_TIME{ 3.f };
 
 		float m_Timer{ INVINCIBLE_TIME };
