@@ -5,6 +5,7 @@
 #include <functional>
 #include <filesystem>
 #include <chrono>
+#include "GameStateManager.h"
 
 namespace dae
 {
@@ -18,6 +19,8 @@ namespace dae
 
 		int GetWindowWidth()  const { return m_WindowWidth; }
 		int GetWindowHeight() const { return m_WindowHeight; }
+
+		void SetGameStateManager(dae::GameStateManager* gsm) { m_pGSM = gsm; }
 
 		// Rule of 5
 		Minigin(const Minigin& other) = delete;
@@ -35,6 +38,7 @@ namespace dae
 
 		float m_Lag{};
 		static constexpr float m_FixedTimeStep{ 1.0f / 60.0f };
+		dae::GameStateManager* m_pGSM{ nullptr };
 	};
 }
 #endif

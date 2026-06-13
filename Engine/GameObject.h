@@ -26,7 +26,7 @@ namespace dae
 		void SetLocalPosition(float x, float y);
 		void SetLocalPosition(const glm::vec3& pos);
 		// World position — recalculates lazily if dirty
-		const glm::vec3& GetWorldPosition() const;
+		const glm::vec3& GetWorldPosition();
 
 		const Transform& GetTransform() const { return m_Transform; }
 
@@ -86,7 +86,7 @@ namespace dae
 		// Releases ownership and returns the child
 		std::unique_ptr<GameObject> RemoveChild(GameObject* child);
 
-		void UpdateWorldPosition() const;
+		void UpdateWorldPosition();
 		void SetPositionDirty();
 
 		Transform m_Transform{};
@@ -98,8 +98,6 @@ namespace dae
 		GameObject* m_pParent{ nullptr };
 		// Owning: this object owns its children
 		std::vector<std::unique_ptr<GameObject>> m_pChildren{};
-
-
 	};
 }
 #endif

@@ -41,12 +41,11 @@
       "backgroundTexture": "Maps/level3.png",
       "collisionSVG": "Data/Maps/level3.svg",
       "enemies": [
-        { "type": "ZenChan", "spawnExprX": "50",                   "spawnY": 100.0 },
-        { "type": "ZenChan", "spawnExprX": "windowWidth - 100",    "spawnY": 100.0 },
-        { "type": "ZenChan", "spawnExprX": "50",                   "spawnY": 200.0 },
-        { "type": "ZenChan", "spawnExprX": "windowWidth - 100",    "spawnY": 200.0 },
+        { "type": "ZenChan", "spawnExprX": "100",                   "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth - 150",    "spawnY": 100.0 },
+        { "type": "ZenChan", "spawnExprX": "100",                   "spawnY": 200.0 },
+        { "type": "ZenChan", "spawnExprX": "windowWidth - 150",    "spawnY": 200.0 },
         { "type": "Maita",   "spawnExprX": "windowWidth/2",        "spawnY": 600.0 },
-        { "type": "Maita",   "spawnExprX": "100",                  "spawnY": 500.0 },
         { "type": "Maita",   "spawnExprX": "windowWidth - 160",    "spawnY": 500.0 }
       ]
     }

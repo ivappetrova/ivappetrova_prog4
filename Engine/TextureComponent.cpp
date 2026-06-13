@@ -13,21 +13,21 @@ void dae::TextureComponent::Render() const
 {
 	if (!m_pTexture) return;
 
-	const SDL_FlipMode flip = FlipX ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-	SDL_Renderer* renderer = Renderer::GetInstance().GetSDLRenderer();
+	const SDL_FlipMode FLIP = FlipX ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+	SDL_Renderer* pRenderer = Renderer::GetInstance().GetSDLRenderer();
 
 	if (m_Width > 0 && m_Height > 0)
 	{
-		const auto pos = GetOwner()->GetWorldPosition();
-		SDL_FRect dst{ pos.x, pos.y - m_Height, m_Width, m_Height };
-		SDL_RenderTextureRotated(renderer, m_pTexture->GetSDLTexture(), nullptr, &dst, 0.0, nullptr, flip);
+		const auto POS = GetOwner()->GetWorldPosition();
+		SDL_FRect dst{ POS.x, POS.y - m_Height, m_Width, m_Height };
+		SDL_RenderTextureRotated(pRenderer, m_pTexture->GetSDLTexture(), nullptr, &dst, 0.0, nullptr, FLIP);
 	}
 	else
 	{
-		const auto pos = GetOwner()->GetWorldPosition();
-		const auto size = m_pTexture->GetSize();
-		SDL_FRect dst{ pos.x, pos.y - size.y, size.x, size.y };
-		SDL_RenderTextureRotated(renderer, m_pTexture->GetSDLTexture(), nullptr, &dst, 0.0, nullptr, flip);
+		const auto POS = GetOwner()->GetWorldPosition();
+		const auto SIZE = m_pTexture->GetSize();
+		SDL_FRect dst{ POS.x, POS.y - SIZE.y, SIZE.x, SIZE.y };
+		SDL_RenderTextureRotated(pRenderer, m_pTexture->GetSDLTexture(), nullptr, &dst, 0.0, nullptr, FLIP);
 	}
 }
 

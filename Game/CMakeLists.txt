@@ -54,11 +54,19 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	EnemyType.h
 	EnemyTypeRegistry.cpp
 	LevelLoader.cpp
-	SoundObserver.h )
+	SoundObserver.h  
+	
+	Menu/MenuState.cpp
+	Menu/MenuCommands/MenuNavigateCommand.h
+	Menu/MenuCommands/MenuConfirmCommand.h 
+	Menu/MenuCommands/GoToMenuCommand.h
+	Menu/GameModes/SinglePlayerState.cpp
+	Menu/GameModes/MultiPlayerState.cpp)
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+	 ${CMAKE_CURRENT_SOURCE_DIR}/Menu
 )
 
 # Link engine library

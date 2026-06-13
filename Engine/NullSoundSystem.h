@@ -12,6 +12,7 @@ namespace dae
 		void Play(sound_id, float) override {}
 		void PlayLoop(sound_id, float) override {}
 		void SetMuted(bool) override {}
+		void Stop(sound_id) override {}
 	};
 }
 #endif

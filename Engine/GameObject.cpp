@@ -76,7 +76,7 @@ void dae::GameObject::SetLocalPosition(const glm::vec3& pos)
 	SetPositionDirty();
 }
 
-const glm::vec3& dae::GameObject::GetWorldPosition() const
+const glm::vec3& dae::GameObject::GetWorldPosition()
 {
 	if (m_Transform.IsDirty())
 	{
@@ -85,7 +85,7 @@ const glm::vec3& dae::GameObject::GetWorldPosition() const
 	return m_Transform.GetWorldPosition();
 }
 
-void dae::GameObject::UpdateWorldPosition() const
+void dae::GameObject::UpdateWorldPosition()
 {
 	if (m_pParent == nullptr)
 	{

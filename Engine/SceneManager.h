@@ -20,6 +20,8 @@ namespace dae
 		void Render();
 		void FixedUpdate(float fixedDelta);
 
+		void RemoveActiveScene();
+
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

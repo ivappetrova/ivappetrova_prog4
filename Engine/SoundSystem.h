@@ -17,6 +17,7 @@ namespace dae
 		void Play(sound_id id, float volume) override;
 		void PlayLoop(sound_id id, float volume) override;
 		void SetMuted(bool muted) override;
+		void Stop(sound_id id) override;
 
 		// Rule of 5
 		SoundSystem(const SoundSystem&) = delete;

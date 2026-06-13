@@ -29,7 +29,8 @@ add_library(Engine OBJECT
     ServiceLocator.h
     Singleton.h
     Subject.h
-	)
+	IGameState.h
+	GameStateManager.h)
 
 # Use C++20
 target_compile_features(Engine PUBLIC cxx_std_20)

@@ -30,3 +30,11 @@ void dae::SceneManager::FixedUpdate(float fixedDelta)
 		scene->FixedUpdate(fixedDelta);
 	}
 }
+
+void dae::SceneManager::RemoveActiveScene()
+{
+	if (!m_pScenes.empty())
+	{
+		m_pScenes.pop_back();
+	}
+}

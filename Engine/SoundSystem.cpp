@@ -81,6 +81,12 @@ namespace dae
 			if (!loaded) return;
 			MIX_SetTrackGain(pTrack, volume);
 		}
+
+		void Stop()
+		{
+			if (!loaded) return;
+			MIX_StopTrack(pTrack, 0);
+		}
 	};
 
 	struct PlayRequest { sound_id id; float volume; bool loop{ false }; };
@@ -233,5 +239,14 @@ namespace dae
 			auto* clip = m_pImpl->clips[m_pImpl->loopingId].get();
 			clip->SetVolume(muted ? 0.f : m_pImpl->loopingVolume);
 		}
+	}
+
+	void SoundSystem::Stop(sound_id id)
+	{
+		std::lock_guard lock(m_pImpl->clipsMutex);
+		if (id >= m_pImpl->clips.size()) return;
+		m_pImpl->clips[id]->Stop();
+		if (m_pImpl->loopingId == id)
+			m_pImpl->loopingId = std::numeric_limits<sound_id>::max();
 	}
 }

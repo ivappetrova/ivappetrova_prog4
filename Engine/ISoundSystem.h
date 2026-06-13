@@ -16,6 +16,7 @@ namespace dae
 		virtual void Play(sound_id id, float volume) = 0;
 		virtual void PlayLoop(sound_id id, float volume) = 0;
 		virtual void SetMuted(bool muted) = 0;
+		virtual void Stop(sound_id id) = 0;
 	};
 }
 #endif

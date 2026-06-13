@@ -12,7 +12,8 @@ namespace dae
 	public:
 		explicit SkipLevelCommand(GameObject* levelManager)
 			: m_pLevelManager(levelManager)
-		{}
+		{
+		}
 
 		void Execute() override
 		{

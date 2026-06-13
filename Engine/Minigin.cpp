@@ -123,6 +123,7 @@ void dae::Minigin::RunOneFrame()
 	}
 
 	SceneManager::GetInstance().Update(DELTA_TIME);
+	if (m_pGSM) m_pGSM->FlushPendingTransition();
 
 	Renderer::GetInstance().Render();
 

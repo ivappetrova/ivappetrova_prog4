@@ -27,8 +27,7 @@ namespace dae
 		bool ProcessInput();
 
 		// Controller bindings
-		void BindControllerCommand(unsigned int controllerIndex, Controller::Button button, Controller::KeyState keyState, 
-								   std::unique_ptr<Command> command);
+		void BindControllerCommand(unsigned int controllerIndex, Controller::Button button, Controller::KeyState keyState, std::unique_ptr<Command> command);
 		void UnbindControllerCommand(unsigned int controllerIndex, Controller::Button button, Controller::KeyState keyState);
 
 		// Keyboard bindings - SDL
@@ -44,13 +43,13 @@ namespace dae
 		//////////////////////////////////////////////////////////////////// Controller state
 		struct ControllerBinding
 		{
-			unsigned int          controllerIndex;
-			Controller::Button    button;
-			Controller::KeyState  keyState;
+			unsigned int controllerIndex;
+			Controller::Button button;
+			Controller::KeyState keyState;
 			std::unique_ptr<Command> command;
 		};
 
-		static constexpr unsigned int MAX_CONTROLLERS = 4;
+		static constexpr unsigned int MAX_CONTROLLERS{4};
 		std::unique_ptr<Controller> m_pControllers[MAX_CONTROLLERS];
 
 		Controller& GetOrCreateController(unsigned int index);
@@ -60,9 +59,9 @@ namespace dae
 		//////////////////////////////////////////////////////////////////// Keyboard state
 		struct KeyboardBinding
 		{
-			SDL_Scancode              key;
-			KeyState                  keyState;
-			std::unique_ptr<Command>  command;
+			SDL_Scancode key;
+			KeyState keyState;
+			std::unique_ptr<Command> command;
 		};
 
 		std::vector<KeyboardBinding> m_KeyboardBindings;

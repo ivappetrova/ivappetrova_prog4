@@ -18,16 +18,16 @@ namespace dae
 
 		void RemoveObserver(IObserver* observer)
 		{
-			m_pObservers.erase(
-				std::remove(m_pObservers.begin(), m_pObservers.end(), observer),
-				m_pObservers.end());
+			m_pObservers.erase( std::remove(m_pObservers.begin(), m_pObservers.end(), observer), m_pObservers.end());
 		}
 
 	protected:
 		void NotifyObservers(const Event& event, GameObject* actor)
 		{
-			for (auto* observer : m_pObservers)
-				observer->Notify(event, actor);
+			for (auto* pObserver : m_pObservers)
+			{
+				pObserver->Notify(event, actor);
+			}
 		}
 
 	private:

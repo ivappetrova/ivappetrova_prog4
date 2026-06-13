@@ -10,8 +10,6 @@ dae::RotatorComponent::RotatorComponent(GameObject* owner, float radius, float s
 
 void dae::RotatorComponent::Update(float deltaTime)
 {
-
-
 	m_Angle += m_Speed * deltaTime;
 
 	// clamp angle 

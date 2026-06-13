@@ -12,15 +12,15 @@ namespace dae
 	{
 		consteval static unsigned int _calculate(const char* const text, unsigned int& value)
 		{
-			const unsigned int character = sdbm_hash<length - 1>::_calculate(text, value);
-			value = character + (value << 6) + (value << 16) - value;
+			const unsigned int CHARACTER = sdbm_hash<length - 1>::_calculate(text, value);
+			value = CHARACTER + (value << 6) + (value << 16) - value;
 			return text[length - 1];
 		}
 		consteval static unsigned int calculate(const char* const text)
 		{
 			unsigned int value = 0;
-			const auto character = _calculate(text, value);
-			return character + (value << 6) + (value << 16) - value;
+			const auto CHARACTER = _calculate(text, value);
+			return CHARACTER + (value << 6) + (value << 16) - value;
 		}
 	};
 	template <> struct sdbm_hash<1>

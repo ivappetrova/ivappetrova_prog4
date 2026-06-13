@@ -39,14 +39,18 @@ void Scene::Render() const
 	std::vector<GameObject*> sorted;
 	sorted.reserve(m_pObjects.size());
 	for (const auto& obj : m_pObjects)
+	{
 		sorted.push_back(obj.get());
+	}
 
 	std::stable_sort(sorted.begin(), sorted.end(),
 		[](const GameObject* a, const GameObject* b)
 		{ return a->m_RenderOrder < b->m_RenderOrder; });
 
 	for (const auto* obj : sorted)
+	{
 		obj->Render();
+	}
 }
 
 void dae::Scene::FixedUpdate(float fixedDelta)

@@ -12,15 +12,15 @@ namespace dae
 		const glm::vec3& GetWorldPosition() const { return m_WorldPosition; }
 
 		void SetLocalPosition(const glm::vec3& position);
-		void SetWorldPosition(const glm::vec3& pos) const;
+		void SetWorldPosition(const glm::vec3& pos);
 
 		bool IsDirty() const { return m_IsDirty; }
 		void SetDirty() { m_IsDirty = true; }
 
 	private:
 		glm::vec3 m_LocalPosition{};
-		mutable glm::vec3 m_WorldPosition{}; 
-		mutable bool m_IsDirty{ true };      
+		glm::vec3 m_WorldPosition{}; 
+		bool m_IsDirty{ true };      
 	};
 }
 #endif

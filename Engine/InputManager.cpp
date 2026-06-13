@@ -14,14 +14,17 @@ namespace dae
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
 		{
-			if (e.type == SDL_EVENT_QUIT)
-				return false;
+			if (e.type == SDL_EVENT_QUIT) return false;
 
 			if (e.type == SDL_EVENT_KEY_DOWN && !e.key.repeat)
+			{
 				m_KeysDownThisFrame.push_back(e.key.scancode);
+			}
 
 			if (e.type == SDL_EVENT_KEY_UP)
+			{
 				m_KeysUpThisFrame.push_back(e.key.scancode);
+			}
 		}
 
 		// Update all active controllers 
@@ -37,19 +40,20 @@ namespace dae
 		for (auto& binding : m_ControllerBindings)
 		{
 			if (!m_pControllers[binding.controllerIndex]) continue;
-			const auto& ctrl = *m_pControllers[binding.controllerIndex];
+			if (!m_pControllers[binding.controllerIndex]->IsConnected()) continue;
+			const auto& CONTROLLER = *m_pControllers[binding.controllerIndex];
 
 			bool triggered = false;
 			switch (binding.keyState)
 			{
 			case Controller::KeyState::Down:
-				triggered = ctrl.IsDown(binding.button);
+				triggered = CONTROLLER.IsDown(binding.button);
 				break;
 			case Controller::KeyState::Up:
-				triggered = ctrl.IsUp(binding.button);
+				triggered = CONTROLLER.IsUp(binding.button);
 				break;
 			case Controller::KeyState::Pressed:
-				triggered = ctrl.IsPressed(binding.button);
+				triggered = CONTROLLER.IsPressed(binding.button);
 				break;
 			}
 
@@ -60,31 +64,39 @@ namespace dae
 		}
 
 		// Execute keyboard commands
-		const bool* keyboardState = SDL_GetKeyboardState(nullptr);
+		const bool* KEYBOARD_STATE = SDL_GetKeyboardState(nullptr);
 
 		for (auto& binding : m_KeyboardBindings)
 		{
-			bool triggered = false;
+			bool isTriggered = false;
 			switch (binding.keyState)
 			{
 			case KeyState::Down:
 			{
 				for (SDL_Scancode sc : m_KeysDownThisFrame)
-					if (sc == binding.key) { triggered = true; break; }
+					if (sc == binding.key) 
+					{ 
+						isTriggered = true; 
+						break; 
+					}
 				break;
 			}
 			case KeyState::Up:
 			{
 				for (SDL_Scancode sc : m_KeysUpThisFrame)
-					if (sc == binding.key) { triggered = true; break; }
+					if (sc == binding.key) 
+					{ 
+						isTriggered = true; 
+						break; 
+					}
 				break;
 			}
 			case KeyState::Pressed:
-				triggered = keyboardState[binding.key];
+				isTriggered = KEYBOARD_STATE[binding.key];
 				break;
 			}
 
-			if (triggered)
+			if (isTriggered)
 			{
 				binding.command->Execute();
 			}
