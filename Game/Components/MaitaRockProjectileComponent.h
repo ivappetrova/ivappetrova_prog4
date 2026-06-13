@@ -17,7 +17,7 @@ namespace dae
 	private:
 		Scene& m_Scene;
 		float  m_DirX;
-		float  m_WindowHeight;
+		[[maybe_unused]] float m_WindowHeight;
 		float  m_Speed{ 200.f };
 		float  m_Lifetime{ 4.f };
 		LevelCollisionComponent* m_pLevelCol;
