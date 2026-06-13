@@ -68,7 +68,7 @@ namespace dae
 				}
 			}
 
-			pBubble->AddComponent<BubbleProjectileComponent>(m_Scene, DIR_X, pPlayerGO, windowHeight, pLevelCol);
+			pBubble->AddComponent<BubbleProjectileComponent>(m_Scene, DIR_X, windowHeight, pLevelCol);
 		}
 
 		m_Scene.Add(std::move(pBubble));
