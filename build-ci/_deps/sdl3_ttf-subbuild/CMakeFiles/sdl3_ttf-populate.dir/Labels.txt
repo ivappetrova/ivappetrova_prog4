@@ -1,0 +1,14 @@
+# Target labels
+ sdl3_ttf-populate
+# Source files and their labels
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/CMakeFiles/sdl3_ttf-populate
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/CMakeFiles/sdl3_ttf-populate.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/CMakeFiles/sdl3_ttf-populate-complete.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-build.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-configure.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-download.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-install.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-mkdir.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-patch.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-test.rule
+/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/sdl3_ttf-subbuild/sdl3_ttf-populate-prefix/src/sdl3_ttf-populate-stamp/sdl3_ttf-populate-update.rule

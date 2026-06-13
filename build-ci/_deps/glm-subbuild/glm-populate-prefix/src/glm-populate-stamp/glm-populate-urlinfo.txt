@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/download-glm-populate.cmake;COMMAND;/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/verify-glm-populate.cmake;COMMAND;/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/extract-glm-populate.cmake
+source_dir=/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps/glm-src
+work_dir=/home/runner/work/ivappetrova_prog4/ivappetrova_prog4/ivappetrova/ivappetrova_prog4/build-ci/_deps
+url(s)=https://github.com/g-truc/glm/releases/download/1.0.3/glm-1.0.3.zip
+hash=
+      no_extract=
+
