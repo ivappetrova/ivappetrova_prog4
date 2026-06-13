@@ -18,7 +18,7 @@
 namespace dae
 {
 	ShootState::ShootState(Scene& scene, bool wasMoving, sound_id shootSound, bool pvp)
-		: m_Scene(scene), m_WasMoving(wasMoving), m_ShootSound(shootSound), m_PvP(pvp)
+		: m_Scene(scene), m_WasMoving(wasMoving), m_PvP(pvp), m_ShootSound(shootSound)
 	{
 	}
 
