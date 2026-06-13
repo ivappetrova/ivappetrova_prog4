@@ -1,6 +1,7 @@
 ﻿[![Build Status](https://github.com/avadae/minigin/actions/workflows/cmake.yml/badge.svg)](https://github.com/avadae/cmake/actions)
 [![Build Status](https://github.com/avadae/minigin/actions/workflows/emscripten.yml/badge.svg)](https://github.com/avadae/emscripten/actions)
 
+<!-- Game Title -->
 <h2 align="center">Bubble</h2>
 <h3 align="center">Made by Iva Petrova, 2DAE11 </h3>
 
@@ -15,7 +16,7 @@
   </ol>
 </details>
 
-
+<!-- About the game -->
 # About the game
 
 Bubble Bobble is all about a green dragon named Bub and a blue dragon named Bob, who need to save their girlfriends from a world known as the Cave of Monsters. 
@@ -26,6 +27,7 @@ I implemented the first 3 levels of the game. In my implementation there are 3 m
 - Co-op: Play as Bub and Bob together and try to complete all levels.
 - PvP: Play as Bub and Maita and try to defeat each other
 
+<!-- Controls -->
 # Controls
 ## Keyboard
 ### Menu
@@ -52,7 +54,7 @@ I implemented the first 3 levels of the game. In my implementation there are 3 m
 - Right shoulder - skip level
 - Back - go to menu
 
-
+<!-- Design Choices -->
 # Design Choices — Game Programming Patterns by Robert Nystrom
 
 ## Mandatory Patterns
@@ -134,6 +136,7 @@ I implemented the first 3 levels of the game. In my implementation there are 3 m
 - The type defines what the enemy looks like and how big it is
 - Adding a new enemy variant is purely a data change
 
-
+<!-- Contacts -->
+## Contacts
 * [Github- Iva Petrova](https://github.com/ivappetrova/ivappetrova_prog4)
 * email: - iva.petrova@student.howest.be
