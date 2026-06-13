@@ -23,7 +23,6 @@ namespace dae
 
 		Scene& m_Scene;
 		std::string m_TypeId;
-		float m_WindowHeight;
 
 		float m_JumpCooldown{ 0.f };
 		float m_ShootCooldown{ 0.f };
