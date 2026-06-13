@@ -34,7 +34,6 @@ dae::GameObject::~GameObject()
 	{
 		child->m_pParent = nullptr;
 	}*/
-	// m_pChildren vector destructor now safely destroys all children
 
 }
 

@@ -18,11 +18,14 @@ namespace dae
 
 	void FallState::Update(PlayerComponent& PlayerComponent, float /*deltaTime*/)
 	{
-		// Allow steering while falling
-		const float dir = PlayerComponent.GetMoveDirX();
-		if (dir != 0.f)
-			PlayerComponent.RequestMove(dir);
+		const float DIRECTION = PlayerComponent.GetMoveDirX();
+		if (DIRECTION != 0.f)
+		{
+			PlayerComponent.RequestMove(DIRECTION);
+		}
 		else
+		{
 			PlayerComponent.StopMove();
+		}
 	}
 }

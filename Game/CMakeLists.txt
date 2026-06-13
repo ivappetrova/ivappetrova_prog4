@@ -32,14 +32,14 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Components/PickUpComponent.cpp
 	Components/PvPBubbleProjectileComponent.cpp 
 
-	Commands/DealDamageCommand.h
+	
     Commands/MoveCommand.h    
     Commands/PlaySoundCommand.h
 	Commands/JumpCommand.h
 	Commands/ShootCommand.h 
 	Commands/SkipLevelCommand.h
 	Commands/MuteCommand.h
-	Commands/PvPShootCommand.h 
+	 
 	
 	States/PlayerState.h
 	States/IdleState.cpp
@@ -48,7 +48,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	States/FallState.cpp
 	States/ShootState.cpp
 	States/TakeDmgState.cpp
-	States/PvPShootState.cpp 
+	 
 
 	Utils/SVGParser.cpp
 	Utils/JSONParser.cpp

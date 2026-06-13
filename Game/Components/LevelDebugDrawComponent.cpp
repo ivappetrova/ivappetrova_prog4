@@ -1,6 +1,6 @@
 #include "LevelDebugDrawComponent.h"
 #include "LevelCollisionComponent.h"
-#include "Renderer.h"          // dae::Renderer::GetInstance().GetSDLRenderer()
+#include "Renderer.h" 
 #include <SDL3/SDL.h>
 
 namespace dae
@@ -29,7 +29,6 @@ namespace dae
 			}
 		}
 
-		// Restore white so other render calls aren't tinted
 		SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
 	}
 }

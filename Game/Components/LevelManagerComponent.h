@@ -17,13 +17,7 @@ namespace dae
 	class LevelManagerComponent final : public Component
 	{
 	public:
-		LevelManagerComponent(
-			GameObject* owner,
-			Scene& scene,
-			std::shared_ptr<LevelLoader>      loader,
-			std::vector<GameObject*>          players,
-			float                             windowWidth,
-			float                             windowHeight);
+		LevelManagerComponent(GameObject* owner, Scene& scene, std::shared_ptr<LevelLoader> loader, std::vector<GameObject*> players, float windowWidth, float windowHeight);
 
 		void Update(float deltaTime) override;
 		void SkipLevel();

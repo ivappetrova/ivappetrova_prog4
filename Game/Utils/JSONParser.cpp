@@ -35,9 +35,6 @@ bool JSONParser::ParseEnemiesFile(const std::string& filePath, EnemiesFileData& 
 	return true;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-//  Top-level section parsers
-// ────────────────────────────────────────────────────────────────────────────
 bool JSONParser::ParseEnemyTypes(const std::string& json, std::vector<EnemyTypeData>& out)
 {
 	std::string arrayContent;
@@ -98,9 +95,6 @@ bool JSONParser::ParseLevels(const std::string& json, std::vector<LevelData>& ou
 	return true;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-//  Object parsers
-// ────────────────────────────────────────────────────────────────────────────
 bool JSONParser::ParseEnemyTypeObject(const std::string& obj, EnemyTypeData& out)
 {
 	if (!GetStringValue(obj, "id",      out.id))      { std::cerr << "JSONParser::ParseEnemyTypeObject, missing \"id\"\n";      return false; }
@@ -153,12 +147,6 @@ bool JSONParser::ParseEnemySpawn(const std::string& obj, EnemySpawnData& out)
 	return true;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-//  Primitive extractors
-// ────────────────────────────────────────────────────────────────────────────
-
-// Finds:  "key" : "some value"
-//                  ^^^^^^^^^^  returned in out
 bool JSONParser::GetStringValue(const std::string& json, const std::string& key, std::string& out)
 {
 	// Search for  "key"
@@ -188,8 +176,6 @@ bool JSONParser::GetStringValue(const std::string& json, const std::string& key,
 	return true;
 }
 
-// Finds:  "key" : 123.4
-//                 ^^^^^  returned in out
 bool JSONParser::GetFloatValue(const std::string& json, const std::string& key, float& out)
 {
 	const std::string searchKey = "\"" + key + "\"";
@@ -219,8 +205,6 @@ bool JSONParser::GetFloatValue(const std::string& json, const std::string& key, 
 	return true;
 }
 
-// Finds:  "key" : 2
-//                 ^  returned in out
 bool JSONParser::GetIntValue(const std::string& json, const std::string& key, int& out)
 {
 	float f{};
@@ -229,12 +213,7 @@ bool JSONParser::GetIntValue(const std::string& json, const std::string& key, in
 	return true;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-//  Array / block helpers
-// ────────────────────────────────────────────────────────────────────────────
 
-// Finds:  "key" : [ ... ]
-//                   ^^^  returned in out (without the brackets)
 bool JSONParser::GetArrayContent(const std::string& json, const std::string& key, std::string& out)
 {
 	const std::string searchKey = "\"" + key + "\"";
@@ -268,8 +247,6 @@ bool JSONParser::GetArrayContent(const std::string& json, const std::string& key
 	return true;
 }
 
-// Splits an array body (text between [ and ]) into individual { ... } strings.
-// Handles nested objects and arrays correctly via depth counting.
 bool JSONParser::SplitObjects(const std::string& arrayContent, std::vector<std::string>& objects)
 {
 	size_t i = 0;
@@ -306,9 +283,6 @@ bool JSONParser::SplitObjects(const std::string& arrayContent, std::vector<std::
 	return true;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-//  Normalize — strips comments, collapses whitespace
-// ────────────────────────────────────────────────────────────────────────────
 void JSONParser::Normalize(std::string& json)
 {
 	std::string result;
@@ -322,8 +296,6 @@ void JSONParser::Normalize(std::string& json)
 	{
 		const char c = json[i];
 
-		// Track whether we're inside a quoted string so we don't
-		// accidentally strip content that looks like a comment
 		if (c == '"' && (i == 0 || json[i - 1] != '\\'))
 			inString = !inString;
 

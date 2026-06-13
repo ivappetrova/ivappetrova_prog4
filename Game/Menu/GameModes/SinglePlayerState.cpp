@@ -110,11 +110,13 @@ namespace dae
 		MakeHUD(scene, pChar1, 100.f, 100.f, font20);
 
 		// Sound observers
-		if (auto* pHealth = pChar1->GetComponent<HealthComponent>())
-			pHealth->AddObserver(new SoundObserver{ SOUND_HIT, EVENT_PLAYER_HIT });
+		m_HitObserver.emplace(SOUND_HIT, EVENT_PLAYER_HIT);
+		m_PointObserver.emplace(SOUND_POINT, EVENT_PLAYER_GET_POINTS);
 
+		if (auto* pHealth = pChar1->GetComponent<HealthComponent>())
+			pHealth->AddObserver(&m_HitObserver.value());
 		if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
-			pScore->AddObserver(new SoundObserver{ SOUND_POINT, EVENT_PLAYER_GET_POINTS });
+			pScore->AddObserver(&m_PointObserver.value());
 
 		// Level manager
 		auto pLoader = std::make_shared<LevelLoader>("Data/enemies.json");
@@ -127,7 +129,9 @@ namespace dae
 				ScoreScreenData data;
 				data.mode = GameMode::SinglePlayer;
 				if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
+				{ 
 					data.playerScores.push_back(pScore->GetScore());
+				}
 				m_GSM.SwitchTo(std::make_unique<ScoreScreenState>(m_GSM, m_WindowWidth, m_WindowHeight, std::move(data)));
 			});
 
@@ -136,7 +140,7 @@ namespace dae
 		// Input — keyboard
 		auto& input = InputManager::GetInstance();
 
-		// Keyboard ----
+		// Keyboard
 		input.BindKeyboardCommand(SDL_SCANCODE_A, InputManager::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, -1.f));
 		input.BindKeyboardCommand(SDL_SCANCODE_D, InputManager::KeyState::Pressed, std::make_unique<MoveCommand>(pChar1, +1.f));
 		input.BindKeyboardCommand(SDL_SCANCODE_W, InputManager::KeyState::Down, std::make_unique<JumpCommand>(pChar1));

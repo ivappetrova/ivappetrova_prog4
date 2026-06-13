@@ -14,7 +14,8 @@ namespace dae
 		std::vector<int> playerScores;
 
 		// PvP only
-		int winnerIndex{ -1 }; // 0 = P1, 1 = P2
+		// 0 = P1, 1 = P2
+		int winnerIndex{ -1 }; 
 	};
 }
 #endif

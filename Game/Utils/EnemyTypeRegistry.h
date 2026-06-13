@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ENEMY_TYPE_REGISTRY_H
 #define ENEMY_TYPE_REGISTRY_H
 
@@ -20,7 +19,6 @@ namespace dae
 
         void LoadFromJson(const std::string& jsonPath);
 
-        // Returns nullptr when the id is unknown
         const EnemyType* GetType(const std::string& id) const;
 
         // Non-copyable singleton
@@ -34,5 +32,4 @@ namespace dae
     };
 
 }
-
 #endif

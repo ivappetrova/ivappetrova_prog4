@@ -4,7 +4,6 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Scene.h"
-#include "ISoundSystem.h"
 
 namespace dae
 {

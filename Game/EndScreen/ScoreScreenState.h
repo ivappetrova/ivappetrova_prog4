@@ -38,7 +38,6 @@ namespace dae
 		float m_WindowHeight;
 		ScoreScreenData m_Data;
 
-		// Name input: one per player (PvP: only winner, SP: 1, Coop: 1 shared)
 		int m_ActivePlayer{ 0 };
 		int m_CursorPos{ 0 };
 		std::array<int, NAME_LENGTH> m_Letters{ 0, 0, 0 }; // 0 = A

@@ -20,12 +20,8 @@
 
 namespace dae
 {
-	// ── Helper: simple spawn-X expression evaluator ──────────────────────────
-	// Supports literals, windowWidth, and +  -  *  /
-	// e.g. "windowWidth/2 - 70"  →  640/2 - 70  =  250
 	float LevelLoader::EvalSpawnX(const std::string& expr, float windowWidth)
 	{
-		// Replace the "windowWidth" token with its numeric value
 		std::string e = expr;
 		const std::string token = "windowWidth";
 		const std::string value = std::to_string(static_cast<int>(windowWidth));
@@ -76,7 +72,6 @@ namespace dae
 		return result;
 	}
 
-	// ── Constructor ──────────────────────────────────────────────────────────
 	LevelLoader::LevelLoader(const std::string& jsonPath)
 		: m_JsonPath{ jsonPath }
 	{
@@ -86,18 +81,14 @@ namespace dae
 		// Count levels by parsing the file
 		EnemiesFileData data;
 		if (JSONParser::ParseEnemiesFile(jsonPath, data))
+		{
 			m_LevelCount = static_cast<int>(data.levels.size());
+		}
 	}
 
 	int LevelLoader::GetLevelCount() const { return m_LevelCount; }
 
-	// ── LoadLevel ────────────────────────────────────────────────────────────
-	LevelLoader::LevelResult LevelLoader::LoadLevel(
-		Scene& scene,
-		int                             levelIndex,
-		float                           windowWidth,
-		float                           windowHeight,
-		const std::vector<GameObject*>& players)
+	LevelLoader::LevelResult LevelLoader::LoadLevel(Scene& scene,int levelIndex,float windowWidth, float windowHeight, const std::vector<GameObject*>& players)
 	{
 		LevelResult result{};
 
@@ -116,21 +107,19 @@ namespace dae
 
 		const LevelData& levelData = data.levels[levelIndex];
 
-		// ── Background ───────────────────────────────────────────────────
+		// Background 
 		{
 			auto bg = std::make_unique<GameObject>();
 			bg->SetLocalPosition(0.f, windowHeight);
-			bg->AddComponent<TextureComponent>(windowWidth, windowHeight)
-				->SetTexture(levelData.backgroundTexture);
+			bg->AddComponent<TextureComponent>(windowWidth, windowHeight)->SetTexture(levelData.backgroundTexture);
 			result.levelObjects.push_back(bg.get());
 			scene.Add(std::move(bg));
 		}
 
-		// ── Level collision ──────────────────────────────────────────────
+		// Level collision 
 		auto levelGO = std::make_unique<GameObject>();
 		levelGO->SetLocalPosition(0.f, windowHeight);
-		levelGO->AddComponent<TextureComponent>(windowWidth, windowHeight)
-			->SetTexture(levelData.backgroundTexture);
+		levelGO->AddComponent<TextureComponent>(windowWidth, windowHeight)->SetTexture(levelData.backgroundTexture);
 
 		auto* pLevelCol = levelGO->AddComponent<LevelCollisionComponent>();
 		pLevelCol->LoadFromSVG(levelData.collisionSVG, windowWidth, windowHeight);
@@ -142,14 +131,18 @@ namespace dae
 
 		// Wire all players to the new collision geometry
 		for (auto* pPlayer : players)
+		{
 			if (auto* phys = pPlayer->GetComponent<PhysicsComponent>())
+			{
 				phys->SetLevelCollision(pLevelCol);
+			}
+		}
 
-		// ── Enemies ──────────────────────────────────────────────────────
+
+		// Enemies
 		for (const auto& spawnData : levelData.enemies)
 		{
-			const EnemyType* pType =
-				EnemyTypeRegistry::GetInstance().GetType(spawnData.typeId);
+			const EnemyType* pType = EnemyTypeRegistry::GetInstance().GetType(spawnData.typeId);
 			if (!pType)
 			{
 				std::cerr << "[LevelLoader] Unknown enemy type '"
@@ -157,14 +150,12 @@ namespace dae
 				continue;
 			}
 
-			const float spawnX = EvalSpawnX(spawnData.spawnExprX, windowWidth);
-			const float spawnY = spawnData.spawnY;
+			const float SPAWN_X = EvalSpawnX(spawnData.spawnExprX, windowWidth);
+			const float SPAWN_Y = spawnData.spawnY;
 
 			auto enemyGO = std::make_unique<GameObject>();
-			enemyGO->SetLocalPosition(spawnX, spawnY);
-
-			enemyGO->AddComponent<TextureComponent>(pType->GetWidth(), pType->GetHeight())
-				->SetTexture(pType->GetTexture());
+			enemyGO->SetLocalPosition(SPAWN_X, SPAWN_Y);
+			enemyGO->AddComponent<TextureComponent>(pType->GetWidth(), pType->GetHeight()) ->SetTexture(pType->GetTexture());
 
 			auto* pPhys = enemyGO->AddComponent<PhysicsComponent>(windowHeight);
 			pPhys->SetLevelCollision(pLevelCol);
@@ -185,4 +176,4 @@ namespace dae
 		return result;
 	}
 
-} // namespace dae
+}

@@ -3,6 +3,8 @@
 
 #include "IGameState.h"
 #include "SoundSystem.h"
+#include "Utils/SoundObserver.h"
+#include <optional>
 
 namespace dae
 {
@@ -28,6 +30,8 @@ namespace dae
 		GameObject* m_pChar1{ nullptr };
 		GameObject* m_pChar2{ nullptr };
 		bool m_GameOver{ false };
+		std::optional<SoundObserver> m_HitObserver1;
+		std::optional<SoundObserver> m_HitObserver2;
 	};
 }
 #endif

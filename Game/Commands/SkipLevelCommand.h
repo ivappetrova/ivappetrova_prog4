@@ -18,7 +18,9 @@ namespace dae
 		void Execute() override
 		{
 			if (auto* pLM = m_pLevelManager->GetComponent<LevelManagerComponent>())
+			{
 				pLM->SkipLevel();
+			}
 		}
 
 	private:

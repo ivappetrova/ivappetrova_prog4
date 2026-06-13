@@ -26,14 +26,12 @@ namespace dae
 		void SetVelocityY(float vy) { m_Velocity.y = vy; }
 		void AddVelocity(float ax, float ay) { m_Velocity.x += ax; m_Velocity.y += ay; }
 		glm::vec2 GetVelocity() const { return m_Velocity; }
+		float GetWindowHeight() const { return m_WindowHeight; }
 
 		// Grounded state— read by PlayerComponent states
 		bool IsGrounded() const { return m_IsGrounded; }
 
-		// Wire up the level collision (call once after AddComponent)
 		void SetLevelCollision(LevelCollisionComponent* levelCollider) { m_pLevelCollision = levelCollider; }
-
-		float GetWindowHeight() const { return m_WindowHeight; }
 
 		// Rule of 5
 		PhysicsComponent(const PhysicsComponent&) = delete;

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef TAKEDMGSTATE_H
 #define TAKEDMGSTATE_H
 

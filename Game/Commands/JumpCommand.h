@@ -12,12 +12,15 @@ namespace dae
 	public:
 		explicit JumpCommand(GameObject* gameObject)
 			: m_pGameObject(gameObject)
-		{}
+		{
+		}
 
 		void Execute() override
 		{
 			if (auto* pPlayer = m_pGameObject->GetComponent<PlayerComponent>())
+			{
 				pPlayer->SetJumpInput(true);
+			}
 		}
 
 	private:

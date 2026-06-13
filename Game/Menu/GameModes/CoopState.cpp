@@ -110,21 +110,28 @@ namespace dae
 		MakeHUDMP(scene, pChar2, m_WindowWidth - 250.f, 100.f, font20);
 
 		// Sound observers — both players share the same sounds
-		auto attachSounds = [&](GameObject* p)
-			{
-				if (auto* pHealth = p->GetComponent<HealthComponent>())
-				{
-					pHealth->AddObserver(new SoundObserver{ SOUND_HIT, EVENT_PLAYER_HIT });
-				}
-				if (auto* pScore = p->GetComponent<ScoreComponent>())
-				{
-					pScore->AddObserver(new SoundObserver{ SOUND_POINT, EVENT_PLAYER_GET_POINTS });
-				}
-			};
-		attachSounds(pChar1);
-		attachSounds(pChar2);
+		m_HitObserver1.emplace(SOUND_HIT, EVENT_PLAYER_HIT);
+		m_HitObserver2.emplace(SOUND_HIT, EVENT_PLAYER_HIT);
+		m_PointObserver1.emplace(SOUND_POINT, EVENT_PLAYER_GET_POINTS);
+		m_PointObserver2.emplace(SOUND_POINT, EVENT_PLAYER_GET_POINTS);
 
-		// Level manager — aware of both players
+		if (auto* pHP = pChar1->GetComponent<HealthComponent>())
+		{
+			pHP->AddObserver(&m_HitObserver1.value());
+		}
+		if (auto* pHP = pChar2->GetComponent<HealthComponent>())
+		{
+			pHP->AddObserver(&m_HitObserver2.value());
+		}
+		if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
+		{
+			pScore->AddObserver(&m_PointObserver1.value());
+		}
+		if (auto* pScore = pChar2->GetComponent<ScoreComponent>())
+		{
+			pScore->AddObserver(&m_PointObserver2.value());
+		}
+
 		auto pLoader = std::make_shared<LevelLoader>("Data/enemies.json");
 		auto managerGO = std::make_unique<GameObject>();
 		managerGO->AddComponent<LevelManagerComponent>( scene, pLoader, std::vector<GameObject*>{ pChar1, pChar2 }, m_WindowWidth, m_WindowHeight);
@@ -163,7 +170,7 @@ namespace dae
 		input.BindControllerCommand(1, Controller::Button::RightShoulder, Controller::KeyState::Down, std::make_unique<SkipLevelCommand>(pManagerRaw));
 		input.BindControllerCommand(1, Controller::Button::Back, Controller::KeyState::Down, std::make_unique<GoToMenuCommand>(m_GSM, m_WindowWidth, m_WindowHeight));
 
-		// ---- Player 2 : controller 1 ----
+		// Player 2 : controller 0
 		input.BindControllerCommand(0, Controller::Button::DPadLeft, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar2, -1.f));
 		input.BindControllerCommand(0, Controller::Button::DPadRight, Controller::KeyState::Pressed, std::make_unique<MoveCommand>(pChar2, +1.f));
 		input.BindControllerCommand(0, Controller::Button::ButtonA, Controller::KeyState::Down, std::make_unique<JumpCommand>(pChar2));

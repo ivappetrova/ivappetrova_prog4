@@ -9,7 +9,8 @@ namespace dae
 {
 	PhysicsComponent::PhysicsComponent(GameObject* owner, float screenHeight)
 		: Component(owner), m_WindowHeight{ screenHeight }
-	{}
+	{
+	}
 
 	void PhysicsComponent::Update(float deltaTime)
 	{

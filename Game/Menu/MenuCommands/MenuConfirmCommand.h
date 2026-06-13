@@ -2,7 +2,6 @@
 #define MENU_CONFIRM_COMMAND_H
 
 #include "Command.h"
-#include "Menu/MenuState.h"
 
 namespace dae
 {

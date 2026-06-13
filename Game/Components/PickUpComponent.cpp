@@ -6,7 +6,6 @@
 
 #include "Scene.h"
 #include "GameObject.h"
-#include "ServiceLocator.h"
 
 #include <iostream>
 

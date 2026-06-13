@@ -14,6 +14,7 @@ namespace dae
 			m_IsMuted = !m_IsMuted;
 			ServiceLocator::GetSoundSystem().SetMuted(m_IsMuted);
 		}
+
 	private:
 		bool m_IsMuted{ false };
 	};

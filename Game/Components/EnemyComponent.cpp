@@ -13,8 +13,7 @@ namespace dae
 
     void EnemyComponent::Update(float /*deltaTime*/)
     {
-        // No behaviour yet.
-        // AI state machine goes here in a future sprint.
+        // Behavior
     }
 
 	void EnemyComponent::Kill()

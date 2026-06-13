@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ENEMY_COMPONENT_H
 #define ENEMY_COMPONENT_H
 
@@ -16,11 +15,7 @@ namespace dae
 
 		void Update(float deltaTime) override;
 
-		// ── Type-Object accessors (delegate to the shared type) ──────────
 		const EnemyType* GetEnemyType() const { return m_pType; }
-
-		// Expose the owning GameObject publicly so other components can reach it
-		// without going through the protected Component::GetOwner().
 		GameObject* GetOwner() const { return Component::GetOwner(); }
 
 		// Alive flag — set false when the player's bubble captures it
@@ -35,7 +30,7 @@ namespace dae
 
 	private:
 		const EnemyType* m_pType;
-		bool             m_IsAlive{ true };
+		bool m_IsAlive{ true };
 	};
 
 }

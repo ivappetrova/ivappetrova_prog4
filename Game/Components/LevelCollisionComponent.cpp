@@ -12,7 +12,8 @@ namespace dae
 {
 	LevelCollisionComponent::LevelCollisionComponent(GameObject* owner)
 		: Component(owner)
-	{}
+	{
+	}
 
 	static glm::vec2 ReadSVGViewBox(const std::string& path)
 	{

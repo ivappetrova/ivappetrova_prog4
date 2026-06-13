@@ -177,7 +177,7 @@ namespace dae
 		}
 		else
 		{
-			// Fallback: use watermelon for unknown enemy types
+			// use watermelon for unknown enemy types
 			foodTexture = "Characters/ZenChan/Watermelon.png";
 			points = 100;
 		}
@@ -188,14 +188,13 @@ namespace dae
 		m_pTrappedEnemy = nullptr;
 
 		// Spawn food pickup at the bubble's current position
-		const auto bubblePos = GetOwner()->GetWorldPosition();
+		const auto BUBBLE_POS = GetOwner()->GetWorldPosition();
 
 		auto foodGO = std::make_unique<GameObject>();
-		foodGO->SetLocalPosition(bubblePos.x, bubblePos.y);
+		foodGO->SetLocalPosition(BUBBLE_POS.x, BUBBLE_POS.y);
 
 		constexpr float FOOD_SIZE{ 32.f };
-		foodGO->AddComponent<TextureComponent>(FOOD_SIZE, FOOD_SIZE)
-			->SetTexture(foodTexture);
+		foodGO->AddComponent<TextureComponent>(FOOD_SIZE, FOOD_SIZE) ->SetTexture(foodTexture);
 		foodGO->AddComponent<BoxColliderComponent>(FOOD_SIZE, FOOD_SIZE);
 		auto* pPhysics = foodGO->AddComponent<PhysicsComponent>(m_WindowHeight);
 		pPhysics->SetVelocityY(-200.f);
@@ -205,8 +204,7 @@ namespace dae
 
 		m_Scene.Add(std::move(foodGO));
 
-		std::cout << "[Bubble] Burst! Spawned " << foodTexture
-			<< " worth " << points << " pts.\n";
+		std::cout << "[Bubble] Burst! Spawned " << foodTexture << " worth " << points << " pts.\n";
 
 		// Self-destruct
 		GetOwner()->MarkForDestroy();
@@ -216,22 +214,21 @@ namespace dae
 	{
 		if (m_pTrappedEnemy)
 		{
-			const auto bubblePos = GetOwner()->GetWorldPosition();
+			const auto BUBBLE_POS = GetOwner()->GetWorldPosition();
 
-			// Clamp Y so the enemy never spawns above the ceiling.
-			// PhysicsComponent uses 60.f as the ceiling cutoff; add the
-			// collider height so the bottom anchor (worldPos.y) is fully below it.
-			constexpr float CEILING_Y = 60.f;
-			float spawnY = bubblePos.y;
+			constexpr float CEILING_Y{ 60.f };
+			float spawnY = BUBBLE_POS.y;
 
 			if (auto* col = m_pTrappedEnemy->GetComponent<BoxColliderComponent>())
 			{
-				const float minSafeY = CEILING_Y + col->GetHeight() + 1.f;
-				if (spawnY < minSafeY)
-					spawnY = minSafeY;
+				const float MIN_SAFE_Y = CEILING_Y + col->GetHeight() + 1.f;
+				if (spawnY < MIN_SAFE_Y)
+				{
+					spawnY = MIN_SAFE_Y;
+				}
 			}
 
-			m_pTrappedEnemy->SetLocalPosition(bubblePos.x, spawnY);
+			m_pTrappedEnemy->SetLocalPosition(BUBBLE_POS.x, spawnY);
 
 			if (auto* phys = m_pTrappedEnemy->GetComponent<PhysicsComponent>())
 			{

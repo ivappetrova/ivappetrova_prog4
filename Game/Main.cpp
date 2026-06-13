@@ -18,17 +18,17 @@
 
 namespace fs = std::filesystem;
 
-#if defined(_WIN32) && !defined(__EMSCRIPTEN__) && _DEBUG
-#include <windows.h>
-static void SpawnConsole()
-{
-	AllocConsole();
-	FILE* f;
-	freopen_s(&f, "CONOUT$", "w", stdout);
-	freopen_s(&f, "CONOUT$", "w", stderr);
-	freopen_s(&f, "CONIN$", "r", stdin);
-}
-#endif
+//#if defined(_WIN32) && !defined(__EMSCRIPTEN__) && _DEBUG
+//#include <windows.h>
+//static void SpawnConsole()
+//{
+//	AllocConsole();
+//	FILE* f;
+//	freopen_s(&f, "CONOUT$", "w", stdout);
+//	freopen_s(&f, "CONOUT$", "w", stderr);
+//	freopen_s(&f, "CONIN$", "r", stdin);
+//}
+//#endif
 
 int main(int, char* [])
 {
@@ -49,9 +49,9 @@ int main(int, char* [])
 		std::make_unique<dae::SoundSystem>());
 #endif
 
-#if _DEBUG && defined(_WIN32) && !defined(__EMSCRIPTEN__)
-	SpawnConsole();
-#endif
+//#if _DEBUG && defined(_WIN32) && !defined(__EMSCRIPTEN__)
+//	SpawnConsole();
+//#endif
 
 	// The GameStateManager owns the current state and drives transitions.
 	// It lives for the entire lifetime of engine.Run().

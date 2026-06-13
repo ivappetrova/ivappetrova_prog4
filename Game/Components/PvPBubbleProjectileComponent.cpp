@@ -8,10 +8,7 @@
 namespace dae
 {
 	PvPBubbleProjectileComponent::PvPBubbleProjectileComponent(GameObject* owner, Scene& scene, float directionX, GameObject* shooter)
-		: Component(owner)
-		, m_Scene(scene)
-		, m_DirX(directionX >= 0.f ? 1.f : -1.f)
-		, m_pShooter(shooter)
+		: Component(owner) , m_Scene(scene) , m_DirX(directionX >= 0.f ? 1.f : -1.f) , m_pShooter(shooter)
 	{
 		m_pCollider = owner->GetComponent<BoxColliderComponent>();
 	}
@@ -32,16 +29,16 @@ namespace dae
 		{
 			for (const auto& pGO : m_Scene.GetGameObjects())
 			{
-				if (!pGO || !pGO->IsActive())       continue;
-				if (pGO.get() == GetOwner())         continue;
-				if (pGO.get() == m_pShooter)         continue;
+				if (!pGO || !pGO->IsActive()) continue;
+				if (pGO.get() == GetOwner()) continue;
+				if (pGO.get() == m_pShooter) continue;
 
 				auto* pPlayer = pGO->GetComponent<PlayerComponent>();
-				if (!pPlayer)                        continue;
-				if (pPlayer->IsInvincible())         continue;
+				if (!pPlayer) continue;
+				if (pPlayer->IsInvincible()) continue;
 
 				auto* pCol = pGO->GetComponent<BoxColliderComponent>();
-				if (!pCol)                           continue;
+				if (!pCol) continue;
 
 				if (m_pCollider->Overlaps(*pCol))
 				{

@@ -11,7 +11,6 @@
 #include "Components/BoxColliderComponent.h"
 #include "States/TakeDmgState.h"
 #include <iostream>
-#include "ServiceLocator.h"
 
 namespace dae
 {
@@ -180,8 +179,7 @@ namespace dae
 
 			if (pMyCol->Overlaps(*pEnemyCol))
 			{
-				std::cout << "[Collision] Hit! Invincible=" << IsInvincible()
-					<< " Timer=" << m_InvincibleTimer << "\n";
+				std::cout << "[Collision] Hit! Invincible=" << IsInvincible() << " Timer=" << m_InvincibleTimer << "\n";
 				ChangeState(new TakeDmgState{});
 				return;
 			}

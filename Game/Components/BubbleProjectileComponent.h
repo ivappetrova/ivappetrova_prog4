@@ -4,11 +4,6 @@
 #include "Component.h"
 #include "GameObject.h"
 
-#include <vector>
-#include <string>
-
-#include "ISoundSystem.h"
-
 namespace dae
 {
 	class BoxColliderComponent;

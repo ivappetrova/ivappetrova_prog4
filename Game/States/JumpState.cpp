@@ -14,10 +14,6 @@ namespace dae
 
 	PlayerState* JumpState::HandleInput(PlayerComponent& PlayerComponent)
 	{
-		/*if (PlayerComponent.WantsShoot())
-		{
-			return new ShootState{ false };
-		}*/
 		if (PlayerComponent.GetVelocityY() >= 0.f)
 		{
 			return new FallState{};
@@ -28,10 +24,14 @@ namespace dae
 
 	void JumpState::Update(PlayerComponent& PlayerComponent, float /*deltaTime*/)
 	{
-		const float dir = PlayerComponent.GetMoveDirX();
-		if (dir != 0.f)
-			PlayerComponent.RequestMove(dir);
+		const float PLAYER_DIR = PlayerComponent.GetMoveDirX();
+		if (PLAYER_DIR != 0.f)
+		{
+			PlayerComponent.RequestMove(PLAYER_DIR);
+		}
 		else
+		{
 			PlayerComponent.StopMove();
+		}
 	}
 }

@@ -23,8 +23,10 @@ namespace dae
 		{
 			if ((event.id == EVENT_PLAYER_HIT || event.id == EVENT_PLAYER_DIED) && actor)
 			{
-				if (auto* health = actor->GetComponent<HealthComponent>())
-					m_Lives = health->GetHP();
+				if (auto* pHealth = actor->GetComponent<HealthComponent>())
+				{
+					m_Lives = pHealth->GetHP();
+				}
 				UpdateText();
 			}
 		}

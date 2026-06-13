@@ -18,20 +18,20 @@ namespace dae
 			return;
 		}
 
-		for (const auto& entryData : data.entries)
+		for (const auto& ENTRY_DATA : data.entries)
 		{
 			ScoreEntry entry;
-			entry.name = entryData.name;
-			entry.score = entryData.score;
-			if (entryData.mode == "singleplayer")
+			entry.name = ENTRY_DATA.name;
+			entry.score = ENTRY_DATA.score;
+			if (ENTRY_DATA.mode == "singleplayer")
 			{
 				entry.mode = GameMode::SinglePlayer;
 			}
-			else if (entryData.mode == "coop")
+			else if (ENTRY_DATA.mode == "coop")
 			{
 				entry.mode = GameMode::Coop;
 			}
-			else if (entryData.mode == "pvp")
+			else if (ENTRY_DATA.mode == "pvp")
 			{
 				entry.mode = GameMode::PvP;
 			}
@@ -47,11 +47,11 @@ namespace dae
 
 		auto appendEntries = [&](const std::vector<ScoreEntry>& entries, const std::string& modeStr)
 			{
-				for (const auto& entryData : entries)
+				for (const auto& ENTRY_DATA : entries)
 				{
 					ScoreEntryData d;
-					d.name = entryData.name;
-					d.score = entryData.score;
+					d.name = ENTRY_DATA.name;
+					d.score = ENTRY_DATA.score;
 					d.mode = modeStr;
 					data.entries.push_back(d);
 				}
