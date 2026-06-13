@@ -30,6 +30,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Components/LevelManagerComponent.cpp
 	Components/BubbleProjectileComponent.cpp 
 	Components/PickUpComponent.cpp
+	Components/PvPBubbleProjectileComponent.cpp 
 
 	Commands/DealDamageCommand.h
     Commands/MoveCommand.h    
@@ -38,6 +39,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Commands/ShootCommand.h 
 	Commands/SkipLevelCommand.h
 	Commands/MuteCommand.h
+	Commands/PvPShootCommand.h 
 	
 	States/PlayerState.h
 	States/IdleState.cpp
@@ -46,6 +48,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	States/FallState.cpp
 	States/ShootState.cpp
 	States/TakeDmgState.cpp
+	States/PvPShootState.cpp 
 
 	Utils/SVGParser.cpp
 	Utils/JSONParser.cpp
@@ -62,7 +65,11 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 	Menu/MenuCommands/GoToMenuCommand.h
 	Menu/GameModes/SinglePlayerState.cpp
 	Menu/GameModes/CoopState.cpp
-	Menu/GameModes/PvPState.cpp "Components/PvPBubbleProjectileComponent.cpp" "States/PvPShootState.cpp" "Commands/PvPShootCommand.h")
+	Menu/GameModes/PvPState.cpp 
+
+	EndScreen/ScoreManager.cpp
+	EndScreen/ScoreScreenData.h
+	EndScreen/ScoreScreenState.cpp)
 
 # Include current folder
 target_include_directories(${TARGET_NAME} PRIVATE

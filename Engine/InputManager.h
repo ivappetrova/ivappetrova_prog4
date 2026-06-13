@@ -36,6 +36,9 @@ namespace dae
 
 		void UnbindAll();
 
+		bool IsKeyboardKeyDown(SDL_Scancode key) const;
+		bool IsControllerButtonDown(unsigned int index, Controller::Button button) const;
+
 	private:
 		friend class Singleton<InputManager>;
 		InputManager() = default;

@@ -43,9 +43,7 @@ int main(int, char* [])
 	dae::Minigin engine(data_location);
 
 #if _DEBUG
-	dae::ServiceLocator::RegisterSoundSystem(
-		std::make_unique<dae::LoggingSoundSystem>(
-			std::make_unique<dae::SoundSystem>()));
+	dae::ServiceLocator::RegisterSoundSystem( std::make_unique<dae::LoggingSoundSystem>( std::make_unique<dae::SoundSystem>()));
 #else
 	dae::ServiceLocator::RegisterSoundSystem(
 		std::make_unique<dae::SoundSystem>());

@@ -29,14 +29,16 @@
 
 #include "Utils/SoundObserver.h"
 
+#include "EndScreen/ScoreScreenData.h"
+#include "EndScreen/ScoreScreenState.h"
+
 #include <SDL3/SDL.h>
 #include <memory>
 #include <vector>
 
 namespace dae
 {
-	static GameObject* MakePlayerPvP(Scene& scene, const std::string& texture,
-		float startX, float startY, float windowHeight)
+	static GameObject* MakePlayerPvP(Scene& scene, const std::string& texture, float startX, float startY, float windowHeight)
 	{
 		auto playerGO = std::make_unique<GameObject>();
 
@@ -59,9 +61,7 @@ namespace dae
 		return pPlayer;
 	}
 
-	static void MakeHUDPvP(Scene& scene, GameObject* pPlayer,
-		float labelX, float labelY,
-		std::shared_ptr<Font> font)
+	static void MakeHUDPvP(Scene& scene, GameObject* pPlayer, float labelX, float labelY, std::shared_ptr<Font> font)
 	{
 		auto* pHealth = pPlayer->GetComponent<HealthComponent>();
 
@@ -77,7 +77,8 @@ namespace dae
 
 	PvPState::PvPState(GameStateManager& gsm, float w, float h)
 		: m_GSM(gsm), m_WindowWidth(w), m_WindowHeight(h)
-	{}
+	{
+	}
 
 	void PvPState::Enter()
 	{
@@ -91,6 +92,9 @@ namespace dae
 		// Players — P1 is Bubble, P2 is Maita
 		GameObject* pChar1 = MakePlayerPvP(scene, "bubble.png", 100.f, 100.f, m_WindowHeight);
 		GameObject* pChar2 = MakePlayerPvP(scene, "Characters/Maita/Maita.png", m_WindowWidth - 160.f, 100.f, m_WindowHeight);
+
+		m_pChar1 = pChar1;
+		m_pChar2 = pChar2;
 
 		auto levelGO = std::make_unique<GameObject>();
 		levelGO->SetLocalPosition(0.f, m_WindowHeight);
@@ -160,6 +164,30 @@ namespace dae
 		SceneManager::GetInstance().RemoveActiveScene();
 	}
 
-	void PvPState::Update(float /*deltaTime*/) {}
+	void PvPState::Update(float /*deltaTime*/)
+	{
+		if (m_GameOver) return;
+
+		auto isDead = [](GameObject* p)
+			{
+				if (!p) return true;
+				auto* pH = p->GetComponent<HealthComponent>();
+				return !pH || pH->GetHP() <= 0;
+			};
+
+		const bool P1_DEAD = isDead(m_pChar1);
+		const bool P2_DEAD = isDead(m_pChar2);
+
+		if (P1_DEAD || P2_DEAD)
+		{
+			m_GameOver = true;
+			ScoreScreenData data;
+			data.mode = GameMode::PvP;
+			data.winnerIndex = P1_DEAD ? 1 : 0;
+			m_GSM.SwitchTo(std::make_unique<ScoreScreenState>(
+				m_GSM, m_WindowWidth, m_WindowHeight, std::move(data)));
+		}
+	}
+
 	void PvPState::Render() const {}
 }

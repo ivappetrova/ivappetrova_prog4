@@ -351,3 +351,61 @@ void JSONParser::Normalize(std::string& json)
 
 	json = std::move(result);
 }
+
+bool JSONParser::ParseScoresFile(const std::string& filePath, ScoresFileData& out)
+{
+	std::ifstream file(filePath);
+	if (!file) return false;
+
+	std::string json((std::istreambuf_iterator<char>(file)),
+		std::istreambuf_iterator<char>());
+	file.close();
+	Normalize(json);
+
+	std::string arrayContent;
+	if (!GetArrayContent(json, "scores", arrayContent)) return false;
+
+	std::vector<std::string> objects;
+	if (!SplitObjects(arrayContent, objects)) return false;
+
+	for (const auto& obj : objects)
+	{
+		ScoreEntryData entry;
+		if (!GetStringValue(obj, "name", entry.name))  continue;
+		if (!GetIntValue(obj, "score", entry.score)) continue;
+		if (!GetStringValue(obj, "mode", entry.mode))  continue;
+		out.entries.push_back(entry);
+	}
+
+	return true;
+}
+
+bool JSONParser::WriteScoresFile(const std::string& filePath, const ScoresFileData& data)
+{
+	std::ofstream file(filePath);
+	if (!file)
+	{
+		std::cerr << "JSONParser::WriteScoresFile, failed to open: " << filePath << '\n';
+		return false;
+	}
+
+	file << "{\n";
+	file << "  \"scores\": [\n";
+
+	for (size_t i = 0; i < data.entries.size(); ++i)
+	{
+		const auto& e = data.entries[i];
+		file << "    {\n";
+		file << "      \"name\": \"" << e.name << "\",\n";
+		file << "      \"score\": " << e.score << ",\n";
+		file << "      \"mode\": \"" << e.mode << "\"\n";
+		file << "    }";
+		if (i + 1 < data.entries.size()) file << ",";
+		file << "\n";
+	}
+
+	file << "  ]\n";
+	file << "}\n";
+
+	return file.good();
+}

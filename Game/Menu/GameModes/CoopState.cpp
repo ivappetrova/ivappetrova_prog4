@@ -32,17 +32,16 @@
 #include "Utils/SoundObserver.h"
 #include "Utils/LevelLoader.h"
 
+#include "EndScreen/ScoreScreenData.h"
+#include "EndScreen/ScoreScreenState.h"
+
 #include <SDL3/SDL.h>
 #include <memory>
 #include <vector>
 
 namespace dae
 {
-	// -----------------------------------------------------------------------
-	// Helpers (duplicated here; consider moving to a shared GameHelpers.h)
-	// -----------------------------------------------------------------------
-	static GameObject* MakePlayerMP(Scene& scene, const std::string& texture,
-		float startX, float startY, float windowHeight)
+	static GameObject* MakePlayerMP(Scene& scene, const std::string& texture, float startX, float startY, float windowHeight)
 	{
 		auto playerGO = std::make_unique<GameObject>();
 
@@ -66,9 +65,7 @@ namespace dae
 		return pPlayer;
 	}
 
-	static void MakeHUDMP(Scene& scene, GameObject* pPlayer,
-		float labelX, float labelY,
-		std::shared_ptr<Font> font)
+	static void MakeHUDMP(Scene& scene, GameObject* pPlayer, float labelX, float labelY, std::shared_ptr<Font> font)
 	{
 		auto* pHealth = pPlayer->GetComponent<HealthComponent>();
 		auto* pPoints = pPlayer->GetComponent<ScoreComponent>();
@@ -88,11 +85,10 @@ namespace dae
 		if (pPoints) pPoints->AddObserver(pPointsDisplay);
 	}
 
-	// -----------------------------------------------------------------------
-
 	CoopState::CoopState(GameStateManager& gsm, float w, float h)
 		: m_GSM(gsm), m_WindowWidth(w), m_WindowHeight(h)
-	{}
+	{
+	}
 
 	void CoopState::Enter()
 	{
@@ -116,10 +112,14 @@ namespace dae
 		// Sound observers — both players share the same sounds
 		auto attachSounds = [&](GameObject* p)
 			{
-				if (auto* ph = p->GetComponent<HealthComponent>())
-					ph->AddObserver(new SoundObserver{ SOUND_HIT, EVENT_PLAYER_HIT });
-				if (auto* ps = p->GetComponent<ScoreComponent>())
-					ps->AddObserver(new SoundObserver{ SOUND_POINT, EVENT_PLAYER_GET_POINTS });
+				if (auto* pHealth = p->GetComponent<HealthComponent>())
+				{
+					pHealth->AddObserver(new SoundObserver{ SOUND_HIT, EVENT_PLAYER_HIT });
+				}
+				if (auto* pScore = p->GetComponent<ScoreComponent>())
+				{
+					pScore->AddObserver(new SoundObserver{ SOUND_POINT, EVENT_PLAYER_GET_POINTS });
+				}
 			};
 		attachSounds(pChar1);
 		attachSounds(pChar2);
@@ -129,6 +129,18 @@ namespace dae
 		auto managerGO = std::make_unique<GameObject>();
 		managerGO->AddComponent<LevelManagerComponent>( scene, pLoader, std::vector<GameObject*>{ pChar1, pChar2 }, m_WindowWidth, m_WindowHeight);
 		GameObject* pManagerRaw = managerGO.get();
+
+		pManagerRaw->GetComponent<LevelManagerComponent>()->SetOnGameOver([&, pChar1, pChar2]()
+			{
+				ScoreScreenData data;
+				data.mode = GameMode::Coop;
+				if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
+					data.playerScores.push_back(pScore->GetScore());
+				if (auto* pScore = pChar2->GetComponent<ScoreComponent>())
+					data.playerScores.push_back(pScore->GetScore());
+				m_GSM.SwitchTo(std::make_unique<ScoreScreenState>(m_GSM, m_WindowWidth, m_WindowHeight, std::move(data)));
+			});
+
 		scene.Add(std::move(managerGO));
 
 		auto& input = InputManager::GetInstance();

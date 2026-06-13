@@ -157,4 +157,18 @@ namespace dae
 		m_ControllerBindings.clear();
 		m_KeyboardBindings.clear();
 	}
+
+	// Add to InputManager.h public section
+	bool InputManager::IsKeyboardKeyDown(SDL_Scancode key) const
+	{
+		for (const auto& sc : m_KeysDownThisFrame)
+			if (sc == key) return true;
+		return false;
+	}
+
+	bool InputManager::IsControllerButtonDown(unsigned int index, Controller::Button button) const
+	{
+		if (index >= MAX_CONTROLLERS || !m_pControllers[index]) return false;
+		return m_pControllers[index]->IsDown(button);
+	}
 }

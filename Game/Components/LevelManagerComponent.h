@@ -27,6 +27,7 @@ namespace dae
 
 		void Update(float deltaTime) override;
 		void SkipLevel();
+		void SetOnGameOver(std::function<void()> callback) { m_OnGameOver = std::move(callback); }
 
 		// Rule of 5
 		LevelManagerComponent(const LevelManagerComponent&) = delete;
@@ -39,16 +40,17 @@ namespace dae
 		void SpawnExitPortal();
 
 		Scene& m_Scene;
-		std::shared_ptr<LevelLoader>     m_pLoader;
-		std::vector<GameObject*>         m_Players;
-		std::vector<GameObject*>         m_Enemies;
-		std::vector<GameObject*>         m_LevelObjects;
+		std::shared_ptr<LevelLoader> m_pLoader;
+		std::vector<GameObject*> m_Players;
+		std::vector<GameObject*> m_Enemies;
+		std::function<void()> m_OnGameOver;
+		std::vector<GameObject*> m_LevelObjects;
 		GameObject* m_pExitPortal{ nullptr };
-		int                              m_CurrentLevel{ 0 };
-		bool                             m_Transitioning{ false };
-		bool                             m_PortalSpawned{ false };
-		float                            m_WindowWidth;
-		float                            m_WindowHeight;
+		int m_CurrentLevel{ 0 };
+		bool m_Transitioning{ false };
+		bool m_PortalSpawned{ false };
+		float m_WindowWidth;
+		float m_WindowHeight;
 	};
 
 }

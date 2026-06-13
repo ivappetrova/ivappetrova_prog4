@@ -7,6 +7,7 @@
 namespace dae
 {
 	class GameStateManager;
+	class GameObject;
 
 	class PvPState final : public IGameState
 	{
@@ -24,6 +25,9 @@ namespace dae
 		float m_WindowWidth;
 		float m_WindowHeight;
 		sound_id m_MusicId{};
+		GameObject* m_pChar1{ nullptr };
+		GameObject* m_pChar2{ nullptr };
+		bool m_GameOver{ false };
 	};
 }
 #endif

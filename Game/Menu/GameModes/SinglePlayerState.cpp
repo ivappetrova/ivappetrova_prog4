@@ -32,17 +32,17 @@
 #include "Utils/SoundObserver.h"
 #include "Utils/LevelLoader.h"
 
+#include "EndScreen/ScoreScreenData.h"
+#include "EndScreen/ScoreScreenState.h"
+
 #include <SDL3/SDL.h>
 #include <memory>
 #include <vector>
 
 namespace dae
 {
-	// -----------------------------------------------------------------------
-	// Helpers (same as the static helpers in the original main.cpp)
-	// -----------------------------------------------------------------------
-	static GameObject* MakePlayer(Scene& scene, const std::string& texture,
-		float startX, float startY, float windowHeight)
+
+	static GameObject* MakePlayer(Scene& scene, const std::string& texture, float startX, float startY, float windowHeight)
 	{
 		auto playerGO = std::make_unique<GameObject>();
 
@@ -88,11 +88,11 @@ namespace dae
 		if (pPoints) pPoints->AddObserver(pPointsDisplay);
 	}
 
-	// -----------------------------------------------------------------------
 
 	SinglePlayerState::SinglePlayerState(GameStateManager& gsm, float w, float h)
 		: m_GSM(gsm), m_WindowWidth(w), m_WindowHeight(h)
-	{}
+	{
+	}
 
 	void SinglePlayerState::Enter()
 	{
@@ -121,6 +121,16 @@ namespace dae
 		auto managerGO = std::make_unique<GameObject>();
 		managerGO->AddComponent<LevelManagerComponent>(scene, pLoader, std::vector<GameObject*>{ pChar1 }, m_WindowWidth, m_WindowHeight);
 		GameObject* pManagerRaw = managerGO.get(); 
+
+		pManagerRaw->GetComponent<LevelManagerComponent>()->SetOnGameOver([&, pChar1]()
+			{
+				ScoreScreenData data;
+				data.mode = GameMode::SinglePlayer;
+				if (auto* pScore = pChar1->GetComponent<ScoreComponent>())
+					data.playerScores.push_back(pScore->GetScore());
+				m_GSM.SwitchTo(std::make_unique<ScoreScreenState>(m_GSM, m_WindowWidth, m_WindowHeight, std::move(data)));
+			});
+
 		scene.Add(std::move(managerGO));
 
 		// Input — keyboard
