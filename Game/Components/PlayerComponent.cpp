@@ -60,12 +60,16 @@ namespace dae
 
 	void PlayerComponent::Notify(const Event& event, GameObject* /*actor*/)
 	{
-		if (event.id == EVENT_PLAYER_HIT || event.id == EVENT_PLAYER_DIED)
+		if (event.id == EVENT_PLAYER_DIED)
+		{
+			GetOwner()->MarkForDestroy();
+			return;
+		}
+
+		if (event.id == EVENT_PLAYER_HIT)
 		{
 			if (!IsInvincible() && dynamic_cast<TakeDmgState*>(m_pCurrentState) == nullptr)
-			{
 				ChangeState(new TakeDmgState{});
-			}
 		}
 	}
 

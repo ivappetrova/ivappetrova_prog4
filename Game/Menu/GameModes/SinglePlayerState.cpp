@@ -106,7 +106,7 @@ namespace dae
 		const sound_id SOUND_POINT = soundSystem.AddSound("Data/Sounds/sound3.mp3");
 
 		// Player 1
-		GameObject* pChar1 = MakePlayer(scene, "bubble.png", 100.f, 100.f, m_WindowHeight);
+		GameObject* pChar1 = MakePlayer(scene, "Characters/Player/Bubble.png", 100.f, 100.f, m_WindowHeight);
 		MakeHUD(scene, pChar1, 100.f, 100.f, font20);
 
 		// Sound observers

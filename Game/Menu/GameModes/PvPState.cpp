@@ -88,7 +88,7 @@ namespace dae
 		const sound_id SOUND_HIT = soundSystem.AddSound("Data/Sounds/sound2.mp3");
 
 		// Players
-		GameObject* pChar1 = MakePlayerPvP(scene, "bubble.png", 100.f, 100.f, m_WindowHeight);
+		GameObject* pChar1 = MakePlayerPvP(scene, "Characters/Player/Bubble.png", 100.f, 100.f, m_WindowHeight);
 		GameObject* pChar2 = MakePlayerPvP(scene, "Characters/Maita/Maita.png", m_WindowWidth - 160.f, 100.f, m_WindowHeight);
 
 		m_pChar1 = pChar1;
