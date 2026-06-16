@@ -12,7 +12,7 @@ namespace dae
 	class EnemyAIComponent final : public Component
 	{
 	public:
-		EnemyAIComponent(GameObject* owner, Scene& scene, const std::string& typeId, float windowHeight);
+		EnemyAIComponent(GameObject* owner, Scene& scene, const std::string& typeId);
 		void Update(float deltaTime) override;
 
 	private:
@@ -23,7 +23,6 @@ namespace dae
 
 		Scene& m_Scene;
 		std::string m_TypeId;
-		float m_WindowHeight;
 
 		float m_JumpCooldown{ 0.f };
 		float m_ShootCooldown{ 0.f };

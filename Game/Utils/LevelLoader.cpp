@@ -165,7 +165,7 @@ namespace dae
 			//enemyGO->AddComponent<BoxColliderDebugDrawComponent>(255, 128, 0);
 
 			enemyGO->AddComponent<EnemyComponent>(pType);
-			enemyGO->AddComponent<EnemyAIComponent>(scene, pType->GetId(), windowHeight);
+			enemyGO->AddComponent<EnemyAIComponent>(scene, pType->GetId());
 
 
 			result.enemies.push_back(enemyGO.get());

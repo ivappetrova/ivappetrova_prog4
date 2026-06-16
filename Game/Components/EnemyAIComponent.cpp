@@ -16,8 +16,8 @@
 
 namespace dae
 {
-	EnemyAIComponent::EnemyAIComponent(GameObject* owner, Scene& scene, const std::string& typeId, float windowHeight)
-		: Component(owner), m_Scene(scene), m_TypeId(typeId), m_WindowHeight(windowHeight)
+	EnemyAIComponent::EnemyAIComponent(GameObject* owner, Scene& scene, const std::string& typeId)
+		: Component(owner), m_Scene(scene), m_TypeId(typeId)
 	{
 		m_JumpCooldown = JUMP_INTERVAL * (0.3f + static_cast<float>(rand() % 100) / 200.f);
 		m_ShootCooldown = SHOOT_INTERVAL * (0.5f + static_cast<float>(rand() % 100) / 200.f);
